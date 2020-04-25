@@ -43,6 +43,7 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="static\images\solo.png" />
     <Content Include="static\scripts\realtime.js" />
     <Content Include="templates\index.html" />
     <Content Include="templates\base.html" />
@@ -51,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="drone\" />
+    <Folder Include="static\images\" />
     <Folder Include="static\scripts\" />
     <Folder Include="templates\" />
     <Folder Include="static\" />

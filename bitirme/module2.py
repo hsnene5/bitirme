@@ -116,7 +116,7 @@ def api_mode():
         time.sleep(1)
 
     #Switch vehicle to GUIDED mode and wait for change
-    vehicle.mode = VehicleMode("STABILIZE")
+    vehicle.mode = VehicleMode("GUIDED")
     while vehicle.mode!="STABILIZE":
         print("Waiting for vehicle to enter GUIDED mode")
         time.sleep(1)
@@ -127,11 +127,11 @@ def api_mode():
         print("Waiting for vehicle to become armed.")
         time.sleep(1)
 
-    vehicle.simple_takeoff(aTargetAltitude)
+    vehicle.simple_takeoff(1)
 
     while True:
         print("Current Altitude: %d"%vehicle.location.global_relative_frame.alt)
-        if vehicle.location.global_relative_frame.alt>=aTargetAltitude*.95:
+        if vehicle.location.global_relative_frame.alt>=1*.95:
             break
         time.sleep(1)
 
