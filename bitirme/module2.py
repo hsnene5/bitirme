@@ -153,7 +153,7 @@ def connect_to_drone():
 
 
     print 'connected!'
-    asd
+   
 # Never cache
 @app.after_request
 def never_cache(response):
