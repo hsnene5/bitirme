@@ -62,6 +62,7 @@
     <Content Include="requirements.txt" />
     <Content Include="static\css\main.css" />
     <Content Include="templates\landingPage.html" />
+    <Content Include="app.yaml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="drone\" />
