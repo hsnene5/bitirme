@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from dronekit import connect, VehicleMode
+from __future__ import print_function
+from dronekit import connect, VehicleMode, LocationGlobalRelative
 from pymavlink import mavutil
 from Queue import Queue
 from flask import Flask, render_template, jsonify, Response, request
@@ -16,6 +17,8 @@ from subprocess import Popen
 from flask import render_template
 from flask import Flask, Response
 from datetime import datetime
+
+
 
 vehicle = None
 
@@ -111,49 +114,103 @@ def api_location():
 
 @app.route("/api/mode", methods=['POST', 'PUT'])
 def api_mode():
+    print("Basic pre-arm checks")
+    # Don't try to arm until autopilot is ready
     while not vehicle.is_armable:
-        print("Waiting for vehicle to become armable")
+        print(" Waiting for vehicle to initialise...")
         time.sleep(1)
 
-    #Switch vehicle to GUIDED mode and wait for change
-    vehicle.mode = VehicleMode("STABILIZED")
-    while vehicle.mode!="STABILIZE":
-        print("Waiting for vehicle to enter GUIDED mode")
+    print("Arming motors")
+    # Copter should arm in GUIDED mode
+    vehicle.mode = VehicleMode("GUIDED")
+    vehicle.armed = True
+
+    # Confirm vehicle armed before attempting to take off
+    while not vehicle.armed:
+        print(" Waiting for arming...")
         time.sleep(1)
 
-    #Arm vehicle once GUIDED mode is confirmed
-    vehicle.armed=True
-    while vehicle.armed==False:
-        print("Waiting for vehicle to become armed.")
-        time.sleep(1)
+    print("Taking off!")
+    vehicle.simple_takeoff(10)  # Take off to target altitude
 
-    vehicle.simple_takeoff(1)
-
+    # Wait until the vehicle reaches a safe height before processing the goto
+    #  (otherwise the command after Vehicle.simple_takeoff will execute
+    #   immediately).
     while True:
-        print("Current Altitude: %d"%vehicle.location.global_relative_frame.alt)
-        if vehicle.location.global_relative_frame.alt>=1*.95:
+        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
+        # Break and return from function just below target altitude.
+        if vehicle.location.global_relative_frame.alt >= 10 * 0.95:
+            print("Reached target altitude")
             break
         time.sleep(1)
 
-    print("Target altitude reached")
-    return None
+    print("Set default/target airspeed to 3")
+    vehicle.airspeed = 3
+
+    print("Going towards first point for 30 seconds ...")
+    point1 = LocationGlobalRelative(-35.361354, 149.165218, 20)
+    vehicle.simple_goto(point1)
+
+    # sleep so we can see the change in map
+    time.sleep(30)
+    
+    print("Going towards second point for 30 seconds (groundspeed set to 10 m/s) ...")
+    point2 = LocationGlobalRelative(-35.363244, 149.168801, 20)
+    vehicle.simple_goto(point2, groundspeed=10)
+    
+    # sleep so we can see the change in map
+    time.sleep(30)
+    
+    print("Returning to Launch")
+    vehicle.mode = VehicleMode("RTL")
+    
+    # Close vehicle object before exiting script
+    print("Close vehicle object")
+    vehicle.close()
 
 def connect_to_drone():
+    import dronekit_sitl
+    sitl = dronekit_sitl.start_default()
     global vehicle
+    connection_string = sitl.connection_string()
+    vehicle = connect(connection_string, wait_ready=True)
 
-    print 'connecting to drone...'
-    while not vehicle:
-        try:
-            vehicle = connect('com7', wait_ready=False,baud=57600)
-        except Exception as e:
-            print 'waiting for connection... (%s)' % str(e)
-            time.sleep(2)
+def arm_and_takeoff(aTargetAltitude):
+    """
+    Arms vehicle and fly to aTargetAltitude.
+    """
 
-    # if --sim is enabled...
+    print("Basic pre-arm checks")
+    # Don't try to arm until autopilot is ready
+    while not vehicle.is_armable:
+        print(" Waiting for vehicle to initialise...")
+        time.sleep(1)
+
+    print("Arming motors")
+    # Copter should arm in GUIDED mode
+    vehicle.mode = VehicleMode("GUIDED")
+    vehicle.armed = True
+
+    # Confirm vehicle armed before attempting to take off
+    while not vehicle.armed:
+        print(" Waiting for arming...")
+        time.sleep(1)
+
+    print("Taking off!")
+    vehicle.simple_takeoff(aTargetAltitude)  # Take off to target altitude
+
+    # Wait until the vehicle reaches a safe height before processing the goto
+    #  (otherwise the command after Vehicle.simple_takeoff will execute
+    #   immediately).
+    while True:
+        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
+        # Break and return from function just below target altitude.
+        if vehicle.location.global_relative_frame.alt >= aTargetAltitude * 0.95:
+            print("Reached target altitude")
+            break
+        time.sleep(1)
 
 
-    print 'connected!'
-   
 # Never cache
 @app.after_request
 def never_cache(response):
@@ -162,6 +219,7 @@ def never_cache(response):
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '-1'
     return response
+
 
 t2 = Thread(target=connect_to_drone)
 t2.daemon = True

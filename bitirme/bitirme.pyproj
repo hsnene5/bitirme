@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>41f95daa-6d60-4609-a2e9-80188d1e99ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>module2.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -27,7 +27,16 @@
     <Compile Include="drone\module1.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="module1.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="module2.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="module3.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="main.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -43,12 +52,16 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="static\css\landingPage.css" />
+    <Content Include="static\css\styles.css" />
     <Content Include="static\images\solo.png" />
     <Content Include="static\scripts\realtime.js" />
+    <Content Include="static\scripts\scripts.js" />
     <Content Include="templates\index.html" />
     <Content Include="templates\base.html" />
     <Content Include="requirements.txt" />
     <Content Include="static\css\main.css" />
+    <Content Include="templates\landingPage.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="drone\" />
