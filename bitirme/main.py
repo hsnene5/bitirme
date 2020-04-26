@@ -13,7 +13,7 @@ def home():
 def main():
     app.config['TEMPLATE_AUTO_RELOAD'] = True
     app.jinja_env.auto_reload = True
-    app.run(threaded=True, host='192.168.1.7', port=8080,ssl_context='adhoc')
+    app.run()
 
 if __name__=="__main__":
     main()
