@@ -10,7 +10,7 @@ def home():
 def main():
     app.config['TEMPLATE_AUTO_RELOAD'] = True
     app.jinja_env.auto_reload = True
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=1717,debug=True)
 
 if __name__=="__main__":
     main()
