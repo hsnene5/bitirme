@@ -23,20 +23,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="bitirme.py" />
-    <Compile Include="drone\module1.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="module1.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="module2.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="module3.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="appengine_config.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -52,21 +42,17 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="static\css\landingPage.css" />
     <Content Include="static\css\styles.css" />
-    <Content Include="static\images\solo.png" />
-    <Content Include="static\scripts\realtime.js" />
     <Content Include="static\scripts\scripts.js" />
-    <Content Include="templates\index.html" />
-    <Content Include="templates\base.html" />
+    <Content Include="templates\401.html" />
+    <Content Include="templates\404.html" />
+    <Content Include="templates\500.html" />
     <Content Include="requirements.txt" />
-    <Content Include="static\css\main.css" />
     <Content Include="templates\landingPage.html" />
     <Content Include="app.yaml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="drone\" />
-    <Folder Include="static\images\" />
     <Folder Include="static\scripts\" />
     <Folder Include="templates\" />
     <Folder Include="static\" />

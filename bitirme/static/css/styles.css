@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /*!
 * Start Bootstrap - SB Admin v6.0.0 (https://startbootstrap.com/templates/sb-admin)
 * Copyright 2013-2020 Start Bootstrap
@@ -6066,63 +6066,73 @@ a.close.disabled {
 }
 
 .bg-primary {
-  background-color: #007bff !important;
+    background-color: #419c67 !important;
 }
 
 a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,
 button.bg-primary:focus {
-  background-color: #0062cc !important;
+    background-color: #419c67 !important;
 }
 
 .bg-secondary {
-  background-color: #6c757d !important;
+    background-color: #426dad !important;
 }
 
 a.bg-secondary:hover, a.bg-secondary:focus,
 button.bg-secondary:hover,
 button.bg-secondary:focus {
-  background-color: #545b62 !important;
+    background-color: #426dad !important;
 }
 
 .bg-success {
-  background-color: #28a745 !important;
+    background-color: #426dad !important;
 }
 
 a.bg-success:hover, a.bg-success:focus,
 button.bg-success:hover,
 button.bg-success:focus {
-  background-color: #1e7e34 !important;
+    background-color: #426dad !important;
 }
 
 .bg-info {
-  background-color: #17a2b8 !important;
+    background-color: #426dad !important;
 }
 
 a.bg-info:hover, a.bg-info:focus,
 button.bg-info:hover,
 button.bg-info:focus {
-  background-color: #117a8b !important;
+    background-color: #426dad !important;
 }
 
 .bg-warning {
-  background-color: #ffc107 !important;
+    background-color: #426dad !important;
 }
 
 a.bg-warning:hover, a.bg-warning:focus,
 button.bg-warning:hover,
 button.bg-warning:focus {
-  background-color: #d39e00 !important;
+    background-color: #426dad !important;
 }
 
 .bg-danger {
-  background-color: #dc3545 !important;
+    background-color: #426dad !important;
 }
 
 a.bg-danger:hover, a.bg-danger:focus,
 button.bg-danger:hover,
 button.bg-danger:focus {
-  background-color: #bd2130 !important;
+  background-color: #426dad !important;
+}
+
+.bg-cancel {
+    background-color: #9c4141 !important;
+}
+
+a.bg-cancel:hover, a.bg-cancel:focus,
+button.bg-cancel:hover,
+button.bg-cancel:focus {
+    background-color: #9c4141 !important;
 }
 
 .bg-light {
