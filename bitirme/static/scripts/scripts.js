@@ -37,4 +37,17 @@ $('#arm').on('click', function () {
         .done(function (msg) {
             console.log('sent arming message')
         });
+    document.getElementById("arm").innerHTML="armed";
+})
+
+$('#guided').on('click', function () {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/guided',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'GUIDED' }),
+    })
+        .done(function (msg) {
+            console.log('sent guided mode')
+        });
 })

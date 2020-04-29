@@ -24,10 +24,37 @@ app = Flask(__name__)
 def home():
     return render_template('landingPage.html', branding = False)
 
+@app.route("/api/guided", methods = ['POST','PUT'])
+def api_guided():
+    while not vehicle.is_armable:
+        print("Waiting for vehicle to become armable")
+        time.sleep(1)
 
+    #Switch vehicle to GUIDED mode and wait for change
+    vehicle.mode = VehicleMode("GUIDED")
+    while vehicle.mode!="GUIDED":
+        print("Waiting for vehicle to enter GUIDED mode")
+        time.sleep(1)
+
+    #Arm vehicle once GUIDED mode is confirmed
+    vehicle.armed=True
+    while vehicle.armed==False:
+        print("Waiting for vehicle to become armed.")
+        time.sleep(1)
+
+    vehicle.simple_takeoff(1)
+
+    while True:
+        print("Current Altitude: %d"%vehicle.location.global_relative_frame.alt)
+        if vehicle.location.global_relative_frame.alt>=1*.95:
+            break
+        time.sleep(1)
+
+    print("Target altitude reached")
+    return None
 
 @app.route("/api/arm", methods=['POST', 'PUT'])
-def api_mode():
+def api_arm():
     if request.method == 'POST' or request.method == 'PUT':
         try:
             vehicle.armed = True
