@@ -27,19 +27,19 @@ def home():
 @app.route("/api/guided", methods = ['POST','PUT'])
 def api_guided():
     while not vehicle.is_armable:
-        print("Waiting for vehicle to become armable")
+        print "Waiting for vehicle to become armable"
         time.sleep(1)
 
     #Switch vehicle to GUIDED mode and wait for change
     vehicle.mode = VehicleMode("GUIDED")
     while vehicle.mode!="GUIDED":
-        print("Waiting for vehicle to enter GUIDED mode")
+        print "Waiting for vehicle to enter GUIDED mode"
         time.sleep(1)
 
     #Arm vehicle once GUIDED mode is confirmed
     vehicle.armed=True
     while vehicle.armed==False:
-        print("Waiting for vehicle to become armed.")
+        print "Waiting for vehicle to become armed."
         time.sleep(1)
 
     vehicle.simple_takeoff(1)
