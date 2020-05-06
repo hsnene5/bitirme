@@ -53,6 +53,21 @@ def api_guided():
     print("Target altitude reached")
     return None
 
+@app.route("/api/loiter", methods = ['POST','PUT'])
+def api_loiter():
+    alttitude = vehicle.attitude
+    location = vehicle.location
+    #Switch vehicle to LOITER mode and control the drone from RC
+    vehicle.mode = VehicleMode('LOITER')
+    if vehicle.mode!='MANUAL':
+        print("Waiting for remote control.")
+        time.sleep(1)
+    
+
+
+    
+
+
 @app.route("/api/arm", methods=['POST', 'PUT'])
 def api_arm():
     if request.method == 'POST' or request.method == 'PUT':

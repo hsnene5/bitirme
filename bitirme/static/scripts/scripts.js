@@ -51,3 +51,15 @@ $('#guided').on('click', function () {
             console.log('sent guided mode')
         });
 })
+
+$('#loiter').on('click', function () {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/loiter',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'LOITER' }),
+    })
+        .done(function (msg) {
+            console.log('sent loiter mode')
+        });
+})
