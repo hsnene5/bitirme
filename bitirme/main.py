@@ -42,7 +42,7 @@ def api_guided():
         print "Waiting for vehicle to become armed."
         time.sleep(1)
 
-    vehicle.simple_takeoff(1)
+
 
     while True:
         print("Current Altitude: %d"%vehicle.location.global_relative_frame.alt)
