@@ -51,3 +51,35 @@ $('#guided').on('click', function () {
             console.log('sent guided mode')
         });
 })
+
+$('#auto').on('click', function () {
+    var modal = document.getElementById("autoModePopup");
+    modal.style.display = "block";
+    $.ajax({
+        method: 'PUT',
+        url: '/api/guided',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'GUIDED' }),
+    })
+        .done(function (msg) {
+            console.log('sent guided mode')
+        });
+})
+
+var modal = document.getElementById("autoModePopup");
+var span = document.getElementById("closeModal");
+
+
+var closeModal = document.getElementById("closeModal");
+// When the user clicks on <span> (x), close the modal
+closeModal.onclick = function () {
+    modal.style.display = "none";
+}
+
+// THINK ABOUT THAT FEATURE
+// When the user clicks anywhere outside of the modal, close it
+/*window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}*/
