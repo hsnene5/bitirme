@@ -38,6 +38,7 @@ def api_guided():
 
     #Arm vehicle once GUIDED mode is confirmed
     vehicle.armed=True
+
     while vehicle.armed==False:
         print "Waiting for vehicle to become armed."
         time.sleep(1)
