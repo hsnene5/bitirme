@@ -121,10 +121,11 @@ def api_guided():
             break
         time.sleep(1)
 
-    api_land()
+    # Close vehicle object before exiting script
+    print("Close vehicle object")
+    vehicle.close()
+    return jsonify(ok=True)
 
-    #print("Now let's land")
-    #vehicle.mode = VehicleMode("LAND")
 
     #while True:
     #    print(" Altitude: ", vehicle.location.global_relative_frame.alt)
@@ -225,6 +226,13 @@ def api_land():
             print("Landed safely")
             break
         time.sleep(1)
+    # Close vehicle object before exiting script
+    print("Close vehicle object")
+    vehicle.close()
+    return jsonify(ok=True)
+
+
+
 
 
 @app.route("/api/connect", methods=['POST','PUT'])
