@@ -50,6 +50,7 @@
     <Content Include="requirements.txt" />
     <Content Include="templates\landingPage.html" />
     <Content Include="app.yaml" />
+    <Content Include="templates\autoModeModal.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="drone\" />
