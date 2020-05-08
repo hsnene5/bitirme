@@ -122,8 +122,6 @@ def api_guided():
         time.sleep(1)
 
     # Close vehicle object before exiting script
-    print("Close vehicle object")
-    vehicle.close()
     return jsonify(ok=True)
 
 
@@ -141,8 +139,6 @@ def api_guided():
     #print("Going towards first point for 30 seconds ...")
     #point1 = LocationGlobalRelative(39.9853521, 32.6448407, 20)
     #vehicle.simple_goto(point1)
-
-    return jsonify(ok=True)
 
 @app.route("/api/auto", methods = ['POST','PUT'])
 def api_autoMode():
