@@ -136,6 +136,19 @@ $('#auto').on('click', function () {
 
 })
 
+$('#land').on('click', function () {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/land',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'LAND' }),
+    })
+        .done(function (msg) {
+            console.log('sent landing mode')
+        });
+
+})
+
 
 
 var modal = document.getElementById("autoModePopup");
