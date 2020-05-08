@@ -82,10 +82,10 @@ def api_guided():
     """
     Arms vehicle and fly to aTargetAltitude.
     """
-    print(vehicle.location.global_relative_frame.alt)
+    print vehicle.location.global_relative_frame.alt
     #point1 = LocationGlobalRelative(-34.364114, 149.166022, 30)
     #distance= get_distance_metres(vehicle.location, point1)   
-    print (vehicle.location.global_frame)
+    print vehicle.location.global_frame
     print (vehicle.location.global_relative_frame)
     print (vehicle.location.local_frame)
 
@@ -100,7 +100,7 @@ def api_guided():
     # Copter should arm in GUIDED mode
     vehicle.mode = VehicleMode("GUIDED")
     vehicle.armed = True
-    aTargetAltitude = 10
+    aTargetAltitude = 20
     # Confirm vehicle armed before attempting to take off
     while not vehicle.armed:
         print(" Waiting for arming...")
