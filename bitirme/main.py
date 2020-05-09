@@ -409,6 +409,7 @@ def goto_position_target_global_int(aLocation):
 
 def main():
     app.config['TEMPLATE_AUTO_RELOAD'] = True
+    app.config["CACHE_TYPE"] = "null"
     app.jinja_env.auto_reload = True
     app.run(threaded=True,host='127.0.0.1', port=5000)
     
