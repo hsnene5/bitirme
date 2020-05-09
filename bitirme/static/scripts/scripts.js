@@ -145,7 +145,7 @@ $('#land').on('click', function () {
     })
         .done(function (msg) {
             console.log('sent landing mode')
-        });
+       });
 
 })
 

@@ -85,7 +85,7 @@ def api_guided():
     print (vehicle.location.global_relative_frame.alt)
     #point1 = LocationGlobalRelative(-34.364114, 149.166022, 30)
     #distance= get_distance_metres(vehicle.location, point1)   
-    print (vehicle.location.global_frame)
+    print vehicle.location.global_frame
     print (vehicle.location.global_relative_frame)
     print (vehicle.location.local_frame)
 
