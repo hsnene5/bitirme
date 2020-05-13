@@ -1,4 +1,3 @@
-pip==6.1.1
 setuptools==15.0
 dronekit==2.9.1
 pyserial

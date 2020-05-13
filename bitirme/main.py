@@ -241,8 +241,23 @@ def api_land():
     vehicle.close()
     return jsonify(ok=True)
 
+@app.route("/api/rtl", methods=['POST', 'PUT'])
+def api_land():
+    
+    print("Coming home")
+    vehicle.mode = VehicleMode("RTL")
 
-
+    while True:
+        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
+        # Break and return from function just below target altitude.
+        if vehicle.location.global_relative_frame.alt <=  0.5:
+            print("Came home")
+            break
+        time.sleep(1)
+    # Close vehicle object before exiting script
+    print("Close vehicle object")
+    vehicle.close()
+    return jsonify(ok=True)
 
 
 @app.route("/api/connect", methods=['POST','PUT'])
