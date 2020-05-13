@@ -149,6 +149,18 @@ $('#land').on('click', function () {
 
 })
 
+$('#rtl').on('click', function () {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/rtl',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'RTL' }),
+    })
+        .done(function (msg) {
+            console.log('sent rtl mode')
+        });
+
+})
 
 
 var modal = document.getElementById("autoModePopup");
