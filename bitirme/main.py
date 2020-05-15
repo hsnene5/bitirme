@@ -17,6 +17,8 @@ from flask import render_template
 from flask import Flask, Response
 from datetime import datetime
 
+vehicle = None
+point1 = None
 def sse_encode(obj, id=None):
     return "data: %s\n\n" % json.dumps(obj)
 
@@ -31,7 +33,8 @@ def state_msg():
         "mode": vehicle.mode.name,
         "heading": vehicle.heading or 0,
         "lat": vehicle.location.global_relative_frame.lat,
-        "lon": vehicle.location.global_relative_frame.lon
+        "lon": vehicle.location.global_relative_frame.lon,
+        "point1": point1
     }
 
 listeners_location = []
@@ -52,7 +55,7 @@ t = Thread(target=tcount)
 t.daemon = True
 t.start()
 
-vehicle = None
+
 app = Flask(__name__)
 
 @app.route("/api/sse/state")
@@ -156,6 +159,10 @@ def api_guided():
 
 @app.route("/api/auto", methods = ['POST','PUT'])
 def api_autoMode():
+    parameters = request.json['dataX']
+    targetAltitude = float(parameters["altitude"])
+    
+    print(targetAltitude)
     print("Basic pre-arm checks")
     # Don't try to arm until autopilot is ready
     while not vehicle.is_armable:
@@ -173,7 +180,7 @@ def api_autoMode():
         time.sleep(1)
 
     print("Taking off!")
-    vehicle.simple_takeoff(10)  # Take off to target altitude
+    vehicle.simple_takeoff(targetAltitude)  # Take off to target altitude
 
     # Wait until the vehicle reaches a safe height before processing the goto
     #  (otherwise the command after Vehicle.simple_takeoff will execute
@@ -181,7 +188,7 @@ def api_autoMode():
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
         # Break and return from function just below target altitude.
-        if vehicle.location.global_relative_frame.alt >= 10 * 0.95:
+        if vehicle.location.global_relative_frame.alt >= targetAltitude * 0.95:
             print("Reached target altitude")
             break
         time.sleep(1)
@@ -190,6 +197,7 @@ def api_autoMode():
     vehicle.airspeed = 3
 
     print("Going towards first point for 30 seconds ...")
+    global point1
     point1 = LocationGlobalRelative(39.9853521, 32.6448407, 20)
     vehicle.simple_goto(point1)
 
@@ -406,6 +414,10 @@ def goto_position_target_global_int(aLocation):
         0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink) 
     # send command to vehicle
     vehicle.send_mavlink(msg)
+
+t = Thread(target=tcount)
+t.daemon = True
+t.start()
 
 def main():
     app.config['TEMPLATE_AUTO_RELOAD'] = True

@@ -10928,3 +10928,60 @@ body {
 .dialogdemoBasicUsage .dialog-demo-prerendered md-checkbox {
     margin-bottom: 0;
 }
+
+#autoModePopupContent {
+    width: 1200px;
+    height: auto;
+}
+
+ol.carousel-indicators {
+    position: absolute;
+    bottom: 5px;
+    margin: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+}
+
+    ol.carousel-indicators li,
+    ol.carousel-indicators li.active {
+        width: 1rem;
+        height: 1rem;
+        margin: 0;
+        border-radius: 50%;
+        border: 0;
+        background: transparent;
+    }
+
+    ol.carousel-indicators li {
+        background: rgba(255,255,255,0.39);
+        margin-left: .5rem;
+        margin-right: .5rem;
+    }
+
+        ol.carousel-indicators li.active {
+            background: yellow;
+        }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    height: 100px;
+    width: 100px;
+    outline: black;
+    background-size: 100%, 100%;
+    border-radius: 50%;
+    border: 1px solid black;
+    background-image: none;
+}
+
+    .carousel-control-next-icon:after {
+        content: '>';
+        font-size: 55px;
+        color: red;
+    }
+
+    .carousel-control-prev-icon:after {
+        content: '<';
+        font-size: 55px;
+        color: red;
+    }

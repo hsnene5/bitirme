@@ -77,6 +77,40 @@
 //    map.getView().setCenter(ol.proj.transform([globmsg.lon, globmsg.lat], 'EPSG:4326', 'EPSG:3857'));
 //})
 
+var marker;
+var map;
+function mainMap() {
+   
+   
+    var mapProp = {
+        center: new google.maps.LatLng(0, 0),
+        zoom: 19,
+    };
+    map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+    map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+    //infoWindow = new google.maps.InfoWindow;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            //infoWindow.setPosition(pos);
+            //infoWindow.setContent('Location found.');
+            //infoWindow.open(map);
+            map.setCenter(pos);
+            var uluru = { lat: position.coords.latitude, lng: position.coords.longitude };
+            marker = new google.maps.Marker({ position: uluru, map: map })
+        }, function () {
+            handleLocationError(true, map.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, map.getCenter());
+    }
+
+}
 
 $('.popover-dismiss').popover({
     trigger: 'focus'
@@ -123,12 +157,27 @@ $('#guided').on('click', function () {
         });
 })
 
-$('#auto').on('click', function () {
+$('#autoStart').on('click', function () {
+    //var altitude = document.getElementById('autoAlt').value;
+    //var velocity = document.getElementById('autoVel').value;
+    //var point1Lan = document.getElementById('autoPoint1Lan').value;
+    //var point1Lon = doucument.getElementById('autoPoint1Lon').value;
+    //var point2Lan = document.getElementById('autoPoint2Lan').value;
+    //var point2Lon = doucument.getElementById('autoPoint2Lon').value;
+    var dataX = {
+        altitude : document.getElementById('autoAlt').value,
+        velocity : document.getElementById('autoVel').value,
+        point1Lan : document.getElementById('autoPoint1Lat').value,
+        point1Lon : document.getElementById('autoPoint1Lon').value,
+        point2Lan : document.getElementById('autoPoint2Lat').value,
+        point2Lon : document.getElementById('autoPoint2Lon').value
+    };
+    //console.log(altitude)
     $.ajax({
         method: 'PUT',
         url: '/api/auto',
         contentType: 'application/json',
-        data: JSON.stringify({ mode: 'GUIDED' }),
+        data: JSON.stringify({ dataX }),
     })
         .done(function (msg) {
             console.log('sent guided mode')
@@ -149,22 +198,17 @@ $('#land').on('click', function () {
 
 })
 
+var globmsg = null;
 
+var source = new EventSource('/api/sse/state');
+source.onmessage = function (event) {
+    var msg = JSON.parse(event.data);
 
-var modal = document.getElementById("autoModePopup");
-var span = document.getElementById("closeModal");
-
-
-var closeModal = document.getElementById("closeModal");
-// When the user clicks on <span> (x), close the modal
-/*closeModal.onclick = function () {
-    modal.style.display = "none";
+    $('#header-state').html('<b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2))
+    var uluru = { lat: msg.lat, lng: msg.lon };
+    var point1 = msg.point1;
+    var latlng = new google.maps.LatLng(msg.lat, msg.lon);
+    map.setCenter(latlng);
+    marker.setPosition(latlng);
+    var marker2 = new google.maps.Marker({ point1, map: map })
 }
-
-// THINK ABOUT THAT FEATURE
-// When the user clicks anywhere outside of the modal, close it
-/*window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}*/
