@@ -198,6 +198,19 @@ $('#land').on('click', function () {
 
 })
 
+$('#loiter').on('click', function () {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/loiter',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'LOITER' }),
+    })
+        .done(function (msg) {
+            console.log('sent loiter mode')
+        });
+
+})
+
 var globmsg = null;
 
 var source = new EventSource('/api/sse/state');

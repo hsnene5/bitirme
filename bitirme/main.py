@@ -85,12 +85,7 @@ def api_guided():
     """
     Arms vehicle and fly to aTargetAltitude.
     """
-    print (vehicle.location.global_relative_frame.alt)
-    #point1 = LocationGlobalRelative(-34.364114, 149.166022, 30)
-    #distance= get_distance_metres(vehicle.location, point1)   
-    print vehicle.location.global_frame
-    print (vehicle.location.global_relative_frame)
-    print (vehicle.location.local_frame)
+
 
     
     print("Basic pre-arm checks")
@@ -111,7 +106,7 @@ def api_guided():
 
 
     print("Taking off!")
-    vehicle.simple_takeoff(aTargetAltitude)  # Take off to target altitude
+    vehicle.simple_takeoff(20)  # Take off to target altitude
 
     # Wait until the vehicle reaches a safe height before processing the goto
     #  (otherwise the command after Vehicle.simple_takeoff will execute
@@ -124,20 +119,13 @@ def api_guided():
             break
         time.sleep(1)
 
-    #while True:
-    #    print(" Altitude: ", vehicle.location.global_relative_frame.alt)
-    #    # Break and return from function just below target altitude.
-    #    if vehicle.location.global_relative_frame.alt <=  0.5:
-    #        print("Landed safely")
-    #        break
-    #    time.sleep(1)
 
-    #print("Set default/target airspeed to 3")
-    #vehicle.airspeed = 3
+    print("set default/target airspeed to 3")
+    vehicle.airspeed = 3
 
-    #print("Going towards first point for 30 seconds ...")
-    #point1 = LocationGlobalRelative(39.9853521, 32.6448407, 20)
-    #vehicle.simple_goto(point1)
+    print("Going towards first point for 30 seconds ...")
+    point1 = LocationGlobalRelative(39.9853521, 32.6448407, 20)
+    vehicle.simple_goto(point1)
 
     return jsonify(ok=True)
 
@@ -242,6 +230,24 @@ def api_land():
         # Break and return from function just below target altitude.
         if vehicle.location.global_relative_frame.alt <=  0.5:
             print("Landed safely")
+            break
+        time.sleep(1)
+    # Close vehicle object before exiting script
+    print("Close vehicle object")
+    vehicle.close()
+    return jsonify(ok=True)
+
+@app.route("/api/loiter", methods=['POST', 'PUT'])
+def api_loiter():
+    
+    print("Loiter mode is on")
+    vehicle.mode = VehicleMode("LOITER")
+
+    while True:
+        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
+        # Break and return from function just below target altitude.
+        if vehicle.mode != VehicleMode("LOITER"):
+            print("Loiter mode is ended")
             break
         time.sleep(1)
     # Close vehicle object before exiting script
