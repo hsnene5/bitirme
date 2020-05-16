@@ -160,12 +160,14 @@ def api_autoMode():
     print("Arming motors")
     # Copter should arm in GUIDED mode
     vehicle.mode = VehicleMode("GUIDED")
-    vehicle.armed = True
 
-    # Confirm vehicle armed before attempting to take off
-    while not vehicle.armed:
-        print(" Waiting for arming...")
-        time.sleep(1)
+    # Check if the vehicle is already armed
+    if not (vehicle.armed):
+        vehicle.armed = True
+        # Confirm vehicle armed before attempting to take off
+        while not vehicle.armed:
+            print(" Waiting for arming...")
+            time.sleep(1)
 
     print("Taking off!")
     vehicle.simple_takeoff(targetAltitude)  # Take off to target altitude
