@@ -145,16 +145,24 @@ $('#simulation').on('click', function () {
         });
 })
 
-$('#guided').on('click', function () {
+$('#guidedStart').on('click', function () {
+    var dataY = {
+        altitude : document.getElementById('guidedAlt').value,
+        velocity : document.getElementById('guidedVel').value
+        //pointLat: document.getElementById('guidedPointLat').value,
+        //pointLon: document.getElementById('guidedPointLon').value
+    };
+    //console.log(altitude)
     $.ajax({
         method: 'PUT',
         url: '/api/guided',
         contentType: 'application/json',
         data: JSON.stringify({ mode: 'GUIDED' }),
     })
-        .done(function (msg) {
-            console.log('sent guided mode')
-        });
+         .done(function (msg) {
+             console.log('sent guided mode')
+         });
+
 })
 
 $('#autoStart').on('click', function () {
