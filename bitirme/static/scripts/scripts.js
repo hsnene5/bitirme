@@ -220,14 +220,14 @@ $('#loiter').on('click', function () {
 })
 
 $('#cancelStart').on('click', function () {
-    var ele = document.getElementsByName('gender'); 
+    var ele = document.getElementsByName('cancelradio'); 
     var selected;
               
     for(i = 0; i < ele.length; i++) { 
         if(ele[i].checked) 
             selected = ele[i].checked;
     } 
-} 
+
     //console.log(altitude)
     $.ajax({
         method: 'PUT',
