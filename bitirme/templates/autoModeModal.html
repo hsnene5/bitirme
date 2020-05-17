@@ -206,45 +206,43 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="modal fade " id="guidedModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                <div class="modal-content">
-                                    <ul class="nav justify-content-center">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" role="button">Active</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#">Link</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#">Link</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                                        </li>
-                                    </ul>
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                <div class="modal-content" id="guidedModePopupContent">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Auto Mode</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Select Destination</h6>
+                                        <div class="input-group">
+                                            <input id="autoPoint1Lat" type="text" class="form-control" placeholder="Latitude">
+                                            <input id="autoPoint1Lon" type="text" class="form-control" placeholder="Longtitude">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
+                                            </div>
+                                        </div>
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
+                                        <div class="input-group">
+                                            <input id="autoVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity">
+                                        </div>
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Set Altitude</h6>
+                                        <div class="input-group">
+                                            <input id="autoAlt" type="number" min="2" max="10" class="form-control" placeholder="Altitude">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button id="autoStart" type="button" class="btn btn-primary">Start</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <!--<div class="modal fade" id="guidedModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>-->
+
+                        
                         <div class="modal fade" id="rtlModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
