@@ -158,7 +158,7 @@
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="connect" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#cancelFlightPopup">Cancel</button>
+                            <button id="cancel" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#cancelFlightPopup">Cancel</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
@@ -312,19 +312,16 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <input type="radio" id="rtl" name="cancel" value="rtl">
-                                        <label for="rtl">RTL</label><br>
-                                        <input type="radio" id="land" name="cancel" value="land">
-                                        <label for="land">LAND</label><br>
-                                        <input type="radio" id="loiter" name="cancel" value="loiter">
-                                        <label for="loiter">LOITER</label>
-                                        <br>
-                                        <input type="radio" id="guided" name="cancel" value="guided">
-                                        <label for="guided">GUIDED</label>
+                                        <input type="radio" id="rtlradio" name="cancel" value="rtl">
+                                        <label for="rtlradio">RTL</label><br>
+                                        <input type="radio" id="landradio" name="cancel" value="land">
+                                        <label for="landradio">LAND</label><br>
+                                        <input type="radio" id="loiterradio" name="cancel" value="loiter">
+                                        <label for="loiterradio">LOITER</label>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                        <button type="button" id="cancelStart" class="btn btn-primary">Save changes</button>
                                     </div>
                                 </div>
                             </div>

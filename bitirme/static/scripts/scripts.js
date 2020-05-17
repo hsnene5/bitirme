@@ -219,6 +219,28 @@ $('#loiter').on('click', function () {
 
 })
 
+$('#cancelStart').on('click', function () {
+    var ele = document.getElementsByName('gender'); 
+    var selected;
+              
+    for(i = 0; i < ele.length; i++) { 
+        if(ele[i].checked) 
+            selected = ele[i].checked;
+    } 
+} 
+    //console.log(altitude)
+    $.ajax({
+        method: 'PUT',
+        url: '/api/cancel',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'CANCEL' }),
+    })
+         .done(function (msg) {
+             console.log('sent cancel mode')
+         });
+
+})
+
 var globmsg = null;
 
 var source = new EventSource('/api/sse/state');
