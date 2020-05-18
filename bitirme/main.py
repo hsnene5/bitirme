@@ -85,8 +85,14 @@ def api_guided():
     """
     Arms vehicle and fly to aTargetAltitude.
     """
+    parameter = request.json['dataY']
+    targetAltitude = float(parameter["altitude"])
+    #velocity = float(parameters["velocity"])
+    #lat = float(parameters["pointLat"])
+    #lon = float(parameters["pointLon"])
 
-
+    print(velocity)
+    print(targetAltitude)
     
     print("Basic pre-arm checks")
     # Don't try to arm until autopilot is ready
@@ -106,7 +112,7 @@ def api_guided():
 
 
     print("Taking off!")
-    vehicle.simple_takeoff(20)  # Take off to target altitude
+    vehicle.simple_takeoff(targetAltitude)  # Take off to target altitude
 
     # Wait until the vehicle reaches a safe height before processing the goto
     #  (otherwise the command after Vehicle.simple_takeoff will execute
@@ -114,7 +120,7 @@ def api_guided():
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
         # Break and return from function just below target altitude.
-        if vehicle.location.global_relative_frame.alt >= aTargetAltitude * 0.95:
+        if vehicle.location.global_relative_frame.alt >= targetAltitude * 0.95:
             print("Reached target altitude")
             break
         time.sleep(1)
@@ -124,7 +130,7 @@ def api_guided():
     vehicle.airspeed = 3
 
     print("Going towards first point for 30 seconds ...")
-    point1 = LocationGlobalRelative(39.9853521, 32.6448407, 20)
+    point1 = LocationGlobalRelative(39.9853521, 32.6448407, targetAltitude)
     vehicle.simple_goto(point1)
 
     return jsonify(ok=True)
@@ -257,6 +263,21 @@ def api_loiter():
     vehicle.close()
     return jsonify(ok=True)
 
+@app.route("/api/cancel", methods=['POST', 'PUT'])
+def api_cancel():
+
+    sel = request.json['selected']
+
+    
+    # if sel is loiter then
+    print("Loiter mode is on")
+    api_loiter()
+    # elif sel is rtl
+    print("RTL mode is on")
+    #api_rtl()
+   # elif sel is land
+    print("LAND mode is on")
+    api_land()
 
 
 
