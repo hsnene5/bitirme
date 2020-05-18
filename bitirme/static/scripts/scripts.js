@@ -157,7 +157,7 @@ $('#guidedStart').on('click', function () {
         method: 'PUT',
         url: '/api/guided',
         contentType: 'application/json',
-        data: JSON.stringify({ mode: 'GUIDED' }),
+        data: JSON.stringify({ dataY }),
     })
          .done(function (msg) {
              console.log('sent guided mode')
@@ -228,12 +228,12 @@ $('#cancelStart').on('click', function () {
             selected = ele[i].checked;
     } 
 
-    //console.log(altitude)
+    console.log(selected)
     $.ajax({
         method: 'PUT',
         url: '/api/cancel',
         contentType: 'application/json',
-        data: JSON.stringify({ mode: 'CANCEL' }),
+        data: JSON.stringify({ selected }),
     })
          .done(function (msg) {
              console.log('sent cancel mode')

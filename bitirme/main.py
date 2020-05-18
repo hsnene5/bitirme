@@ -87,12 +87,13 @@ def api_guided():
     """
     parameter = request.json['dataY']
     targetAltitude = float(parameter["altitude"])
+    velocity = float(parameter["velocity"])
     #velocity = float(parameters["velocity"])
     #lat = float(parameters["pointLat"])
     #lon = float(parameters["pointLon"])
 
-    print(velocity)
-    print(targetAltitude)
+    print velocity
+    print targetAltitude
     
     print("Basic pre-arm checks")
     # Don't try to arm until autopilot is ready
@@ -267,18 +268,18 @@ def api_loiter():
 def api_cancel():
 
     sel = request.json['selected']
-
+    print sel
     
     # if sel is loiter then
     print("Loiter mode is on")
-    api_loiter()
+    # api_loiter()
     # elif sel is rtl
     print("RTL mode is on")
     #api_rtl()
    # elif sel is land
     print("LAND mode is on")
     api_land()
-
+    return jsonify(ok=True)
 
 
 
