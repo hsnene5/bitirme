@@ -257,18 +257,15 @@ def api_loiter():
 @app.route("/api/cancel", methods=['POST', 'PUT'])
 def api_cancel():
 
-    sel = request.json['selected']
+    sel = request.json['dataSelected']
     print sel
     
-    # if sel is loiter then
-    print("Loiter mode is on")
-    # api_loiter()
-    # elif sel is rtl
-    print("RTL mode is on")
-    #api_rtl()
-   # elif sel is land
-    print("LAND mode is on")
-    api_land()
+    if(sel == "loiter"):
+       api_loiter();
+    elif(sel == "land"):
+        api_land();
+    elif(sel == "rtl"):
+        vehicle.mode = VehicleMode("RTL");
     return jsonify(ok=True)
 
 
