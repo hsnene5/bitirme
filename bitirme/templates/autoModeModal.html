@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
+    <link rel="icon" href="static/images/favicon.png" type="image/png" />
     <title>The UACT</title>
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
@@ -16,12 +17,12 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-
+    
 
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand" href="landingPage.html">The UACT</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
+        <a class="navbar-brand" href="autoModeModal.html">The UACT</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
             <i class="fas fa-bars"></i>
         </button><!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
@@ -50,7 +51,7 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="landingPage.html">
+                        <a class="nav-link" href="autoModeModal.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-helicopter"></i></div>
                             Dashboard
                         </a>
@@ -112,7 +113,7 @@
                         <li class="breadcrumb-item active">Drone</li>
 
                     </ol>
-                    <p id="header-state"><b>Armed:</b> ???<br><b>Mode:</b> ??? <br><b>Altitude:</b> ???</p>
+                    <p id="header-state"><b>Vehicle:</b> <br><b>Armed:</b> <br><b>Mode:</b> <br><b>Altitude:</b></p>
                     <script type="text/javascript" src="/static/scripts/scripts.js"></script>
                     <div class="row">
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
@@ -128,7 +129,7 @@
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="auto" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoModePopup">Auto</button>
+                            <button id="auto" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoModePopup" disabled>Auto</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
@@ -140,25 +141,25 @@
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="connect" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#rtlModePopup">RTL</button>
+                            <button id="rtl" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#rtlModePopup" disabled>RTL</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="loiter" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#stabilizeModePopup">Stabilize</button>
+                            <button id="loiter" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#stabilizeModePopup" >LOITER</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="land" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#landModePopup">Land</button>
+                            <button id="land" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#landModePopup" disabled>Land</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="cancel" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#cancelFlightPopup">Cancel</button>
+                            <button id="cancel" type="button" class="btn btn-lg btn-danger" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#cancelFlightPopup" disabled>Cancel</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
@@ -176,27 +177,27 @@
                                     <div class="modal-body">
                                         <h6 class="modal-title" id="exampleModalLongTitle">Select Point 1</h6>
                                         <div class="input-group">
-                                            <input id="autoPoint1Lat" type="text" class="form-control" placeholder="Latitude">
-                                            <input id="autoPoint1Lon" type="text" class="form-control" placeholder="Longtitude">
+                                            <input id="autoPoint1Lat" type="text" class="form-control" placeholder="Latitude" required>
+                                            <input id="autoPoint1Lon" type="text" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
                                             </div>
                                         </div>
                                         <h6 class="modal-title" id="exampleModalLongTitle">Select Point 2</h6>
                                         <div class="input-group">
-                                            <input id="autoPoint2Lat" type="text" class="form-control" placeholder="Latitude">
-                                            <input id="autoPoint2Lon" type="text" class="form-control" placeholder="Longtitude">
+                                            <input id="autoPoint2Lat" type="text" class="form-control" placeholder="Latitude" required>
+                                            <input id="autoPoint2Lon" type="text" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
                                             </div>
                                         </div>
                                         <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
                                         <div class="input-group">
-                                            <input id="autoVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity">
+                                            <input id="autoVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity" required>
                                         </div>
                                         <h6 class="modal-title" id="exampleModalLongTitle">Set Altitude</h6>
                                         <div class="input-group">
-                                            <input id="autoAlt" type="number" min="2" max="10" class="form-control" placeholder="Altitude">
+                                            <input id="autoAlt" type="number" min="2" max="10" class="form-control" placeholder="Altitude" required>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -219,20 +220,42 @@
                                     </div>
                                     <div class="modal-body">
                                         <h6 class="modal-title" id="exampleModalLongTitle">Select Destination</h6>
-                                        <!--<div class="input-group">
-                                            <input id="guidedPointLat" type="text" class="form-control" placeholder="Latitude">
-                                            <input id="guidedPointLon" type="text" class="form-control" placeholder="Longtitude">
+                                        <div class="input-group">
+                                            <input id="guidedPointLat" type="number" class="form-control" placeholder="Latitude">
+                                            <input id="guidedPointLon" type="number" class="form-control" placeholder="Longtitude">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
+                                                <button class="btn btn-outline-secondary" role="button" id="guidedSelectMapButton"><i class="fas fa-map mr-1"></i>Map</button>
                                             </div>
-                                        </div>-->
+                                        </div>
+                                        <div id="guidedSelectMap">
+                                            <script type="text/javascript" src="static/scripts/scripts.js"></script>
+                                        </div>
                                         <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
                                         <div class="input-group">
-                                            <input id="guidedVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity">
+                                            <input id="guidedVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity" required>
                                         </div>
                                         <h6 class="modal-title" id="exampleModalLongTitle">Set Altitude</h6>
                                         <div class="input-group">
-                                            <input id="guidedAlt" type="number" min="2" max="10" class="form-control" placeholder="Altitude">
+                                            <input id="guidedAlt" type="number" min="2" max="10" class="form-control" placeholder="Altitude" required>
+                                        </div>
+                                        <h6 class="modal-title" id="exampleModalLongTitle">After Arrival</h6>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="guidedRadio" id="guidedRtlRadio" value="RTL" checked>
+                                            <label class="form-check-label" for="exampleRadios1">
+                                                Return to Launch
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="guidedRadio" id="guidedLandRadio" value="LAND">
+                                            <label class="form-check-label" for="exampleRadios2">
+                                                Land
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="guidedRadio" id="guidedLoiterRadio" value="LOITER">
+                                            <label class="form-check-label" for="exampleRadios3">
+                                                Loiter
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -244,7 +267,7 @@
                         </div>
 
 
-                        
+
                         <div class="modal fade" id="rtlModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -334,41 +357,8 @@
                                 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js" type="text/javascript"></script>
                                 <!--<div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>-->
                                 <div id="googleMap" style="width:100%;height:400px;"></div>
-                                <!--<script>
-                    var openWeatherMapKey = "ABC..."
-                    function myMap() {
+                                <script src="static/scripts/scripts.js"></script>
 
-                        var mapProp = {
-                            center: new google.maps.LatLng(39.9853521, 32.6448407),
-                            zoom: 19,
-                        };
-                        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-                        map.setMapTypeId(google.maps.MapTypeId.HYBRID);
-                        infoWindow = new google.maps.InfoWindow;
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(function (position) {
-                                var pos = {
-                                    lat: position.coords.latitude,
-                                    lng: position.coords.longitude
-                                };
-
-                                infoWindow.setPosition(pos);
-                                infoWindow.setContent('Location found.');
-                                infoWindow.open(map);
-                                map.setCenter(pos);
-                                var uluru = { lat: position.coords.latitude, lng: position.coords.longitude };
-                                var marker = new google.maps.Marker({ position: uluru, map: map })
-                            }, function () {
-                                handleLocationError(true, infoWindow, map.getCenter());
-                            });
-                        } else {
-                            // Browser doesn't support Geolocation
-                            handleLocationError(false, infoWindow, map.getCenter());
-                        }
-
-                    }
-                </script>-->
-                                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASOO96jqmNjNeZ-yT1K27PjaMGR2vkSHk&callback=mainMap&language=en"></script>
                             </div>
                         </div>
                     </div>
@@ -388,6 +378,7 @@
             </footer>
         </div>
     </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASOO96jqmNjNeZ-yT1K27PjaMGR2vkSHk&callback=initMaps&language=en"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="static/scripts/scripts.js"></script>

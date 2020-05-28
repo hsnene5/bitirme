@@ -43,6 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="static\css\styles.css" />
+    <Content Include="static\images\camera.png" />
+    <Content Include="static\images\favicon.ico" />
+    <Content Include="static\images\favicon.png" />
+    <Content Include="static\scripts\map.js" />
     <Content Include="static\scripts\scripts.js" />
     <Content Include="templates\401.html" />
     <Content Include="templates\404.html" />
@@ -54,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="drone\" />
+    <Folder Include="static\images\" />
     <Folder Include="static\scripts\" />
     <Folder Include="templates\" />
     <Folder Include="static\" />

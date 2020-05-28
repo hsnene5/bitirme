@@ -17,6 +17,7 @@ from flask import render_template
 from flask import Flask, Response
 from datetime import datetime
 
+vehicleState = None
 vehicle = None
 point1 = None
 def sse_encode(obj, id=None):
@@ -28,13 +29,13 @@ def state_msg():
     if vehicle.armed == None:
         raise Exception('no armed info')
     return {
+        "vehicleState": vehicleState,
         "armed": vehicle.armed,
         "alt": vehicle.location.global_relative_frame.alt,
         "mode": vehicle.mode.name,
         "heading": vehicle.heading or 0,
         "lat": vehicle.location.global_relative_frame.lat,
         "lon": vehicle.location.global_relative_frame.lon,
-        "point1": point1
     }
 
 listeners_location = []
@@ -44,7 +45,7 @@ from threading import Thread
 import time
 def tcount():
     while True:
-        time.sleep(0.25)
+        time.sleep(0.10)
         try:
             msg = state_msg()
             for x in listeners_location:
@@ -88,10 +89,9 @@ def api_guided():
     parameter = request.json['dataY']
     targetAltitude = float(parameter["altitude"])
     velocity = float(parameter["velocity"])
-    #velocity = float(parameters["velocity"])
-    #lat = float(parameters["pointLat"])
-    #lon = float(parameters["pointLon"])
-
+    point1Lat = float(parameter["point1Lat"])
+    point1Lon = float(parameter["point1Lon"])
+    afterArrival = parameter["afterArrival"];
     print velocity
     print targetAltitude
     
@@ -131,26 +131,16 @@ def api_guided():
     vehicle.airspeed = 3
 
     print("Going towards first point for 30 seconds ...")
-    point1 = LocationGlobalRelative(39.9853521, 32.6448407, targetAltitude)
+    point1 = LocationGlobalRelative(point1Lat, point1Lon, targetAltitude)
     vehicle.simple_goto(point1)
-
+    time.sleep(30)
+    if afterArrival == "RTL":
+        vehicle.mode = VehicleMode("RTL")
+    if afterArrival == "LAND":
+        api_land()
+    if afterArrival == "LOITER":
+        vehicle.mode = VehicleMode("STABILIZE")
     return jsonify(ok=True)
-
-
-    #while True:
-    #    print(" Altitude: ", vehicle.location.global_relative_frame.alt)
-    #    # Break and return from function just below target altitude.
-    #    if vehicle.location.global_relative_frame.alt <=  0.5:
-    #        print("Landed safely")
-    #        break
-    #    time.sleep(1)
-
-    #print("Set default/target airspeed to 3")
-    #vehicle.airspeed = 3
-
-    #print("Going towards first point for 30 seconds ...")
-    #point1 = LocationGlobalRelative(39.9853521, 32.6448407, 20)
-    #vehicle.simple_goto(point1)
 
 @app.route("/api/auto", methods = ['POST','PUT'])
 def api_autoMode():
@@ -183,7 +173,7 @@ def api_autoMode():
     #  (otherwise the command after Vehicle.simple_takeoff will execute
     #   immediately).
     while True:
-        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
+         ##print(" Altitude: ", vehicle.location.global_relative_frame.alt)
         # Break and return from function just below target altitude.
         if vehicle.location.global_relative_frame.alt >= targetAltitude * 0.95:
             print("Reached target altitude")
@@ -255,9 +245,9 @@ def api_loiter():
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
         # Break and return from function just below target altitude.
-        if vehicle.mode != VehicleMode("LOITER"):
-            print("Loiter mode is ended")
-            break
+        ##if vehicle.mode != VehicleMode("LOITER"):
+          ##  print("Loiter mode is ended")
+            ##break
         time.sleep(1)
     # Close vehicle object before exiting script
     print("Close vehicle object")
@@ -305,7 +295,10 @@ def enableSimulation():
     global vehicle
     connection_string = sitl.connection_string()
     vehicle = connect(connection_string, wait_ready=True)
+    global vehicleState
+    vehicleState = 'Simulation'
     print 'simulation mode enabled'
+   
     return jsonify(ok=True)
 
 #t2 = Thread(target=connect_to_drone)

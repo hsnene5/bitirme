@@ -54,8 +54,6 @@
 //    })
 //});
 
-//var globmsg = null;
-
 //var source = new EventSource('/api/sse/state');
 //source.onmessage = function (event) {
 //    var msg = JSON.parse(event.data);
@@ -77,15 +75,74 @@
 //    map.getView().setCenter(ol.proj.transform([globmsg.lon, globmsg.lat], 'EPSG:4326', 'EPSG:3857'));
 //})
 
+var map2; //Will contain map object.
+var marker2 = false; ////Has the user plotted their location marker? 
+
+//Function called to initialize / create the map.
+//This is called when the page has loaded.
+function initMap() {
+
+    //The center location of our map.
+    var centerOfMap = new google.maps.LatLng(52.357971, -6.516758);
+
+    //Map options.
+    var options = {
+        //center: centerOfMap, //Set center.
+        zoom: 19 //The zoom value.
+    };
+
+    //Create the map object.
+    map2 = new google.maps.Map(document.getElementById('guidedSelectMap'), options);
+    map2.setMapTypeId(google.maps.MapTypeId.HYBRID);
+    //Listen for any clicks on the map.
+    google.maps.event.addListener(map2, 'click', function (event) {
+        //Get the location that the user clicked.
+        var clickedLocation = event.latLng;
+        //If the marker hasn't been added.
+        if (marker2 === false) {
+            //Create the marker.
+            marker2 = new google.maps.Marker({
+                position: clickedLocation,
+                map: map2,
+                draggable: true //make it draggable
+            });
+            //Listen for drag events!
+            google.maps.event.addListener(marker2, 'dragend', function (event) {
+                markerLocation();
+            });
+        } else {
+            //Marker has already been added, so just change its location.
+            marker2.setPosition(clickedLocation);
+        }
+        //Get the marker's location.
+        markerLocation();
+    });
+}
+
+function markerLocation() {
+    //Get location.
+    var currentLocation = marker2.getPosition();
+    //Add lat and lng values to a field that we can save.
+    document.getElementById('guidedPointLat').value = currentLocation.lat(); //latitude
+    document.getElementById('guidedPointLon').value = currentLocation.lng(); //longitude
+}
+
+function initMaps() {
+    mainMap();
+    initMap();
+}
+
+var iconBase = 'http://maps.google.com/mapfiles/kml/shapes/';
 var marker;
 var map;
 function mainMap() {
-   
-   
+
+
     var mapProp = {
         center: new google.maps.LatLng(0, 0),
         zoom: 19,
     };
+    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
     map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
     map.setMapTypeId(google.maps.MapTypeId.HYBRID);
     //infoWindow = new google.maps.InfoWindow;
@@ -96,12 +153,9 @@ function mainMap() {
                 lng: position.coords.longitude
             };
 
-            //infoWindow.setPosition(pos);
-            //infoWindow.setContent('Location found.');
-            //infoWindow.open(map);
             map.setCenter(pos);
-            var uluru = { lat: position.coords.latitude, lng: position.coords.longitude };
-            marker = new google.maps.Marker({ position: uluru, map: map })
+            var user = { lat: position.coords.latitude, lng: position.coords.longitude };
+            marker = new google.maps.Marker({ position: user, map: map, icon: iconBase + 'man.png' })
         }, function () {
             handleLocationError(true, map.getCenter());
         });
@@ -112,6 +166,23 @@ function mainMap() {
 
 }
 
+function enableFlightModes(connectionMode)
+{
+    document.getElementById('auto').disabled = false;
+    document.getElementById('guided').disabled = false;
+}
+
+function enableComponents(flightMode) {
+    if (flightMode == 'guided') {
+        document.getElementById('auto').disabled = true;
+    } else if (flightMode == 'auto') {
+        document.getElementById('guided').disabled = true;
+    }
+    document.getElementById('rtl').disabled = false;
+    document.getElementById('land').disabled = false;
+    document.getElementById('cancel').disabled = false;
+}
+
 $('.popover-dismiss').popover({
     trigger: 'focus'
 })
@@ -120,7 +191,8 @@ $(function () {
     $('[data-toggle="popover"]').popover()
 })
 
-$('#arm').on('click', function () {
+$('#connect').on('click', function () {
+    document.getElementById('simulation').disabled = true;
     $.ajax({
         method: 'PUT',
         url: '/api/arm',
@@ -130,10 +202,13 @@ $('#arm').on('click', function () {
         .done(function (msg) {
             console.log('sent arming message')
         });
-    document.getElementById("arm").innerHTML="armed";
+    //document.getElementById("connect").innerHTML="armed";
 })
 
 $('#simulation').on('click', function () {
+    console.log('simulation');
+    document.getElementById('connect').disabled = true;
+    enableFlightModes();
     $.ajax({
         method: 'PUT',
         url: '/api/simulation',
@@ -146,13 +221,43 @@ $('#simulation').on('click', function () {
 })
 
 $('#guidedStart').on('click', function () {
+    var guidedAltitude = document.getElementById('guidedAlt').value;
+    var guidedVelocity = document.getElementById('guidedVel').value;
+    var guidedPointLat = document.getElementById('guidedPointLat').value;
+    var guidedPointLon = document.getElementById('guidedPointLon').value;
+    var afterArrival = document.querySelector('input[name="guidedRadio"]:checked').value;
+    
+    if (guidedAltitude == "" && guidedVelocity == "") {
+        alert("Altitude and Velocity parameters cannot be empty!");
+        document.getElementById('guidedAlt').style["border"] = "2 px solid red";
+        document.getElementById('guidedVel').style["background-color"] = "red";
+        return false;
+    }
+
+    if (guidedAltitude == "") {
+        alert("Altitude parameter cannot be empty!");
+        document.getElementById('guidedAlt').style["background-color"] = "red";
+        return false;
+    }
+
+    if (guidedVelocity == "") {
+        alert("Velocity parameter cannot be empty!");
+        document.getElementById('guidedVel').style["background-color"] = "red";
+        return false;
+    }
+
     var dataY = {
         altitude : document.getElementById('guidedAlt').value,
-        velocity : document.getElementById('guidedVel').value
-        //pointLat: document.getElementById('guidedPointLat').value,
-        //pointLon: document.getElementById('guidedPointLon').value
+        velocity: document.getElementById('guidedVel').value,
+        point1Lat: guidedPointLat,
+        point1Lon: guidedPointLon,
+        afterArrival: afterArrival
     };
-    //console.log(altitude)
+
+    enableComponents('guided');
+    var uluru = { lat: parseFloat(guidedPointLat), lng: parseFloat(guidedPointLon) };
+    pointMarker = new google.maps.Marker({ position: uluru, map: map });
+
     $.ajax({
         method: 'PUT',
         url: '/api/guided',
@@ -166,12 +271,6 @@ $('#guidedStart').on('click', function () {
 })
 
 $('#autoStart').on('click', function () {
-    //var altitude = document.getElementById('autoAlt').value;
-    //var velocity = document.getElementById('autoVel').value;
-    //var point1Lan = document.getElementById('autoPoint1Lan').value;
-    //var point1Lon = doucument.getElementById('autoPoint1Lon').value;
-    //var point2Lan = document.getElementById('autoPoint2Lan').value;
-    //var point2Lon = doucument.getElementById('autoPoint2Lon').value;
     var dataX = {
         altitude : document.getElementById('autoAlt').value,
         velocity : document.getElementById('autoVel').value,
@@ -180,7 +279,7 @@ $('#autoStart').on('click', function () {
         point2Lan : document.getElementById('autoPoint2Lat').value,
         point2Lon : document.getElementById('autoPoint2Lon').value
     };
-    //console.log(altitude)
+
     $.ajax({
         method: 'PUT',
         url: '/api/auto',
@@ -241,17 +340,39 @@ $('#cancelStart').on('click', function () {
 
 })
 
-var globmsg = null;
+$('#guidedSelectMapButton').on('click', function () {
+    var elem = document.getElementById('guidedSelectMap');
+    if (elem.style.display == "block") {
+        elem.style.display = "none";
+    } else {
+        elem.style.display = "block";
+    }
+})
 
+
+
+//This function will get the marker's current location and then add the lat/long
+//values to our textfields so that we can save the location.
+
+
+
+
+var globmsg = null;
+var droneMarker = new google.maps.Marker({ map: map, icon: iconBase + 'heliport.png' });
 var source = new EventSource('/api/sse/state');
 source.onmessage = function (event) {
     var msg = JSON.parse(event.data);
 
-    $('#header-state').html('<b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2))
+    $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState +'<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2))
     var uluru = { lat: msg.lat, lng: msg.lon };
     var point1 = msg.point1;
     var latlng = new google.maps.LatLng(msg.lat, msg.lon);
     map.setCenter(latlng);
-    marker.setPosition(latlng);
-    var marker2 = new google.maps.Marker({ point1, map: map })
+    map2.setCenter(latlng);
+    map.setCenter(latlng);
+    //droneMarker; 
+    droneMarker.setPosition(latlng);
+    //var marker2 = new google.maps.Marker({ point1, map: map })
 }
+
+//google.maps.event.addDomListener(window, 'load', mainMap);
