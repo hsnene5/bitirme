@@ -222,18 +222,18 @@ $('#loiter').on('click', function () {
 $('#cancelStart').on('click', function () {
     var ele = document.getElementsByName('cancelradio'); 
     var selected;
-              
     for(i = 0; i < ele.length; i++) { 
         if(ele[i].checked) 
-            selected = ele[i].checked;
+            selected = ele[i];
     } 
-
     console.log(selected)
+    var dataSelected = selected.value;
+
     $.ajax({
         method: 'PUT',
         url: '/api/cancel',
         contentType: 'application/json',
-        data: JSON.stringify({ selected }),
+        data: JSON.stringify({ dataSelected }),
     })
          .done(function (msg) {
              console.log('sent cancel mode')
