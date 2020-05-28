@@ -105,7 +105,6 @@ def api_guided():
     # Copter should arm in GUIDED mode
     vehicle.mode = VehicleMode("GUIDED")
     vehicle.armed = True
-    aTargetAltitude = 20
     # Confirm vehicle armed before attempting to take off
     while not vehicle.armed:
         print(" Waiting for arming...")
@@ -241,7 +240,7 @@ def api_loiter():
     
     print("Loiter mode is on")
     vehicle.mode = VehicleMode("LOITER")
-
+    vehicle.location.global_relative_frame.alt = 3
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
         # Break and return from function just below target altitude.
@@ -257,6 +256,8 @@ def api_loiter():
 @app.route("/api/cancel", methods=['POST', 'PUT'])
 def api_cancel():
 
+    
+
     sel = request.json['dataSelected']
     print sel
     
@@ -265,7 +266,7 @@ def api_cancel():
     elif(sel == "land"):
         api_land();
     elif(sel == "rtl"):
-        vehicle.mode = VehicleMode("RTL");
+        vehicle.mode = VehicleMode("CIRCLE");
     return jsonify(ok=True)
 
 
