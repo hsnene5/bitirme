@@ -88,7 +88,7 @@ function initMap() {
     //Map options.
     var options = {
         //center: centerOfMap, //Set center.
-        zoom: 19 //The zoom value.
+        zoom: 14 //The zoom value.
     };
 
     //Create the map object.
@@ -104,7 +104,7 @@ function initMap() {
             marker2 = new google.maps.Marker({
                 position: clickedLocation,
                 map: map2,
-                draggable: true //make it draggable
+                draggable: true, //make it draggable
             });
             //Listen for drag events!
             google.maps.event.addListener(marker2, 'dragend', function (event) {
@@ -137,11 +137,11 @@ var marker;
 var map;
 function mainMap() {
 
-
     var mapProp = {
         center: new google.maps.LatLng(0, 0),
         zoom: 19,
     };
+
     var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
     map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
     map.setMapTypeId(google.maps.MapTypeId.HYBRID);
@@ -154,6 +154,7 @@ function mainMap() {
             };
 
             map.setCenter(pos);
+
             var user = { lat: position.coords.latitude, lng: position.coords.longitude };
             marker = new google.maps.Marker({ position: user, map: map, icon: iconBase + 'man.png' })
         }, function () {
@@ -319,14 +320,6 @@ $('#loiter').on('click', function () {
 })
 
 $('#cancelStart').on('click', function () {
-    /*var ele = document.getElementsByName('cancelradio'); 
-    var selected;
-    for(i = 0; i < ele.length; i++) { 
-        if(ele[i].checked) 
-            selected = ele[i];
-    } 
-    console.log(selected)
-    var dataSelected = selected.value;*/
 
     var dataSelected = document.querySelector('input[name="cancelRadio"]:checked').value;
 
@@ -353,14 +346,17 @@ $('#guidedSelectMapButton').on('click', function () {
 
 
 
-//This function will get the marker's current location and then add the lat/long
-//values to our textfields so that we can save the location.
-
-
-
-
 var globmsg = null;
 var droneMarker = new google.maps.Marker({ map: map, icon: iconBase + 'heliport.png' });
+var rangeCircle = rangeCircle = new google.maps.Circle({
+    strokeColor: '#1ec904',
+    strokeOpacity: 0.8,
+    fill: false,
+    strokeWeight: 2,
+    map: map2,
+    clickable: false,
+    radius: 1000
+});
 var source = new EventSource('/api/sse/state');
 source.onmessage = function (event) {
     var msg = JSON.parse(event.data);
@@ -372,7 +368,8 @@ source.onmessage = function (event) {
     map.setCenter(latlng);
     map2.setCenter(latlng);
     map.setCenter(latlng);
-    //droneMarker; 
+    //droneMarker;
+    rangeCircle.setCenter(latlng);
     droneMarker.setPosition(latlng);
     //var marker2 = new google.maps.Marker({ point1, map: map })
 }
