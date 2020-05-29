@@ -88,7 +88,7 @@ function initMap() {
     //Map options.
     var options = {
         //center: centerOfMap, //Set center.
-        zoom: 14 //The zoom value.
+        zoom: 13 //The zoom value.
     };
 
     //Create the map object.
@@ -122,6 +122,11 @@ function initMap() {
 function markerLocation() {
     //Get location.
     var currentLocation = marker2.getPosition();
+    console.log(google.maps.geometry.spherical.computeDistanceBetween(currentLocation, rangeCircle.center));
+    if (google.maps.geometry.spherical.computeDistanceBetween(currentLocation, rangeCircle.center) > rangeCircle.radius) {
+        alert("Too far away");
+        marker2.setPosition(rangeCircle.center);
+    }
     //Add lat and lng values to a field that we can save.
     document.getElementById('guidedPointLat').value = currentLocation.lat(); //latitude
     document.getElementById('guidedPointLon').value = currentLocation.lng(); //longitude
@@ -185,11 +190,13 @@ function enableComponents(flightMode) {
 }
 
 $('.popover-dismiss').popover({
-    trigger: 'focus'
+    trigger: 'hover'
 })
 
 $(function () {
-    $('[data-toggle="popover"]').popover()
+    $('[data-toggle="popover"]').popover({
+        trigger:'hover'
+    });
 })
 
 $('#connect').on('click', function () {
@@ -355,7 +362,7 @@ var rangeCircle = rangeCircle = new google.maps.Circle({
     strokeWeight: 2,
     map: map2,
     clickable: false,
-    radius: 1000
+    radius: 1500
 });
 var source = new EventSource('/api/sse/state');
 source.onmessage = function (event) {
