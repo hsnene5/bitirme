@@ -176,7 +176,6 @@ function selectNewLocation() {
     if (document.getElementById("secondPoint").style.display == 'none') {
         document.getElementById("exampleModalLongTitle2").style.display = 'block';
         document.getElementById("secondPoint").style.display = 'flex';
-
     }
     else if (document.getElementById("thirdPoint").style.display == 'none') {
         document.getElementById("exampleModalLongTitle3").style.display = 'block';
@@ -301,7 +300,11 @@ $('#autoStart').on('click', function () {
         point1Lan : document.getElementById('autoPoint1Lat').value,
         point1Lon : document.getElementById('autoPoint1Lon').value,
         point2Lan : document.getElementById('autoPoint2Lat').value,
-        point2Lon : document.getElementById('autoPoint2Lon').value
+        point2Lon: document.getElementById('autoPoint2Lon').value,
+        point2Lan: document.getElementById('autoPoint3Lat').value,
+        point2Lon: document.getElementById('autoPoint3Lon').value,
+        point2Lan: document.getElementById('autoPoint4Lat').value,
+        point2Lon: document.getElementById('autoPoint4Lon').value
     };
 
     $.ajax({

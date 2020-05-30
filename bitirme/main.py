@@ -144,8 +144,25 @@ def api_guided():
 @app.route("/api/auto", methods = ['POST','PUT'])
 def api_autoMode():
     parameters = request.json['dataX']
-    targetAltitude = float(parameters["altitude"])
-    
+    targetAltitude = float(parameter["autoAlt"])
+    velocity = float(parameter["autoVel"])
+    point1Lat = float(parameter["autoPoint1Lat"])
+    point1Lon = float(parameter["autoPoint1Lon"])    
+    point2Lat = float(parameter["autoPoint2Lat"])
+    point2Lon = float(parameter["autoPoint2Lon"])   
+    point3Lat = float(parameter["autoPoint3Lat"])
+    point3Lon = float(parameter["autoPoint3Lon"])   
+    point4Lat = float(parameter["autoPoint4Lat"])
+    point4Lon = float(parameter["autoPoint4Lon"])  
+
+    numberOfPoints;
+    if(point2Lat != null):
+        numberOfPoints=2
+        if(point3Lat != null):
+            numberOfPoints=3
+            if(point4Lat != null):
+                numberOfPoints=4;
+
     print(targetAltitude)
     print("Basic pre-arm checks")
     # Don't try to arm until autopilot is ready
@@ -180,7 +197,7 @@ def api_autoMode():
         time.sleep(1)
 
     print("Set default/target airspeed to 3")
-    vehicle.airspeed = 3
+    vehicle.airspeed = velocity
 
     print("Going towards first point for 30 seconds ...")
     global point1
