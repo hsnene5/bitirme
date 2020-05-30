@@ -174,16 +174,17 @@ function mainMap() {
 
 function selectNewLocation() {
     if (document.getElementById("secondPoint").style.display == 'none') {
-        id = "secondPoint";
-        document.getElementById(id).style.display = 'block';
+        document.getElementById("exampleModalLongTitle2").style.display = 'block';
+        document.getElementById("secondPoint").style.display = 'flex';
+
     }
     else if (document.getElementById("thirdPoint").style.display == 'none') {
-        id = "thirdPoint";
-        document.getElementById(id).style.display = 'block';
+        document.getElementById("exampleModalLongTitle3").style.display = 'block';
+        document.getElementById("thirdPoint").style.display = 'flex';
     }
     else if (document.getElementById("fourthPoint").style.display == 'none') {
-        id = "fourthPoint";
-        document.getElementById(id).style.display = 'block';
+        document.getElementById("exampleModalLongTitle4").style.display = 'block';
+        document.getElementById("fourthPoint").style.display = 'flex';
     }
 }
 
