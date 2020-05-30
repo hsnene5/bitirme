@@ -172,6 +172,21 @@ function mainMap() {
 
 }
 
+function selectNewLocation() {
+    if (document.getElementById("secondPoint").style.display == 'none') {
+        id = "secondPoint";
+        document.getElementById(id).style.display = 'block';
+    }
+    else if (document.getElementById("thirdPoint").style.display == 'none') {
+        id = "thirdPoint";
+        document.getElementById(id).style.display = 'block';
+    }
+    else if (document.getElementById("fourthPoint").style.display == 'none') {
+        id = "fourthPoint";
+        document.getElementById(id).style.display = 'block';
+    }
+}
+
 function enableFlightModes(connectionMode)
 {
     document.getElementById('auto').disabled = false;
