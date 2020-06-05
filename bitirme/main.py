@@ -22,6 +22,7 @@ from array import *
 vehicleState = None
 vehicle = None
 point1 = None
+spinner = None
 def sse_encode(obj, id=None):
     return "data: %s\n\n" % json.dumps(obj)
 
@@ -38,6 +39,7 @@ def state_msg():
         "heading": vehicle.heading or 0,
         "lat": vehicle.location.global_relative_frame.lat,
         "lon": vehicle.location.global_relative_frame.lon,
+        "spinner" : spinner
     }
 
 listeners_location = []
@@ -329,6 +331,8 @@ def connect_to_drone():
 
 @app.route("/api/simulation", methods=['POST','PUT'])
 def enableSimulation():
+    global spinner
+    spinner = True
     parameter = request.json['homeLocation']
     homeLocationLat = float(parameter["lat"])
     homeLocationLng = float(parameter["lng"])
@@ -338,14 +342,22 @@ def enableSimulation():
     sitl = SITL()
     sitl.download('copter','3.3', verbose=True)
     sitl_args = ['-I0', '--model', 'quad', homeArg]
-    sitl.launch(sitl_args,await_ready=False, restart = False)
+    sitl.launch(sitl_args,await_ready=True, restart = True)
     connection_string = 'tcp:127.0.0.1:5760'
-    vehicle = connect(connection_string, wait_ready=True)
-    
+
+    while not vehicle:
+            try:
+                vehicle = connect(connection_string, wait_ready=True, baud=57600)
+            except Exception as e:
+                print 'waiting for connection... (%s)' % str(e)
+                time.sleep(2)
+
     global vehicleState
     vehicleState = 'Simulation'
+    spinner = False
     print 'simulation mode enabled'
-   
+    
+    
     return jsonify(ok=True)
 
 #t2 = Thread(target=connect_to_drone)

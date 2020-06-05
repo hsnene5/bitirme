@@ -106,6 +106,11 @@
 
         <div id="layoutSidenav_content">
             <main>
+                <div id="spinner">
+                    <img id="loading-image" src="static/images/spinner2.gif" alt="Loading..." />
+                    <br />
+                    <img id="loading-image2" src="static/images/spinner.gif" alt="Loading..." />
+                </div>
                 <div class="container-fluid">
                     <h1 class="mt-4">Drone</h1>
 
@@ -186,10 +191,10 @@
                                             </div>
                                         </div>
                                         <div id="simulationSelectMap">
-                                            
+
                                         </div>
                                     </div>
-                                   
+
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button id="simulationStart" type="button" class="btn btn-primary">Start</button>
@@ -215,7 +220,7 @@
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
                                             </div>
                                         </div>
-                                        <br />                                  
+                                        <br />
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle2">Point 2</h6>
                                         <div style="display:none" id="secondPoint" class="input-group">
                                             <br />
@@ -263,71 +268,71 @@
                         <div class="modal fade " id="guidedModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content" id="guidedModePopupContent">
-                                    
+
                                     <div class="modal-header">
 
                                         <!-- <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" data-animation="true" id="toast" style="position:absolute" >
 
-        <div class="toast-header">
-            <i class="fas fa-exclamation-circle">  </i>
-            <strong class="mr-auto">    Location Error</strong>
+                                <div class="toast-header">
+                                    <i class="fas fa-exclamation-circle">  </i>
+                                    <strong class="mr-auto">    Location Error</strong>
 
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="toast-body">
-            Selected location is not in the range.<br /> Please select another location.
-        </div>
-    </div>-->
-                                        
+                                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="toast-body">
+                                    Selected location is not in the range.<br /> Please select another location.
+                                </div>
+                            </div>-->
+
                                         <h5 class="modal-title" id="exampleModalLongTitle">Guided Mode</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                        <div class="modal-body">
+                                    <div class="modal-body">
 
-                                            <h6 class="modal-title" id="exampleModalLongTitle">Select Destination</h6>
-                                            <div class="input-group">
-                                                <input id="guidedPointLat" type="number" class="form-control" placeholder="Latitude">
-                                                <input id="guidedPointLon" type="number" class="form-control" placeholder="Longtitude">
-                                                <div class="input-group-prepend">
-                                                    <button class="btn btn-outline-secondary" role="button" id="guidedSelectMapButton"><i class="fas fa-map-marked-alt"></i> Map</button>
-                                                    <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
-                                                </div>
-                                            </div>
-
-                                            <div id="guidedSelectMap">
-
-                                                <script type="text/javascript" src="static/scripts/scripts.js"></script>
-
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
-                                                    <input id="guidedVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity" required>
-                                                </div>
-                                                <div class="col">
-                                                    <h6 class="modal-title" id="exampleModalLongTitle">Set Altitude</h6>
-                                                    <input id="guidedAlt" type="number" min="2" max="20" class="form-control" placeholder="Altitude" required>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h6 class="modal-title" id="exampleModalLongTitle">After Arrival</h6>
-                                                <div class="form-row">
-                                                    <label class="radio-inline col-xl-4"> <input type="radio" name="guidedRadio" id="guidedRtlRadio" value="RTL" checked> Return to Launch </label>
-                                                    <label class="radio-inline col-xl-4"> <input type="radio" name="guidedRadio" id="guidedLandRadio" value="LAND"> Land </label>
-                                                    <label class="radio-inline col-xl-4"> <input type="radio" name="guidedRadio" id="guidedLoiterRadio" value="LOITER"> Loiter </label>
-                                                </div>
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Select Destination</h6>
+                                        <div class="input-group">
+                                            <input id="guidedPointLat" type="number" class="form-control" placeholder="Latitude">
+                                            <input id="guidedPointLon" type="number" class="form-control" placeholder="Longtitude">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-secondary" role="button" id="guidedSelectMapButton"><i class="fas fa-map-marked-alt"></i> Map</button>
+                                                <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
                                             </div>
                                         </div>
 
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button id="guidedStart" type="button" class="btn btn-primary"><i class="fas fa-flag-checkered"></i> Start</button>
+                                        <div id="guidedSelectMap">
+
+                                            <script type="text/javascript" src="static/scripts/scripts.js"></script>
+
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
+                                                <input id="guidedVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity" required>
+                                            </div>
+                                            <div class="col">
+                                                <h6 class="modal-title" id="exampleModalLongTitle">Set Altitude</h6>
+                                                <input id="guidedAlt" type="number" min="2" max="20" class="form-control" placeholder="Altitude" required>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h6 class="modal-title" id="exampleModalLongTitle">After Arrival</h6>
+                                            <div class="form-row">
+                                                <label class="radio-inline col-xl-4"> <input type="radio" name="guidedRadio" id="guidedRtlRadio" value="RTL" checked> Return to Launch </label>
+                                                <label class="radio-inline col-xl-4"> <input type="radio" name="guidedRadio" id="guidedLandRadio" value="LAND"> Land </label>
+                                                <label class="radio-inline col-xl-4"> <input type="radio" name="guidedRadio" id="guidedLoiterRadio" value="LOITER"> Loiter </label>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button id="guidedStart" type="button" class="btn btn-primary"><i class="fas fa-flag-checkered"></i> Start</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
