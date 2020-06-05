@@ -123,7 +123,7 @@
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="simulation" type="button" class="btn btn-lg btn-primary">Simulation</button>
+                            <button id="simulation" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#simulationPopup">Simulation</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
@@ -147,7 +147,7 @@
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="loiter" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#stabilizeModePopup" >LOITER</button>
+                            <button id="loiter" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#stabilizeModePopup">LOITER</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
@@ -165,6 +165,38 @@
                             </a>
                         </div>
                         <!-- Modal -->
+                        <div class="modal fade" id="simulationPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                <div class="modal-content" id="simulationPopupContent">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Simulation</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Select Home Location</h6>
+                                        <div class="input-group">
+                                            <input id="simulationHomeLat" type="text" class="form-control" placeholder="Latitude" required>
+                                            <input id="simulationHomeLon" type="text" class="form-control" placeholder="Longtitude" required>
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-secondary" role="button" id="simulationUserLocation"><i class="fas fa-map-marker-alt"></i></button>
+                                                <button class="btn btn-outline-secondary" role="button" id="simulationSelectMapButton"><i class="fas fa-map mr-1"></i>Map</button>
+                                                <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
+                                            </div>
+                                        </div>
+                                        <div id="simulationSelectMap">
+                                            
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button id="simulationStart" type="button" class="btn btn-primary">Start</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="modal fade" id="autoModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content" id="autoModePopupContent">
@@ -228,8 +260,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="modal fade " id="guidedModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content" id="guidedModePopupContent">

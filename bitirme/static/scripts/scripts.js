@@ -1,86 +1,13 @@
-/*!
-    * Start Bootstrap - SB Admin v6.0.0 (https://startbootstrap.com/templates/sb-admin)
-    * Copyright 2013-2020 Start Bootstrap
-    * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-sb-admin/blob/master/LICENSE)
-    */
-
-
-
-    /*(function($) {
-    "use strict";
-
-    // Add active state to sidbar nav links
-    var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
-        $("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function() {
-            if (this.href === path) {
-                $(this).addClass("active");
-            }
-        });
-
-    // Toggle the side navigation
-    $("#sidebarToggle").on("click", function(e) {
-        e.preventDefault();
-        $("body").toggleClass("sb-sidenav-toggled");
-    });
-
-    
-
-    
-})(jQuery);*/
-
-//var map = new ol.Map({
-//    // controls: [],
-//    // interactions : ol.interaction.defaults({
-//    //   doubleClickZoom: false,
-//    //   dragZoom: false,
-//    //   keyboardZoom: false,
-//    //   mouseWheelZoom: false,
-//    //   pinchZoom: false,
-//    // }),
-//    target: 'googleMap',
-//    renderer: 'canvas', // Force the renderer to be used
-//    layers: [
-//        new ol.layer.Tile({
-//            source: new ol.source.BingMaps({
-//                key: 'AnGHr16zmRWug0WA8mJKrMg5g6W4GejzGPBdP-wQ4Gqqw-yHNqsHmYPYh1VUOR1q',
-//                imagerySet: 'AerialWithLabels',
-//                // imagerySet: 'Road',
-//            })
-//        })
-//    ],
-//    view: new ol.View({
-//        center: ol.proj.transform([39.9853521, 32.6448407], 'EPSG:4326', 'EPSG:3857'),
-//        zoom: 18
-//    })
-//});
-
-//var source = new EventSource('/api/sse/state');
-//source.onmessage = function (event) {
-//    var msg = JSON.parse(event.data);
-//    if (!globmsg) {
-//        console.log('FIRST', msg);
-//        $('body').removeClass('disabled')
-//        map.getView().setCenter(ol.proj.transform([msg.lon, msg.lat], 'EPSG:4326', 'EPSG:3857'));
-//    }
-//    globmsg = msg;
-
-//    //$('#header-state').html('<b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2))
-//    //$('#header-arm').prop('disabled', msg.armed);
-
-//    //overlay.setPosition(ol.proj.transform([msg.lon, msg.lat], 'EPSG:4326', 'EPSG:3857'));
-//    //$(overlay.getElement()).find('.heading').css('-webkit-transform', 'rotate(' + ((msg.heading) + 45) + 'deg)')
-//};
-
-//$('#header-center').on('click', function () {
-//    map.getView().setCenter(ol.proj.transform([globmsg.lon, globmsg.lat], 'EPSG:4326', 'EPSG:3857'));
-//})
 
 var map2; //Will contain map object.
 var marker2 = false; ////Has the user plotted their location marker? 
 
+var simMap;
+var simMarker = false;
+
 //Function called to initialize / create the map.
 //This is called when the page has loaded.
-function initMap() {
+function guidedMap() {
 
     //The center location of our map.
     var centerOfMap = new google.maps.LatLng(52.357971, -6.516758);
@@ -115,11 +42,66 @@ function initMap() {
             marker2.setPosition(clickedLocation);
         }
         //Get the marker's location.
-        markerLocation();
+        guidedMarkerLocation();
     });
 }
 
-function markerLocation() {
+function simulationMap() {
+
+    //The center location of our map.
+    var mapProp = {
+        
+        zoom: 14,
+    };
+
+    simMap = new google.maps.Map(document.getElementById("simulationSelectMap"), mapProp);
+    simMap.setMapTypeId(google.maps.MapTypeId.HYBRID);
+    //infoWindow = new google.maps.InfoWindow;
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            simMap.setCenter(pos);
+
+            var user = { lat: position.coords.latitude, lng: position.coords.longitude };
+            marker = new google.maps.Marker({ position: user, map: simMap, icon: iconBase + 'man.png' });
+            simMarker = new google.maps.Marker({ position: user, map: simMap });
+        }, function () {
+            handleLocationError(true, simMap.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, simMap.getCenter());
+    }
+    google.maps.event.addListener(simMap, 'click', function (event) {
+        //Get the location that the user clicked.
+        var clickedLocation = event.latLng;
+        //If the marker hasn't been added.
+        if (simMarker === false) {
+            //Create the marker.
+            simMarker = new google.maps.Marker({
+                position: clickedLocation,
+                map: simMap,
+                draggable: true, //make it draggable
+            });
+            //Listen for drag events!
+            google.maps.event.addListener(simMarker, 'dragend', function (event) {
+                 simulationMarkerLocation();
+            });
+        } else {
+            //Marker has already been added, so just change its location.
+            simMarker.setPosition(clickedLocation);
+        }
+        //Get the marker's location.
+        simulationMarkerLocation();
+    });
+}
+
+function guidedMarkerLocation() {
     //Get location.
     var currentLocation = marker2.getPosition();
     if (google.maps.geometry.spherical.computeDistanceBetween(currentLocation, rangeCircle.center) > rangeCircle.radius) {
@@ -134,9 +116,17 @@ function markerLocation() {
     document.getElementById('guidedPointLon').value = currentLocation.lng(); //longitude
 }
 
+function simulationMarkerLocation() {
+    var currentLocation = simMarker.getPosition();
+
+    document.getElementById('simulationHomeLat').value = currentLocation.lat(); //latitude
+    document.getElementById('simulationHomeLon').value = currentLocation.lng(); //longitude
+}
+
 function initMaps() {
     mainMap();
-    initMap();
+    guidedMap();
+    simulationMap();
 }
 
 var iconBase = 'http://maps.google.com/mapfiles/kml/shapes/';
@@ -230,15 +220,19 @@ $('#connect').on('click', function () {
     //document.getElementById("connect").innerHTML="armed";
 })
 
-$('#simulation').on('click', function () {
-    console.log('simulation');
+$('#simulationStart').on('click', function () {
     document.getElementById('connect').disabled = true;
     enableFlightModes();
+    var simMarkerLocation = simMarker.getPosition();
+    var homeLocation = {
+        lng : simMarkerLocation.lng(),
+        lat : simMarkerLocation.lat(),
+    };
     $.ajax({
         method: 'PUT',
         url: '/api/simulation',
         contentType: 'application/json',
-        data: JSON.stringify({ arm: true }),
+        data: JSON.stringify({ homeLocation }),
     })
         .done(function (msg) {
             console.log('sent arming message')
@@ -363,8 +357,8 @@ $('#cancelStart').on('click', function () {
 
 })
 
-$('#guidedSelectMapButton').on('click', function () {
-    var elem = document.getElementById('guidedSelectMap');
+$('#simulationSelectMapButton').on('click', function () {
+    var elem = document.getElementById('simulationSelectMap');
     if (elem.style.display == "block") {
         elem.style.display = "none";
     } else {
@@ -372,11 +366,47 @@ $('#guidedSelectMapButton').on('click', function () {
     }
 })
 
+$('#simulationUserLocation').on('click', function () {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
 
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            simMap.setCenter(pos);
+
+            if (simMarker != null) {
+                simMarker.setPosition(pos);
+            }
+            
+            document.getElementById('simulationHomeLat').value = pos.lat;
+            document.getElementById('simulationHomeLon').value = pos.lng;
+            
+        }, function () {
+            handleLocationError(true, simMap.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, simMap.getCenter());
+    }
+})
+
+
+$('#guidedSelectMapButton').on('click', function () {
+    var elem = document.getElementById('guidedSelectMap');
+    if (elem.style.display == "block") {
+        elem.style.display = "none";
+        console.log("block")
+    } else {
+        elem.style.display = "block";
+    }
+})
 
 var globmsg = null;
 var droneMarker = new google.maps.Marker({ map: map, icon: iconBase + 'heliport.png' });
-var rangeCircle = rangeCircle = new google.maps.Circle({
+var rangeCircle = new google.maps.Circle({
     strokeColor: '#1ec904',
     strokeOpacity: 0.8,
     fill: false,

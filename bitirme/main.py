@@ -329,11 +329,19 @@ def connect_to_drone():
 
 @app.route("/api/simulation", methods=['POST','PUT'])
 def enableSimulation():
-    import dronekit_sitl
-    sitl = dronekit_sitl.start_default()
+    parameter = request.json['homeLocation']
+    homeLocationLat = float(parameter["lat"])
+    homeLocationLng = float(parameter["lng"])
+    homeArg = '--home='+str(homeLocationLat)+','+str(homeLocationLng)+',0,180'
+    from dronekit_sitl import SITL
     global vehicle
-    connection_string = sitl.connection_string()
+    sitl = SITL()
+    sitl.download('copter','3.3', verbose=True)
+    sitl_args = ['-I0', '--model', 'quad', homeArg]
+    sitl.launch(sitl_args,await_ready=False, restart = False)
+    connection_string = 'tcp:127.0.0.1:5760'
     vehicle = connect(connection_string, wait_ready=True)
+    
     global vehicleState
     vehicleState = 'Simulation'
     print 'simulation mode enabled'
