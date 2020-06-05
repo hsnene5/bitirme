@@ -288,17 +288,27 @@ $('#simulationStart').on('click', function () {
     enableFlightModes();
     var simMarkerLocation = simMarker.getPosition();
     var homeLocation = {
-        lng : simMarkerLocation.lng(),
-        lat : simMarkerLocation.lat(),
+        lng: simMarkerLocation.lng(),
+        lat: simMarkerLocation.lat(),
     };
+
+    $('#simulation').prop("disabled", true);
+    $('#simulation').html(
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+    );
+    $("#spinner").css("display", "block");
     $.ajax({
         method: 'PUT',
         url: '/api/simulation',
         contentType: 'application/json',
         data: JSON.stringify({ homeLocation }),
+        success: function () {
+            $('#simulation').html("Simulation");
+            $("#spinner").css("display", "none");
+        }
     })
         .done(function (msg) {
-            console.log('sent arming message')
+            console.log('sent arming message');
         });
 })
 
@@ -491,10 +501,14 @@ var rangeCircle = new google.maps.Circle({
     clickable: false,
     radius: 1500
 });
+
 var source = new EventSource('/api/sse/state');
 source.onmessage = function (event) {
     var msg = JSON.parse(event.data);
+    //console.log(msg.spinner);
+    if (spinner = false) {
 
+    }
     $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState +'<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2))
     var uluru = { lat: msg.lat, lng: msg.lon };
     var point1 = msg.point1;
