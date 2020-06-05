@@ -341,6 +341,19 @@ $('#loiter').on('click', function () {
 
 })
 
+$('#rtl').on('click', function () {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/rtl',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'RTL' }),
+    })
+        .done(function (msg) {
+            console.log('sent RTL mode')
+        });
+
+})
+
 $('#cancelStart').on('click', function () {
 
     var dataSelected = document.querySelector('input[name="cancelRadio"]:checked').value;
