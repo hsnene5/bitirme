@@ -208,13 +208,15 @@
                                     </div>
                                     <div class="modal-body">
                                         <h6 class="modal-title" id="exampleModalLongTitle">Select Point 1</h6>
-                                        <div class="input-group">
+                                        <div id="firstPoint" class="input-group">
                                             <input id="autoPoint1Lat" type="number" class="form-control" placeholder="Latitude" required>
                                             <input id="autoPoint1Lon" type="number" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
                                             </div>
                                         </div>
+                                        <h5 style="display:none" id="landOption1">Next step: Land</h5>
+                                        <h5 style="display:none" id="rtlOption1">Next step: RTL</h5>
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle2">Point 2</h6>
                                         <div style="display:none" id="secondPoint" class="input-group">
                                             <input id="autoPoint2Lat" type="number" class="form-control" placeholder="Latitude" required>
@@ -224,6 +226,8 @@
                                                 <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint2"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
+                                        <h5 style="display:none" id="landOption2">Next step: Land</h5>
+                                        <h5 style="display:none" id="rtlOption2">Next step: RTL</h5>
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle3">Point 3</h6>
                                         <div style="display:none" id="thirdPoint" class="input-group">
                                             <input id="autoPoint3Lat" type="number" class="form-control" placeholder="Latitude" required>
@@ -233,6 +237,8 @@
                                                 <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint3"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
+                                        <h5 style="display:none" id="landOption3">Next step: Land</h5>
+                                        <h5 style="display:none" id="rtlOption3">Next step: RTL</h5>
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle4">Point 4</h6>
                                         <div style="display:none" id="fourthPoint" class="input-group">
                                             <input id="autoPoint4Lat" type="number" class="form-control" placeholder="Latitude" required>
@@ -240,12 +246,20 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
                                                 <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint4"><i class="fas fa-times"></i></button>
-
                                             </div>
                                         </div>
+                                        <h5 style="display:none" id="landOption4">Final step: Land</h5>
+                                        <h5 style="display:none" id="rtlOption4">Final step: RTL</h5>
                                         <br />
                                         <br />
-                                        <button onclick="selectNewLocation()" id="selectPointButton" class="btn btn-primary btn-sm" type="button">Select New Point</button>
+                                        <button onclick="selectNewStep()" id="selectNewStepnButton" class="btn btn-primary btn-sm" type="button">Select New Step</button>
+                                        <br />
+                                        <br />
+                                        <div id="selectNewStepGroup" class="btn-group" role="group" style="display:none">
+                                            <button onclick="selectNewLocation()" id="selectPointButton" class="btn btn-primary btn-sm" type="button">Select New Point</button>
+                                            <button onclick="selectNewOptionLand()" id="nextOptionLand" class="btn btn-primary btn-sm" type="button">Land</button>
+                                            <button onclick="selectNewOptionRtl()" id="nextOptionRtl" class="btn btn-primary btn-sm" type="button">RTL</button>
+                                        </div>
                                         <br />
                                         <br />
                                         <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
