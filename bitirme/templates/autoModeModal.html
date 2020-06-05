@@ -177,20 +177,41 @@
                                     <div class="modal-body">
                                         <h6 class="modal-title" id="exampleModalLongTitle">Select Point 1</h6>
                                         <div class="input-group">
-                                            <input id="autoPoint1Lat" type="text" class="form-control" placeholder="Latitude" required>
-                                            <input id="autoPoint1Lon" type="text" class="form-control" placeholder="Longtitude" required>
+                                            <input id="autoPoint1Lat" type="number" class="form-control" placeholder="Latitude" required>
+                                            <input id="autoPoint1Lon" type="number" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
                                             </div>
                                         </div>
-                                        <h6 class="modal-title" id="exampleModalLongTitle">Select Point 2</h6>
-                                        <div class="input-group">
-                                            <input id="autoPoint2Lat" type="text" class="form-control" placeholder="Latitude" required>
-                                            <input id="autoPoint2Lon" type="text" class="form-control" placeholder="Longtitude" required>
+                                        <br />                                  
+                                        <h6 style="display:none" class="modal-title" id="exampleModalLongTitle2">Point 2</h6>
+                                        <div style="display:none" id="secondPoint" class="input-group">
+                                            <br />
+                                            <input id="autoPoint2Lat" type="number" class="form-control" placeholder="Latitude" required>
+                                            <input id="autoPoint2Lon" type="number" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
                                             </div>
                                         </div>
+                                        <h6 style="display:none" class="modal-title" id="exampleModalLongTitle3">Point 3</h6>
+                                        <div style="display:none" id="thirdPoint" class="input-group">
+                                            <input id="autoPoint3Lat" type="number" class="form-control" placeholder="Latitude" required>
+                                            <input id="autoPoint3Lon" type="number" class="form-control" placeholder="Longtitude" required>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
+                                            </div>
+                                        </div>
+                                        <h6 style="display:none" class="modal-title" id="exampleModalLongTitle4">Point 4</h6>
+                                        <div style="display:none" id="fourthPoint" class="input-group" style="display:none">
+                                            <input id="autoPoint4Lat" type="number" class="form-control" placeholder="Latitude" required>
+                                            <input id="autoPoint4Lon" type="number" class="form-control" placeholder="Longtitude" required>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <button onclick="selectNewLocation()" id="selectPointButton" class="btn btn-primary btn-sm" type="button">Select New Point</button>
+                                        <br />
                                         <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
                                         <div class="input-group">
                                             <input id="autoVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity" required>
