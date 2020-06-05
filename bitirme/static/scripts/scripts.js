@@ -297,14 +297,14 @@ $('#autoStart').on('click', function () {
     var dataX = {
         altitude : document.getElementById('autoAlt').value,
         velocity : document.getElementById('autoVel').value,
-        point1Lan : document.getElementById('autoPoint1Lat').value,
+        point1Lat : document.getElementById('autoPoint1Lat').value,
         point1Lon : document.getElementById('autoPoint1Lon').value,
-        point2Lan : document.getElementById('autoPoint2Lat').value,
+        point2Lat : document.getElementById('autoPoint2Lat').value,
         point2Lon: document.getElementById('autoPoint2Lon').value,
-        point2Lan: document.getElementById('autoPoint3Lat').value,
-        point2Lon: document.getElementById('autoPoint3Lon').value,
-        point2Lan: document.getElementById('autoPoint4Lat').value,
-        point2Lon: document.getElementById('autoPoint4Lon').value
+        point3Lat: document.getElementById('autoPoint3Lat').value,
+        point3Lon: document.getElementById('autoPoint3Lon').value,
+        point4Lat: document.getElementById('autoPoint4Lat').value,
+        point4Lon: document.getElementById('autoPoint4Lon').value
     };
 
     $.ajax({
