@@ -10993,3 +10993,16 @@ ol.carousel-indicators {
     background-color: #f1f1f1;
     height: 400px;
 }
+
+.mr-auto, .mx-auto {
+    margin-right: auto !important;
+    padding-left: inherit;
+}
+
+#toast {
+    background-color: #eee;
+    border-radius: 5px;
+    border: 1px solid;
+    border-color: #ef5350;
+    z-index: 1;
+}

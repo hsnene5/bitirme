@@ -122,12 +122,14 @@ function initMap() {
 function markerLocation() {
     //Get location.
     var currentLocation = marker2.getPosition();
-    console.log(google.maps.geometry.spherical.computeDistanceBetween(currentLocation, rangeCircle.center));
     if (google.maps.geometry.spherical.computeDistanceBetween(currentLocation, rangeCircle.center) > rangeCircle.radius) {
-        alert("Too far away");
+        $('.alert').alert();
+        
         marker2.setPosition(rangeCircle.center);
+        return;
     }
     //Add lat and lng values to a field that we can save.
+    $('#toast').toast('hide');
     document.getElementById('guidedPointLat').value = currentLocation.lat(); //latitude
     document.getElementById('guidedPointLon').value = currentLocation.lng(); //longitude
 }
