@@ -215,14 +215,13 @@
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
                                             </div>
                                         </div>
-                                        <br />                                  
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle2">Point 2</h6>
                                         <div style="display:none" id="secondPoint" class="input-group">
-                                            <br />
                                             <input id="autoPoint2Lat" type="number" class="form-control" placeholder="Latitude" required>
                                             <input id="autoPoint2Lon" type="number" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
+                                                <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint2"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle3">Point 3</h6>
@@ -231,18 +230,23 @@
                                             <input id="autoPoint3Lon" type="number" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
+                                                <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint3"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle4">Point 4</h6>
-                                        <div style="display:none" id="fourthPoint" class="input-group" style="display:none">
+                                        <div style="display:none" id="fourthPoint" class="input-group">
                                             <input id="autoPoint4Lat" type="number" class="form-control" placeholder="Latitude" required>
                                             <input id="autoPoint4Lon" type="number" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
+                                                <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint4"><i class="fas fa-times"></i></button>
+
                                             </div>
                                         </div>
                                         <br />
+                                        <br />
                                         <button onclick="selectNewLocation()" id="selectPointButton" class="btn btn-primary btn-sm" type="button">Select New Point</button>
+                                        <br />
                                         <br />
                                         <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
                                         <div class="input-group">

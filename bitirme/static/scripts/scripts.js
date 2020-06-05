@@ -179,6 +179,24 @@ function selectNewLocation() {
     }
 }
 
+function cancelNewLocation() {
+    document.getElementById("cancelPoint4").addEventListener("click", function ()
+    {
+        document.getElementById("exampleModalLongTitle4").style.display = 'none';
+        document.getElementById("fourthPoint").style.display = 'none';
+    });
+
+    document.getElementById("cancelPoint3").addEventListener("click", function () {
+        document.getElementById("exampleModalLongTitle3").style.display = 'none';
+        document.getElementById("thirdPoint").style.display = 'none';
+    });
+
+    document.getElementById("cancelPoint2").addEventListener("click", function () {
+        document.getElementById("exampleModalLongTitle2").style.display = 'none';
+        document.getElementById("secondPoint").style.display = 'none';
+    });
+}
+
 function enableFlightModes(connectionMode)
 {
     document.getElementById('auto').disabled = false;
