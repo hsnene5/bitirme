@@ -296,15 +296,15 @@ def api_cancel():
     elif(sel == "land"):
         api_land();
     elif(sel == "rtl"):
-        vehicle.mode = VehicleMode("CIRCLE");
+        api_rtl();
     return jsonify(ok=True)
 
 @app.route("/api/rtl", methods=['POST', 'PUT'])
-def rtl():
+def api_rtl():
 
-    if request.method == 'POST' or request.method == 'PUT':
-        vehicle.mode = VehicleMode("RTL")
-        print("Coming home!")
+    vehicle.parameters['RTL_ALT'] = 0
+    vehicle.mode = VehicleMode("RTL")
+    print("Coming home!")
 
 
     return jsonify(ok=True)

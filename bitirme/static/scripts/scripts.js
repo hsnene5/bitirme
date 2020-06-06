@@ -164,6 +164,21 @@ function mainMap() {
 
 }
 
+function selectNewStep(){
+    document.getElementById("selectNewStepGroup").style.display = 'block';
+
+    document.getElementById("selectPointButton").addEventListener("click", function () {
+        document.getElementById("selectNewStepGroup").style.display = 'none';
+    });
+    document.getElementById("nextOptionLand").addEventListener("click", function () {
+        document.getElementById("selectNewStepGroup").style.display = 'none';
+    });
+    document.getElementById("nextOptionRtl").addEventListener("click", function () {
+        document.getElementById("selectNewStepGroup").style.display = 'none';
+    });
+
+}
+
 function selectNewLocation() {
     if (document.getElementById("secondPoint").style.display == 'none') {
         document.getElementById("exampleModalLongTitle2").style.display = 'block';
@@ -177,6 +192,54 @@ function selectNewLocation() {
         document.getElementById("exampleModalLongTitle4").style.display = 'block';
         document.getElementById("fourthPoint").style.display = 'flex';
     }
+}
+
+function selectNewOptionLand() {
+    if (document.getElementById("secondPoint").style.display == 'none') {
+        document.getElementById("landOption1").style.display = 'block';
+    }
+    if (document.getElementById("thirdPoint").style.display == 'none' && document.getElementById("secondPoint").style.display != 'none') {
+        document.getElementById("landOption2").style.display = 'block';
+    }
+    if (document.getElementById("fourthPoint").style.display == 'none' && document.getElementById("thirdPoint").style.display != 'none') {
+        document.getElementById("landOption3").style.display = 'block';
+    }
+    if (document.getElementById("fourthPoint").style.display != 'none') {
+        document.getElementById("landOption4").style.display = 'block';
+    }
+}
+
+function selectNewOptionRtl() {
+    if (document.getElementById("secondPoint").style.display == 'none') {
+        document.getElementById("rtlOption1").style.display = 'block';
+    }
+    if (document.getElementById("thirdPoint").style.display == 'none' && document.getElementById("secondPoint").style.display != 'none') {
+        document.getElementById("rtlOption2").style.display = 'block';
+    }
+    if (document.getElementById("fourthPoint").style.display == 'none' && document.getElementById("thirdPoint").style.display != 'none') {
+        document.getElementById("rtlOption3").style.display = 'block';
+    }
+    if (document.getElementById("fourthPoint").style.display != 'none') {
+        document.getElementById("rtlOption4").style.display = 'block';
+    }
+}
+
+function cancelNewLocation() {
+    document.getElementById("cancelPoint4").addEventListener("click", function ()
+    {
+        document.getElementById("exampleModalLongTitle4").style.display = 'none';
+        document.getElementById("fourthPoint").style.display = 'none';
+    });
+
+    document.getElementById("cancelPoint3").addEventListener("click", function () {
+        document.getElementById("exampleModalLongTitle3").style.display = 'none';
+        document.getElementById("thirdPoint").style.display = 'none';
+    });
+
+    document.getElementById("cancelPoint2").addEventListener("click", function () {
+        document.getElementById("exampleModalLongTitle2").style.display = 'none';
+        document.getElementById("secondPoint").style.display = 'none';
+    });
 }
 
 function enableFlightModes(connectionMode)
@@ -347,6 +410,19 @@ $('#loiter').on('click', function () {
     })
         .done(function (msg) {
             console.log('sent loiter mode')
+        });
+
+})
+
+$('#rtl').on('click', function () {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/rtl',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'RTL' }),
+    })
+        .done(function (msg) {
+            console.log('sent RTL mode')
         });
 
 })
