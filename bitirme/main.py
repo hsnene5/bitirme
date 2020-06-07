@@ -513,6 +513,28 @@ def targetReached(point1, point2):
     else:
         return False
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
+
+@app.errorhandler(401)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('401.html'), 401
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    if request.method == 'POST':
+        # do stuff when the form is submitted
+
+        # redirect to end the POST handling
+        # the redirect can be to the same route or somewhere else
+        return redirect(url_for('index'))
+
+    # show the form, it wasn't submitted
+    return render_template('autoModeModal.html')
+
 def main():
     app.config['TEMPLATE_AUTO_RELOAD'] = True
     app.config["CACHE_TYPE"] = "null"
