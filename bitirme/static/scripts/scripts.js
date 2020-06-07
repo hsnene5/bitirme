@@ -290,9 +290,29 @@ $('#connect').on('click', function () {
     document.getElementById('simulation').disabled = true;
     $.ajax({
         method: 'PUT',
-        url: '/api/arm',
+        url: '/api/connect',
         contentType: 'application/json',
+        dataType: "json",
         data: JSON.stringify({ arm: true }),
+        success: function (response) {
+            var data = [{ "telemetryName": response, "connection": "none" }];
+            $('#connectionTable').bootstrapTable({
+                data: data,
+                columns: [{},
+                {
+                    field: 'operate',
+                    title: 'Connection',
+                    align: 'center',
+                    valign: 'middle',
+                    clickToSelect: false,
+                    formatter: function (value, row, index) {
+                        //return '<input name="elementname"  value="'+value+'"/>';
+                        return '<button class=\'btn btn-primary \' id=" connectToCom  " >Connect</button> ';
+                    }
+                }
+                ]
+            });
+        }
     })
         .done(function (msg) {
             console.log('sent arming message')

@@ -11,6 +11,8 @@ import atexit
 import os
 import sys
 import socket
+import glob
+import serial.tools.list_ports
 from threading import Thread
 from subprocess import Popen
 from flask import render_template
@@ -313,9 +315,17 @@ def api_rtl():
 
     return jsonify(ok=True)
 
-
-
 @app.route("/api/connect", methods=['POST','PUT'])
+def connect_to_drone():
+
+    ports = list( serial.tools.list_ports.comports() )
+
+    resultPorts = []
+    descriptions = []
+    for port in ports:
+        return jsonify(port.description)
+
+
 def connect_to_drone():
     if request.method == 'POST' or request.method == 'PUT':
 
