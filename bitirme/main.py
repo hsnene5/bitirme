@@ -26,6 +26,8 @@ spinner = None
 def sse_encode(obj, id=None):
     return "data: %s\n\n" % json.dumps(obj)
 
+
+
 def state_msg():
     if vehicle.location.global_relative_frame.lat == None:
         raise Exception('no position info')
@@ -105,6 +107,8 @@ def api_guided():
         print(" Waiting for vehicle to initialise...")
         time.sleep(1)
 
+
+
     print("Arming motors")
     # Copter should arm in GUIDED mode
     vehicle.mode = VehicleMode("GUIDED")
@@ -113,8 +117,7 @@ def api_guided():
     while not vehicle.armed:
         print(" Waiting for arming...")
         time.sleep(1)
-
-
+     
     print("Taking off!")
     vehicle.simple_takeoff(targetAltitude)  # Take off to target altitude
 
@@ -129,20 +132,16 @@ def api_guided():
             break
         time.sleep(1)
 
-
-    print("set default/target airspeed to 3")
-    vehicle.airspeed = 3
-
     print("Going towards first point for 30 seconds ...")
     point1 = LocationGlobalRelative(point1Lat, point1Lon, targetAltitude)
     vehicle.simple_goto(point1)
     time.sleep(30)
     if afterArrival == "RTL":
-        vehicle.mode = VehicleMode("RTL")
+        api_rtl()
     if afterArrival == "LAND":
         api_land()
     if afterArrival == "LOITER":
-        vehicle.mode = VehicleMode("STABILIZE")
+        api_loiter()
     return jsonify(ok=True)
 
 @app.route("/api/auto", methods = ['POST','PUT'])
@@ -209,7 +208,7 @@ def api_autoMode():
             break
         time.sleep(1)
 
-    print("Set default/target airspeed to 3")
+    print("Set default/target airspeed to velocity")
     vehicle.airspeed = velocity
 
     for x in range(0,numberOfPoints):
@@ -262,17 +261,14 @@ def api_land():
             print("Landed safely")
             break
         time.sleep(1)
-    # Close vehicle object before exiting script
-    print("Close vehicle object")
-    vehicle.close()
+    
     return jsonify(ok=True)
 
 @app.route("/api/loiter", methods=['POST', 'PUT'])
 def api_loiter():
     
     print("Loiter mode is on")
-    vehicle.mode = VehicleMode("LOITER")
-    vehicle.location.global_relative_frame.alt = 3
+    vehicle.mode = VehicleMode("STABILIZE")
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
         # Break and return from function just below target altitude.
@@ -280,9 +276,7 @@ def api_loiter():
           ##  print("Loiter mode is ended")
             ##break
         time.sleep(1)
-    # Close vehicle object before exiting script
-    print("Close vehicle object")
-    vehicle.close()
+    
     return jsonify(ok=True)
 
 @app.route("/api/cancel", methods=['POST', 'PUT'])
@@ -305,7 +299,6 @@ def api_rtl():
     vehicle.parameters['RTL_ALT'] = 0
     vehicle.mode = VehicleMode("RTL")
     print("Coming home!")
-
 
     return jsonify(ok=True)
 
