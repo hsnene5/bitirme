@@ -338,3 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/bitirme/env/Lib/site-packages/six-1.15.0.dist-info

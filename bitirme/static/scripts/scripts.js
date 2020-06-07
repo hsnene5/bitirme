@@ -35,7 +35,7 @@ function guidedMap() {
             });
             //Listen for drag events!
             google.maps.event.addListener(marker2, 'dragend', function (event) {
-                markerLocation();
+                guidedMarkerLocation();
             });
         } else {
             //Marker has already been added, so just change its location.
@@ -105,7 +105,7 @@ function guidedMarkerLocation() {
     //Get location.
     var currentLocation = marker2.getPosition();
     if (google.maps.geometry.spherical.computeDistanceBetween(currentLocation, rangeCircle.center) > rangeCircle.radius) {
-        $('.alert').alert();
+        
         
         marker2.setPosition(rangeCircle.center);
         return;

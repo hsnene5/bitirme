@@ -136,7 +136,11 @@ def api_guided():
     print("Going towards first point for 30 seconds ...")
     point1 = LocationGlobalRelative(point1Lat, point1Lon, targetAltitude)
     vehicle.simple_goto(point1)
-    time.sleep(30)
+    
+    while not targetReached(point1,vehicle.location.global_relative_frame):
+        pass
+
+    print 'ARRIVED'
     if afterArrival == "RTL":
         vehicle.mode = VehicleMode("RTL")
     if afterArrival == "LAND":
@@ -497,6 +501,17 @@ def goto_position_target_global_int(aLocation):
 t = Thread(target=tcount)
 t.daemon = True
 t.start()
+
+
+###################################
+## TARGET POINT REACHED FUNCTION ##
+###################################
+def targetReached(point1, point2):
+    if "{:.6f}".format(point1.lat) == "{:.6f}".format(point2.lat):
+        if "{:.6f}".format(point1.lon) == "{:.6f}".format(point2.lon):
+            return True
+    else:
+        return False
 
 def main():
     app.config['TEMPLATE_AUTO_RELOAD'] = True
