@@ -287,31 +287,31 @@ $(function () {
 })
 
 $('#connect').on('click', function () {
-    document.getElementById('simulation').disabled = true;
     $.ajax({
         method: 'PUT',
-        url: '/api/connect',
+        url: '/api/availableDevices',
         contentType: 'application/json',
         dataType: "json",
-        data: JSON.stringify({ arm: true }),
         success: function (response) {
             var data = [{ "telemetryName": response, "connection": "none" }];
             $('#connectionTable').bootstrapTable({
                 data: data,
                 columns: [{},
                 {
-                    field: 'operate',
                     title: 'Connection',
                     align: 'center',
                     valign: 'middle',
                     clickToSelect: false,
-                    formatter: function (value, row, index) {
+                    formatter: function () {
                         //return '<input name="elementname"  value="'+value+'"/>';
-                        return '<button class=\'btn btn-primary \' id=" connectToCom  " >Connect</button> ';
+                        return '<button type="button" class=\'btn btn-primary \' id="simulationStart" onclick="connectToCom()">Connect</button> ';
                     }
                 }
                 ]
             });
+        },
+        error: function () {
+            alert("No available devices found. Check your telemetry connection!")
         }
     })
         .done(function (msg) {
@@ -319,6 +319,30 @@ $('#connect').on('click', function () {
         });
     //document.getElementById("connect").innerHTML="armed";
 })
+
+function connectToCom() {
+    console.log('conncet');
+    document.getElementById('simulation').disabled = true;
+    $('#conncet').html(
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+    $('#conncetToCom').html(
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+    $("#spinner").css("display", "block");
+
+    $.ajax({
+        method: 'PUT',
+        url: '/api/connect',
+        contentType: 'application/json',
+        data: JSON.stringify({ arm: true }),
+        success: function () {
+            $('#connectToCom').html('<button type="button" class="btn btn-success">Connected</button>');
+            $("#spinner").css("display", "none");
+        }
+    })
+        .done(function (msg) {
+            console.log('sent arming message')
+        });
+}
 
 $('#simulationStart').on('click', function () {
     document.getElementById('connect').disabled = true;

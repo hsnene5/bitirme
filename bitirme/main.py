@@ -132,8 +132,8 @@ def api_guided():
         time.sleep(1)
 
 
-    print("set default/target airspeed to 3")
-    vehicle.airspeed = 3
+    print("set default/target airspeed to velocity")
+    vehicle.airspeed = velocity
 
     print("Going towards first point for 30 seconds ...")
     point1 = LocationGlobalRelative(point1Lat, point1Lon, targetAltitude)
@@ -144,11 +144,11 @@ def api_guided():
 
     print 'ARRIVED'
     if afterArrival == "RTL":
-        vehicle.mode = VehicleMode("RTL")
+        api_rtl()
     if afterArrival == "LAND":
         api_land()
     if afterArrival == "LOITER":
-        vehicle.mode = VehicleMode("STABILIZE")
+        api_loiter()
     return jsonify(ok=True)
 
 @app.route("/api/auto", methods = ['POST','PUT'])
@@ -268,16 +268,14 @@ def api_land():
             print("Landed safely")
             break
         time.sleep(1)
-    # Close vehicle object before exiting script
-    print("Close vehicle object")
-    vehicle.close()
+
     return jsonify(ok=True)
 
 @app.route("/api/loiter", methods=['POST', 'PUT'])
 def api_loiter():
     
     print("Loiter mode is on")
-    vehicle.mode = VehicleMode("LOITER")
+    vehicle.mode = VehicleMode("STABILIZE")
     vehicle.location.global_relative_frame.alt = 3
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
@@ -315,8 +313,8 @@ def api_rtl():
 
     return jsonify(ok=True)
 
-@app.route("/api/connect", methods=['POST','PUT'])
-def connect_to_drone():
+@app.route("/api/availableDevices", methods=['POST','PUT'])
+def availableDevices():
 
     ports = list( serial.tools.list_ports.comports() )
 
@@ -324,8 +322,9 @@ def connect_to_drone():
     descriptions = []
     for port in ports:
         return jsonify(port.description)
+    return jsonify(ok=False)
 
-
+@app.route("/api/connect", methods=['POST','PUT'])
 def connect_to_drone():
     if request.method == 'POST' or request.method == 'PUT':
 
@@ -340,8 +339,9 @@ def connect_to_drone():
                 time.sleep(2)
 
     # if --sim is enabled...
-
+    
     print 'connected!'
+    return jsonify(ok=True)
 
 @app.route("/api/simulation", methods=['POST','PUT'])
 def enableSimulation():
