@@ -19,8 +19,8 @@
 var map2; //Will contain map object.
 var marker2 = false; ////Has the user plotted their location marker? 
 
-var simMap ;
-var simMarker;
+var simMap;
+var simMarker = false;
 
 //Function called to initialize / create the map.
 //This is called when the page has loaded.
@@ -525,7 +525,7 @@ $('#simulationUserLocation').on('click', function () {
 
             simMap.setCenter(pos);
 
-            if (simMarker != false) {
+            if (simMarker != null) {
                 simMarker.setPosition(pos);
             }
             
