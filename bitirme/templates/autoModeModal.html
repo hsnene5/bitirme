@@ -122,7 +122,7 @@
 
                     </ol>
                     <p id="header-state"><b>Vehicle:</b> <br><b>Armed:</b> <br><b>Mode:</b> <br><b>Altitude:</b></p>
-
+                   
                     <div class="row">
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
                             <button id="connect" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#connectPopup">Connect</button>
@@ -188,7 +188,7 @@
                                             <thead>
                                                 <tr>
                                                     <th data-field="telemetryName" scope="col">Telemetry Name</th>
-                                                    
+
                                                 </tr>
                                             </thead>
                                         </table>
@@ -320,18 +320,18 @@
 
                                         <!-- <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" data-animation="true" id="toast" style="position:absolute" >
 
-                                            <div class="toast-header">
-                                                <i class="fas fa-exclamation-circle">  </i>
-                                                <strong class="mr-auto">    Location Error</strong>
+                        <div class="toast-header">
+                            <i class="fas fa-exclamation-circle">  </i>
+                            <strong class="mr-auto">    Location Error</strong>
 
-                                                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="toast-body">
-                                                Selected location is not in the range.<br /> Please select another location.
-                                            </div>
-                                        </div>-->
+                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            Selected location is not in the range.<br /> Please select another location.
+                        </div>
+                    </div>-->
 
                                         <h5 class="modal-title" id="exampleModalLongTitle">Guided Mode</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -352,7 +352,7 @@
 
                                         <div id="guidedSelectMap">
 
-
+                                            <script type="text/javascript" src="static/scripts/scripts.js"></script>
 
                                         </div>
                                         <div class="form-row">
@@ -480,6 +480,7 @@
                         </div>
                     </div>
                 </div>
+                <script src="static/scripts/scripts.js"></script>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
@@ -494,15 +495,13 @@
             </footer>
         </div>
     </div>
-    <script src="/static/scripts/scripts.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASOO96jqmNjNeZ-yT1K27PjaMGR2vkSHk&callback=initMaps&language=en"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="static/scripts/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
-    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 </body>
 
 </html>

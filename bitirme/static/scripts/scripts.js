@@ -567,7 +567,6 @@ var rangeCircle = new google.maps.Circle({
 var source = new EventSource('/api/sse/state');
 source.onmessage = function (event) {
     var msg = JSON.parse(event.data);
-    //console.log(msg.spinner);
     if (spinner = false) {
 
     }
