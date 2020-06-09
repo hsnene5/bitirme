@@ -214,7 +214,7 @@
                                             <input id="simulationHomeLat" type="text" class="form-control" placeholder="Latitude" required>
                                             <input id="simulationHomeLon" type="text" class="form-control" placeholder="Longtitude" required>
                                             <div class="input-group-prepend">
-                                                <button class="btn btn-outline-secondary" role="button" id="simulationUserLocation"><i class="fas fa-map-marker-alt"></i></button>
+                                                <button class="btn btn-outline-secondary" role="button" id="simulationUserLocation" ><i class="fas fa-map-marker-alt"></i></button>
                                                 <button class="btn btn-outline-secondary" role="button" id="simulationSelectMapButton"><i class="fas fa-map mr-1"></i>Map</button>
                                                 <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
                                             </div>
@@ -314,24 +314,7 @@
                         <div class="modal fade " id="guidedModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content" id="guidedModePopupContent">
-
                                     <div class="modal-header">
-
-                                        <!-- <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" data-animation="true" id="toast" style="position:absolute" >
-
-                        <div class="toast-header">
-                            <i class="fas fa-exclamation-circle">  </i>
-                            <strong class="mr-auto">    Location Error</strong>
-
-                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="toast-body">
-                            Selected location is not in the range.<br /> Please select another location.
-                        </div>
-                    </div>-->
-
                                         <h5 class="modal-title" id="exampleModalLongTitle">Guided Mode</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -348,11 +331,8 @@
                                                 <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
                                             </div>
                                         </div>
-
                                         <div id="guidedSelectMap">
-
                                             <script type="text/javascript" src="static/scripts/scripts.js"></script>
-
                                         </div>
                                         <div class="form-row">
                                             <div class="col">
