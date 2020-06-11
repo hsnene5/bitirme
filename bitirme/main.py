@@ -230,12 +230,15 @@ def api_autoMode():
     for x in range(0,numberOfPoints):
         if (vehicle.mode == VehicleMode("LAND")):
             vehicle.mode = VehicleMode("GUIDED")
+            while not vehicle.is_armable:
+                print(" Waiting for vehicle to initialise...")
+                time.sleep(1)
             vehicle.armed = True
             while not vehicle.armed:
                 print(" Waiting for arming...")
                 time.sleep(1)
             print("Taking off!")
-            vehicle.simple_takeoff(5)
+            vehicle.simple_takeoff(targetAltitude)
             while True:
                if vehicle.location.global_relative_frame.alt >= targetAltitude * 0.95:
                    print("Reached target altitude")
@@ -246,11 +249,12 @@ def api_autoMode():
         print("Going towards first point for 30 seconds ...")
         point1 = LocationGlobalRelative(points[x][0], points[x][1], targetAltitude)
         vehicle.simple_goto(point1)
-        time.sleep(30)
-       
+        while not targetReached(point1,vehicle.location.global_relative_frame):
+            pass
+        print 'ARRIVED'
         if(landOptions[count] == 'Next Step: LAND'):
             api_land()
-            vehicle.armed = False
+        time.sleep(5)    
 
         count=count+1
 
@@ -534,8 +538,8 @@ t.start()
 ## TARGET POINT REACHED FUNCTION ##
 ###################################
 def targetReached(point1, point2):
-    if "{:.6f}".format(point1.lat) == "{:.6f}".format(point2.lat):
-        if "{:.6f}".format(point1.lon) == "{:.6f}".format(point2.lon):
+    if "{:.5f}".format(point1.lat) == "{:.5f}".format(point2.lat):
+        if "{:.5f}".format(point1.lon) == "{:.5f}".format(point2.lon):
             return True
     else:
         return False
