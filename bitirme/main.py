@@ -157,17 +157,22 @@ def api_autoMode():
     targetAltitude = float(parameter["altitude"])
     velocity = float(parameter["velocity"])
     point1Lat = float(parameter["point1Lat"])
-    point1Lon = float(parameter["point1Lon"])    
-    #point2Lat = float(parameter["point2Lat"])
-    #point2Lon = float(parameter["point2Lon"])   
-    #point3Lat = float(parameter["point3Lat"])
-    #point3Lon = float(parameter["point3Lon"])   
-    #point4Lat = float(parameter["point4Lat"])
-    #point4Lon = float(parameter["point4Lon"])  
+    point1Lon = float(parameter["point1Lon"])
+    land1 = str(parameter["land1"])
+    land2 = str(parameter["land2"])
+    land3 = str(parameter["land3"])
+    land4 = str(parameter["land4"])
+    rtl1 = str(parameter["rtl1"])
+    rtl2 = str(parameter["rtl2"])
+    rtl3 = str(parameter["rtl3"])
+    rtl4 = str(parameter["rtl4"])
 
+    landOptions = [land1, land2, land3, land4] 
+    rtlOptions = [rtl1, rtl2, rtl3, rtl4] 
 
+    points = [[point1Lat, point1Lon]]
 
-    numberOfPoints = 0
+    numberOfPoints = 1
     if((parameter["point2Lat"]) != ""):
         numberOfPoints=2
         point2Lat = float(parameter["point2Lat"])
@@ -175,11 +180,13 @@ def api_autoMode():
         points = [[point1Lat, point1Lon], [point2Lat, point2Lon]] 
         if((parameter["point3Lat"]) != ""):
             point3Lat = float(parameter["point3Lat"])
-            point3Lon = float(parameter["point3Lon"])   
+            point3Lon = float(parameter["point3Lon"])
+            points = [[point1Lat, point1Lon], [point2Lat, point2Lon], [point3Lat, poin3Lon]]    
             numberOfPoints=3
             if((parameter["point4Lat"]) != ""):
                 point4Lat = float(parameter["point4Lat"])
-                point4Lon = float(parameter["point4Lon"])  
+                point4Lon = float(parameter["point4Lon"])
+                points = [[point1Lat, point1Lon], [point2Lat, point2Lon], [point3Lat, poin3Lon], [point4Lat, poin4Lon]]
                 numberOfPoints=4
 
     print(targetAltitude)
@@ -215,32 +222,40 @@ def api_autoMode():
             break
         time.sleep(1)
 
-    print("Set default/target airspeed to 3")
+    print("Set default/target airspeed")         
     vehicle.airspeed = velocity
+    
+    count = 0
 
     for x in range(0,numberOfPoints):
-            print("Going towards first point for 30 seconds ...")
-            global point1
-            point = LocationGlobalRelative(points[x,0], points[x,1], targetAltitude)
-            vehicle.simple_goto(point)
-            time.sleep(30)
+        if (vehicle.mode == VehicleMode("LAND")):
+            vehicle.mode = VehicleMode("GUIDED")
+            vehicle.armed = True
+            while not vehicle.armed:
+                print(" Waiting for arming...")
+                time.sleep(1)
+            print("Taking off!")
+            vehicle.simple_takeoff(5)
+            while True:
+               if vehicle.location.global_relative_frame.alt >= targetAltitude * 0.95:
+                   print("Reached target altitude")
+                   break
+               time.sleep(1)
+        
+
+        print("Going towards first point for 30 seconds ...")
+        point1 = LocationGlobalRelative(points[x][0], points[x][1], targetAltitude)
+        vehicle.simple_goto(point1)
+        time.sleep(30)
+       
+        if(landOptions[count] == 'Next Step: LAND'):
+            api_land()
+            vehicle.armed = False
+
+        count=count+1
 
 
-    ## sleep so we can see the change in map
-    
-    #print("Going towards second point for 30 seconds (groundspeed set to 10 m/s) ...")
-    #point2 = LocationGlobalRelative(-35.363244, 149.168801, 20)
-    #vehicle.simple_goto(point2, groundspeed=10)
-    
-    ## sleep so we can see the change in map
-    #time.sleep(30)
-    
-    #print("Returning to Launch")
-    vehicle.mode = VehicleMode("RTL")
-    
-    # Close vehicle object before exiting script
-    print("Close vehicle object")
-    vehicle.close()
+
     return jsonify(ok=True)
 
 @app.route("/api/arm", methods=['POST', 'PUT'])
@@ -273,10 +288,14 @@ def api_land():
 
 @app.route("/api/loiter", methods=['POST', 'PUT'])
 def api_loiter():
-    
+    pointLoiterAlt = vehicle.location.global_relative_frame.alt
+    pointLoiterLon = vehicle.location.global_relative_frame.lon
+    pointLoiterLat = vehicle.location.global_relative_frame.lat
+    loiterPoint = LocationGlobalRelative(pointLoiterLat, pointLoiterLon, pointLoiterAlt)
+    vehicle.simple_goto(loiterPoint)
+    time.sleep(1)
     print("Loiter mode is on")
-    vehicle.mode = VehicleMode("STABILIZE")
-    vehicle.location.global_relative_frame.alt = 3
+    #vehicle.mode = VehicleMode("STABILIZE")
     while True:
         print(" Altitude: ", vehicle.location.global_relative_frame.alt)
         # Break and return from function just below target altitude.
@@ -284,9 +303,7 @@ def api_loiter():
           ##  print("Loiter mode is ended")
             ##break
         time.sleep(1)
-    # Close vehicle object before exiting script
-    print("Close vehicle object")
-    vehicle.close()
+    
     return jsonify(ok=True)
 
 @app.route("/api/cancel", methods=['POST', 'PUT'])
