@@ -389,29 +389,6 @@ function connectToCom() {
         });
 }
 
-function closeVehicleClick() {
-    $.ajax({
-        method: 'PUT',
-        url: '/api/closeVehicle',
-        contentType: 'application/json',
-        
-    })
-        .done(function (msg) {
-            console.log('sent arming message')
-        });
-}
-
-function test() {
-    $.ajax({
-        method: 'PUT',
-        url: '/api/test',
-        contentType: 'application/json',
-
-    })
-        .done(function (msg) {
-            console.log('sent arming message')
-        });
-}
 
 $('#simulationStart').on('click', function () {
     document.getElementById('connect').disabled = true;
@@ -686,13 +663,23 @@ source.onmessage = function (event) {
     if (spinner = false) {
 
     }
-    $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState +'<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2))
-    var uluru = { lat: msg.lat, lng: msg.lon };
-    var point1 = msg.point1;
+
+    if (msg.onFlight == true) {
+        $('#stopSimulationGroup').prop("hidden", true);
+    }
+    if (msg.onFlight == false) {
+        $('#stopSimulationGroup').prop("hidden", false);
+    }
+
+    if (msg.vehicleState == null) {
+        msg.vehicleState = 'Not Available';
+    }
+    
+    $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState + '<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2));
     var latlng = new google.maps.LatLng(msg.lat, msg.lon);
     map.setCenter(latlng);
     map2.setCenter(latlng);
-    map.setCenter(latlng);
+    
     //droneMarker;
     rangeCircle.setCenter(latlng);
     droneMarker.setPosition(latlng);

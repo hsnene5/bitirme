@@ -18,8 +18,14 @@ from subprocess import Popen
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from array import *
+import dronekit_sitl
+from dronekit_sitl import SITL
 
 app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template('autoModeModal.html', branding = False)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///theUactDB.db'
 
@@ -38,6 +44,7 @@ class GuidedFlight(db.Model):
         #return '[id:'+ self.id +',targetLat:'+self.targetLat+',targetLon:'+self.targetLon+',run_velocity:'+self.run_velocity+',run_altitude:'+self.run_altitude+',run_date:',self.run_date+']'
         return {c.name: unicode(getattr(self, c.name)) for c in self.__table__.columns}
 
+sitl = None
 vehicleState = None
 vehicle = None
 point1 = None
@@ -94,9 +101,6 @@ def api_sse_location():
 
     return Response(gen(), mimetype="text/event-stream")
 
-@app.route("/")
-def home():
-    return render_template('autoModeModal.html', branding = False)
 
 @app.route("/api/guided", methods = ['POST','PUT'])
 def api_guided():
@@ -272,7 +276,7 @@ def api_arm():
 
 @app.route("/api/land", methods=['POST', 'PUT'])
 def api_land():
-    
+
     print("Now let's land")
     vehicle.mode = VehicleMode("LAND")
 
@@ -288,7 +292,7 @@ def api_land():
 
 @app.route("/api/loiter", methods=['POST', 'PUT'])
 def api_loiter():
-    
+
     print("Loiter mode is on")
     vehicle.mode = VehicleMode("STABILIZE")
     
@@ -296,41 +300,6 @@ def api_loiter():
 
     return jsonify(ok=True)
 
-@app.route("/api/test", methods=['POST', 'PUT'])
-def test():
-    aTargetAltitude = 20
-    print "Basic pre-arm checks"
-    # Don't try to arm until autopilot is ready
-    while not vehicle.is_armable:
-        print " Waiting for vehicle to initialise..."
-        time.sleep(1)
-
-    print "Arming motors"
-    # Copter should arm in GUIDED mode
-    vehicle.mode    = VehicleMode("GUIDED")
-    vehicle.armed   = True
-
-    # Confirm vehicle armed before attempting to take off
-    while not vehicle.armed:
-        print " Waiting for arming..."
-        time.sleep(1)
-
-    print "Taking off!"
-    vehicle.simple_takeoff(aTargetAltitude) # Take off to target altitude
-
-    # Wait until the vehicle reaches a safe height before processing the goto (otherwise the command
-    #  after Vehicle.simple_takeoff will execute immediately).
-    while True:
-        print " Altitude: ", vehicle.location.global_relative_frame.alt
-        #Break and return from function just below target altitude.
-        if vehicle.location.global_relative_frame.alt>=aTargetAltitude*0.95:
-            print "Reached target altitude"
-            break
-        time.sleep(1)
-
-    api_land()
-
-    return jsonify(ok=True)
 @app.route("/api/cancel", methods=['POST', 'PUT'])
 def api_cancel():
 
@@ -369,7 +338,7 @@ def connect_to_drone():
     if request.method == 'POST' or request.method == 'PUT':
 
         global vehicle
-
+        global vehicleState
         print 'connecting to drone...'
         while not vehicle:
             try:
@@ -380,43 +349,23 @@ def connect_to_drone():
 
     # if --sim is enabled...
     #api_arm()
+    vehicleState = 'Connected'
     print 'connected!'
     return jsonify(ok=True)
 
-@app.route("/api/closeVehicle", methods=['POST','PUT'])
-def closeVehicle():
-    if request.method == 'POST' or request.method == 'PUT':
-
-        global vehicle
-
-        print 'close'
-        vehicle.flush()
-        vehicle.close()
-        cmds = vehicle.commands
-        cmds.clear()
-        cmds.upload()
-            
-
-    # if --sim is enabled...
-    #api_arm()
-    print 'connected!'
-    return jsonify(ok=True)
 
 @app.route("/api/simulation", methods=['POST','PUT'])
 def enableSimulation():
-    global spinner
-    spinner = True
     parameter = request.json['homeLocation']
     homeLocationLat = float(parameter["lat"])
     homeLocationLng = float(parameter["lng"])
     homeArg = '--home='+str(homeLocationLat)+','+str(homeLocationLng)+',0,180'
-    from dronekit_sitl import SITL
-    global vehicle
-    sitl = SITL()
-    sitl.download('copter','3.3', verbose=True)
-    sitl_args = ['-I0', '--model', 'quad', homeArg]
-    sitl.launch(sitl_args,await_ready=True, restart = True)
-    connection_string = 'tcp:127.0.0.1:5760'
+    sitl = dronekit_sitl.start_default(homeLocationLat,homeLocationLng)
+    #sitl.download('copter','3.3', verbose=True)
+    #sitl_args = ['-I0', '--model', 'quad', homeArg]
+    #sitl.launch(sitl_args,await_ready=True, restart = True)
+    #connection_string = 'tcp:127.0.0.1:5760'
+    connection_string = sitl.connection_string()
 
     while not vehicle:
             try:

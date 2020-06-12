@@ -37,7 +37,7 @@
         </form>
         <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
             <!-- Position it -->
-            <div style="position: absolute; top: 100px; right: 0;">
+            <div style="position: absolute; top: 100px; right: 0; width:250px;">
 
                 <!-- Then put toasts within -->
                 <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
@@ -200,19 +200,8 @@
                                 Details
                             </a>
                         </div>
-                        <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="prevFlights" type="button" class="btn btn-lg btn-danger" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="closeVehicleClick()">Close Vehicle</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
-                                Details
-                            </a>
-                        </div>
-                        <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="prevFlights" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="test()">Test</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
-                                Details
-                            </a>
-                        </div>
                         <!-- Modal -->
+
                         <div class="modal fade" id="prevFlightsPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content" id="prevFlightPopupContent">
@@ -386,31 +375,13 @@
                         <div class="modal fade " id="guidedModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content" id="guidedModePopupContent">
-
                                     <div class="modal-header">
-
-                                        <!-- <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" data-animation="true" id="toast" style="position:absolute" >
-
-                        <div class="toast-header">
-                            <i class="fas fa-exclamation-circle">  </i>
-                            <strong class="mr-auto">    Location Error</strong>
-
-                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="toast-body">
-                            Selected location is not in the range.<br /> Please select another location.
-                        </div>
-                    </div>-->
-
                                         <h5 class="modal-title" id="exampleModalLongTitle">Guided Mode</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-
                                         <h6 class="modal-title" id="exampleModalLongTitle">Select Destination</h6>
                                         <div class="input-group">
                                             <input id="guidedPointLat" type="number" class="form-control" placeholder="Latitude">
@@ -420,11 +391,8 @@
                                                 <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
                                             </div>
                                         </div>
-
                                         <div id="guidedSelectMap">
-
                                             <script type="text/javascript" src="static/scripts/scripts.js"></script>
-
                                         </div>
                                         <div class="form-row">
                                             <div class="col">
@@ -445,7 +413,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button id="guidedStart" type="button" class="btn btn-primary"><i class="fas fa-flag-checkered"></i> Start</button>
@@ -453,9 +420,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
                         <div class="modal fade" id="rtlModePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -517,22 +481,52 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Cancel Flight</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
                                         <input type="radio" id="rtlradio" name="cancelRadio" value="rtl">
-                                        <label for="rtlradio">RTL</label><br>
+                                        <label for="rtlradio">Return to Launch</label><br>
                                         <input type="radio" id="landradio" name="cancelRadio" value="land">
-                                        <label for="landradio">LAND</label><br>
+                                        <label for="landradio">Land</label><br>
                                         <input type="radio" id="loiterradio" name="cancelRadio" value="loiter">
-                                        <label for="loiterradio">LOITER</label>
+                                        <label for="loiterradio">Loiter</label>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" id="cancelStart" class="btn btn-primary">Save changes</button>
+                                        <button type="button" id="cancelStart" class="btn btn-primary">Start</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="closeVehiclePopup" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Close Vehicle</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="alert alert-danger" role="alert">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            This feature should only be used for emergencies. Please do not use during the flight.
+                                        </div>
+                                        <div class="alert alert-warning" role="alert">
+                                            <i class="fas fa-info-circle"></i>
+                                            If you are connected to the drone, you can disarm the vehicle.
+                                        </div>
+                                        <div class="alert alert-warning" role="alert">
+                                            <i class="fas fa-info-circle"></i>
+                                            If you are using simulation mode, you can turn off simulation.
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="closeVehicleClick()"><i class="fas fa-power-off"></i>  Close Anyway</button>
                                     </div>
                                 </div>
                             </div>
