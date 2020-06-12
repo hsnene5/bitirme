@@ -114,9 +114,7 @@ def api_guided():
     
     print("Basic pre-arm checks")
     # Don't try to arm until autopilot is ready
-    while not vehicle.is_armable:
-        print(" Waiting for vehicle to initialise...")
-        time.sleep(1)
+
 
     print("Arming motors")
     # Copter should arm in GUIDED mode
@@ -298,6 +296,41 @@ def api_loiter():
 
     return jsonify(ok=True)
 
+@app.route("/api/test", methods=['POST', 'PUT'])
+def test():
+    aTargetAltitude = 20
+    print "Basic pre-arm checks"
+    # Don't try to arm until autopilot is ready
+    while not vehicle.is_armable:
+        print " Waiting for vehicle to initialise..."
+        time.sleep(1)
+
+    print "Arming motors"
+    # Copter should arm in GUIDED mode
+    vehicle.mode    = VehicleMode("GUIDED")
+    vehicle.armed   = True
+
+    # Confirm vehicle armed before attempting to take off
+    while not vehicle.armed:
+        print " Waiting for arming..."
+        time.sleep(1)
+
+    print "Taking off!"
+    vehicle.simple_takeoff(aTargetAltitude) # Take off to target altitude
+
+    # Wait until the vehicle reaches a safe height before processing the goto (otherwise the command
+    #  after Vehicle.simple_takeoff will execute immediately).
+    while True:
+        print " Altitude: ", vehicle.location.global_relative_frame.alt
+        #Break and return from function just below target altitude.
+        if vehicle.location.global_relative_frame.alt>=aTargetAltitude*0.95:
+            print "Reached target altitude"
+            break
+        time.sleep(1)
+
+    api_land()
+
+    return jsonify(ok=True)
 @app.route("/api/cancel", methods=['POST', 'PUT'])
 def api_cancel():
 
@@ -346,7 +379,26 @@ def connect_to_drone():
                 time.sleep(2)
 
     # if --sim is enabled...
-    
+    #api_arm()
+    print 'connected!'
+    return jsonify(ok=True)
+
+@app.route("/api/closeVehicle", methods=['POST','PUT'])
+def closeVehicle():
+    if request.method == 'POST' or request.method == 'PUT':
+
+        global vehicle
+
+        print 'close'
+        vehicle.flush()
+        vehicle.close()
+        cmds = vehicle.commands
+        cmds.clear()
+        cmds.upload()
+            
+
+    # if --sim is enabled...
+    #api_arm()
     print 'connected!'
     return jsonify(ok=True)
 

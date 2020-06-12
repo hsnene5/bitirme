@@ -389,6 +389,30 @@ function connectToCom() {
         });
 }
 
+function closeVehicleClick() {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/closeVehicle',
+        contentType: 'application/json',
+        
+    })
+        .done(function (msg) {
+            console.log('sent arming message')
+        });
+}
+
+function test() {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/test',
+        contentType: 'application/json',
+
+    })
+        .done(function (msg) {
+            console.log('sent arming message')
+        });
+}
+
 $('#simulationStart').on('click', function () {
     document.getElementById('connect').disabled = true;
     enableFlightModes();
