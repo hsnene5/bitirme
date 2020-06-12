@@ -16,6 +16,17 @@
     });
 })(jQuery);
 
+function notifyAutoHide(message) {
+    $('.toast-body').html(message);
+    $('#toast2').toast('show');
+}
+
+function notify(message) {
+    $('.toast-body').html(message);
+    $('#toast').toast('show');
+}
+
+
 var map2; //Will contain map object.
 var marker2 = false; ////Has the user plotted their location marker? 
 
@@ -123,7 +134,7 @@ function guidedMarkerLocation() {
     var currentLocation = marker2.getPosition();
     if (google.maps.geometry.spherical.computeDistanceBetween(currentLocation, rangeCircle.center) > rangeCircle.radius) {
         
-        
+        notify("Selected location is not in the range.");
         marker2.setPosition(rangeCircle.center);
         return;
     }
@@ -286,7 +297,7 @@ $(function () {
     });
 })
 
-$('#connect').on('click', function () {
+function connectClick() {
     $.ajax({
         method: 'PUT',
         url: '/api/availableDevices',
@@ -318,7 +329,41 @@ $('#connect').on('click', function () {
             console.log('sent arming message')
         });
     //document.getElementById("connect").innerHTML="armed";
-})
+}
+
+/*$('#connect').on('click', function () {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/availableDevices',
+        contentType: 'application/json',
+        dataType: "json",
+        success: function (response) {
+            var data = [{ "telemetryName": response, "connection": "none" }];
+            $('#connectionTable').bootstrapTable({
+                data: data,
+                columns: [{},
+                {
+                    title: 'Connection',
+                    align: 'center',
+                    valign: 'middle',
+                    clickToSelect: false,
+                    formatter: function () {
+                        //return '<input name="elementname"  value="'+value+'"/>';
+                        return '<button type="button" class=\'btn btn-primary \' id="simulationStart" onclick="connectToCom()">Connect</button> ';
+                    }
+                }
+                ]
+            });
+        },
+        error: function () {
+            alert("No available devices found. Check your telemetry connection!")
+        }
+    })
+        .done(function (msg) {
+            console.log('sent arming message')
+        });
+    //document.getElementById("connect").innerHTML="armed";
+})*/
 
 function connectToCom() {
     console.log('conncet');
@@ -344,6 +389,7 @@ function connectToCom() {
         });
 }
 
+
 $('#simulationStart').on('click', function () {
     document.getElementById('connect').disabled = true;
     enableFlightModes();
@@ -366,6 +412,7 @@ $('#simulationStart').on('click', function () {
         success: function () {
             $('#simulation').html("Simulation");
             $("#spinner").css("display", "none");
+            notifyAutoHide("Simulation Enabled");
         }
     })
         .done(function (msg) {
@@ -475,18 +522,64 @@ $('#loiter').on('click', function () {
 
 })
 
-$('#rtl').on('click', function () {
+function prevFlightsClick() {
     $.ajax({
         method: 'PUT',
-        url: '/api/rtl',
+        url: '/api/getDB',
         contentType: 'application/json',
-        data: JSON.stringify({ mode: 'RTL' }),
+        success: function (response) {
+            $('#prevFlightsTable').bootstrapTable({
+                data: response,
+                columns: [{}, {}, {}, {}, {}, {}, {},
+                {
+                    field: 'operate',
+                    title: 'Run',
+                    align: 'center',
+                    valign: 'middle',
+                    clickToSelect: false,
+                    formatter: function (value, row, index) {
+                        //return '<input name="elementname"  value="'+value+'"/>';
+                        return '<button class=\'btn btn-primary \' guidedPointLat="' + row.targetLat + '" guidedPointLon="' + row.targetLon +
+                            '"guidedAltitude="' + row.run_altitude + '"guidedVelocity="' + row.run_velocity + '"afterArrival="' + row.afterReach + '"> Run</button > ';
+                    }
+                }
+                ]  
+                
+            });
+            $(".btn").click(function () {
+                var alt = $(this).attr('guidedAltitude');
+                var vel = $(this).attr('guidedVelocity');
+                var dataY = {
+                    altitude: parseFloat(alt).toFixed(2),
+                    velocity: parseFloat(vel).toFixed(2),
+                    point1Lat: $(this).attr('guidedPointLat'),
+                    point1Lon: $(this).attr('guidedPointLon'),
+                    afterArrival: $(this).attr('afterArrival')
+                };
+
+                var uluru = { lat: parseFloat($(this).attr('guidedPointLat')), lng: parseFloat($(this).attr('guidedPointLon')) };
+                pointMarker = new google.maps.Marker({ position: uluru, map: map });
+
+                $.ajax({
+                    method: 'PUT',
+                    url: '/api/guided',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ dataY }),
+                    success: function () {
+                        console.log('flight completed');
+                    }
+                })
+                    .done(function (msg) {
+                        console.log('sent guided mode')
+                    });
+            });
+        }
     })
         .done(function (msg) {
-            console.log('sent RTL mode')
+            console.log('running a previous mission');
         });
+}
 
-})
 
 $('#cancelStart').on('click', function () {
 
@@ -570,13 +663,23 @@ source.onmessage = function (event) {
     if (spinner = false) {
 
     }
-    $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState +'<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2))
-    var uluru = { lat: msg.lat, lng: msg.lon };
-    var point1 = msg.point1;
+
+    if (msg.onFlight == true) {
+        $('#stopSimulationGroup').prop("hidden", true);
+    }
+    if (msg.onFlight == false) {
+        $('#stopSimulationGroup').prop("hidden", false);
+    }
+
+    if (msg.vehicleState == null) {
+        msg.vehicleState = 'Not Available';
+    }
+    
+    $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState + '<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2));
     var latlng = new google.maps.LatLng(msg.lat, msg.lon);
     map.setCenter(latlng);
     map2.setCenter(latlng);
-    map.setCenter(latlng);
+    
     //droneMarker;
     rangeCircle.setCenter(latlng);
     droneMarker.setPosition(latlng);
