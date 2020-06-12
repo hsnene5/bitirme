@@ -26,26 +26,48 @@
         <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
             <i class="fas fa-bars"></i>
         </button>
-        <!-- Navbar Search-->
+        <!-- Navbar-->
         <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
             <!--<div class="input-group">
-                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
-                </div>
-            </div>-->
+            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </div>-->
         </form>
-        <!-- Navbar-->
-        <ul class="navbar-nav ml-auto ml-md-0">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">Activity Log</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="login.html">Logout</a>
+        <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+            <!-- Position it -->
+            <div style="position: absolute; top: 100px; right: 0;">
+
+                <!-- Then put toasts within -->
+                <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+                    <div class="toast-header">
+                        <strong class="mr-auto">Bootstrap</strong>
+                        <small class="text-muted">just now</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        See? Just like this.
+                    </div>
                 </div>
-            </li>
-        </ul>
+
+                <div id="toast2" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="mr-auto">Bootstrap</strong>
+                        <small class="text-muted">2 seconds ago</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        Heads up, toasts will stack automatically
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
@@ -122,10 +144,10 @@
 
                     </ol>
                     <p id="header-state"><b>Vehicle:</b> <br><b>Armed:</b> <br><b>Mode:</b> <br><b>Altitude:</b></p>
-                   
+
                     <div class="row">
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="connect" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#connectPopup">Connect</button>
+                            <button id="connect" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="connectClick()" data-target="#connectPopup">Connect</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
@@ -149,7 +171,7 @@
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="rtl" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#rtlModePopup" disabled>RTL</button>
+                            <button id="rtl" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="rtlClick()" data-target="#rtlModePopup">RTL</button>
                             <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
@@ -172,7 +194,45 @@
                                 Details
                             </a>
                         </div>
+                        <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
+                            <button id="prevFlights" type="button" class="btn btn-lg btn-danger" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="prevFlightsClick()" data-target="#prevFlightsPopup">Prev Flights</button>
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
+                                Details
+                            </a>
+                        </div>
                         <!-- Modal -->
+                        <div class="modal fade" id="prevFlightsPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                <div class="modal-content" id="prevFlightPopupContent">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Previous Flights</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Guided Flights</h6>
+                                        <table id="prevFlightsTable" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th data-field="id" scope="col">ID</th>
+                                                    <th data-field="targetLat" scope="col">Target Latitude</th>
+                                                    <th data-field="targetLon" scope="col">Target Longitude</th>
+                                                    <th data-field="run_velocity" scope="col">Velocity</th>
+                                                    <th data-field="run_altitude" scope="col">Altitude</th>
+                                                    <th data-field="afterReach" scope="col">After Arrival</th>
+                                                    <th data-field="run_date" scope="col">Date & Time</th>
+                                                    <th>Run</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="modal fade" id="connectPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content" id="simulationPopupContent">
@@ -501,6 +561,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 </body>
 
 </html>
