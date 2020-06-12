@@ -359,6 +359,7 @@ def enableSimulation():
     parameter = request.json['homeLocation']
     homeLocationLat = float(parameter["lat"])
     homeLocationLng = float(parameter["lng"])
+    global vehicle
     homeArg = '--home='+str(homeLocationLat)+','+str(homeLocationLng)+',0,180'
     sitl = dronekit_sitl.start_default(homeLocationLat,homeLocationLng)
     #sitl.download('copter','3.3', verbose=True)
