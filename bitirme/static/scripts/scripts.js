@@ -140,8 +140,8 @@ function guidedMarkerLocation() {
     }
     //Add lat and lng values to a field that we can save.
     $('#toast').toast('hide');
-    document.getElementById('guidedPointLat').value = currentLocation.lat(); //latitude
-    document.getElementById('guidedPointLon').value = currentLocation.lng(); //longitude
+    document.getElementById('guidedPointLat').value = currentLocation.lat().toFixed(6); //latitude
+    document.getElementById('guidedPointLon').value = currentLocation.lng().toFixed(6); //longitude
 }
 
 function simulationMarkerLocation() {
@@ -390,7 +390,7 @@ function connectToCom() {
 }
 
 
-$('#simulationStart').on('click', function () {
+function simulationStart() {
     document.getElementById('connect').disabled = true;
     enableFlightModes();
     var simMarkerLocation = simMarker.getPosition();
@@ -418,33 +418,47 @@ $('#simulationStart').on('click', function () {
         .done(function (msg) {
             console.log('sent arming message');
         });
-})
+}
 
-$('#guidedStart').on('click', function () {
+function guidedStart() {
     var guidedAltitude = document.getElementById('guidedAlt').value;
     var guidedVelocity = document.getElementById('guidedVel').value;
     var guidedPointLat = document.getElementById('guidedPointLat').value;
     var guidedPointLon = document.getElementById('guidedPointLon').value;
     var afterArrival = document.querySelector('input[name="guidedRadio"]:checked').value;
-    
+
+    if (guidedPointLat == "" || guidedPointLon == "") {
+        notify("Location parameters cannot be empty!");
+        $('#guidedLocationParams').css('border', '2px solid red');
+        return false;
+    }
+
     if (guidedAltitude == "" && guidedVelocity == "") {
-        alert("Altitude and Velocity parameters cannot be empty!");
-        document.getElementById('guidedAlt').style["border"] = "2 px solid red";
-        document.getElementById('guidedVel').style["background-color"] = "red";
+        notify("Altitude and Velocity parameters cannot be empty!");
+        $('#guidedVel').css('border', '2px solid red');
+        $('#guidedAlt').css('border', '2px solid red');
         return false;
     }
 
     if (guidedAltitude == "") {
-        alert("Altitude parameter cannot be empty!");
-        document.getElementById('guidedAlt').style["background-color"] = "red";
+        notify("Altitude parameter cannot be empty!");
+        $('#guidedAlt').css('border', '2px solid red');
         return false;
     }
 
-    if (guidedVelocity == "") {
-        alert("Velocity parameter cannot be empty!");
-        document.getElementById('guidedVel').style["background-color"] = "red";
+    if (guidedAltitude > 20) {
+        notify("Altitude cannot be higher than 20!");
+        $('#guidedAlt').css('border', '2px solid red');
         return false;
     }
+
+    if (guidedVelocity > 5) {
+        notify("Velocity cannot be higher than 5!");
+        $('#guidedVel').css('border', '2px solid red');
+        return false;
+    }
+
+    
 
     var dataY = {
         altitude : document.getElementById('guidedAlt').value,
@@ -462,13 +476,13 @@ $('#guidedStart').on('click', function () {
         method: 'PUT',
         url: '/api/guided',
         contentType: 'application/json',
-        data: JSON.stringify({ dataY }),
+        data: JSON.stringify({ dataY })
     })
          .done(function (msg) {
-             console.log('sent guided mode')
+             $('#toast').toast('hide');
          });
 
-})
+}
 
 $('#autoStart').on('click', function () {
     var dataX = {
@@ -538,15 +552,15 @@ function prevFlightsClick() {
                     valign: 'middle',
                     clickToSelect: false,
                     formatter: function (value, row, index) {
-                        //return '<input name="elementname"  value="'+value+'"/>';
-                        return '<button class=\'btn btn-primary \' guidedPointLat="' + row.targetLat + '" guidedPointLon="' + row.targetLon +
+                        var btnClass = 'prevFlight'+row.id
+                        return '<button class=\'prevFlightbtn btn btn-primary \' guidedPointLat="' + row.targetLat + '" guidedPointLon="' + row.targetLon +
                             '"guidedAltitude="' + row.run_altitude + '"guidedVelocity="' + row.run_velocity + '"afterArrival="' + row.afterReach + '"> Run</button > ';
                     }
                 }
                 ]  
                 
             });
-            $(".btn").click(function () {
+            $(".prevFlightbtn").click(function () {
                 var alt = $(this).attr('guidedAltitude');
                 var vel = $(this).attr('guidedVelocity');
                 var dataY = {

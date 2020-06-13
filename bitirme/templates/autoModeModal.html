@@ -42,27 +42,25 @@
                 <!-- Then put toasts within -->
                 <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
                     <div class="toast-header">
-                        <strong class="mr-auto">Bootstrap</strong>
-                        <small class="text-muted">just now</small>
+                        <strong class="mr-auto">Notification</strong>
                         <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="toast-body">
-                        See? Just like this.
+                        Notification message.
                     </div>
                 </div>
 
-                <div id="toast2" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div id="toast2" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
                     <div class="toast-header">
-                        <strong class="mr-auto">Bootstrap</strong>
-                        <small class="text-muted">2 seconds ago</small>
+                        <strong class="mr-auto">Notification</strong>
                         <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="toast-body">
-                        Heads up, toasts will stack automatically
+                        Notification message.
                     </div>
                 </div>
             </div>
@@ -287,7 +285,7 @@
 
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button id="simulationStart" type="button" class="btn btn-primary">Start</button>
+                                        <button id="simulationStart" type="button" class="btn btn-primary" onclick="simulationStart()">Start</button>
                                     </div>
                                 </div>
                             </div>
@@ -400,9 +398,9 @@
                                     </div>
                                     <div class="modal-body">
                                         <h6 class="modal-title" id="exampleModalLongTitle">Select Destination</h6>
-                                        <div class="input-group">
-                                            <input id="guidedPointLat" type="number" class="form-control" placeholder="Latitude">
-                                            <input id="guidedPointLon" type="number" class="form-control" placeholder="Longtitude">
+                                        <div class="input-group" id="guidedLocationParams">
+                                            <input id="guidedPointLat" type="number" class="form-control" placeholder="Latitude" disabled>
+                                            <input id="guidedPointLon" type="number" class="form-control" placeholder="Longtitude" disabled>
                                             <div class="input-group-prepend">
                                                 <button class="btn btn-outline-secondary" role="button" id="guidedSelectMapButton"><i class="fas fa-map-marked-alt"></i> Map</button>
                                                 <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
@@ -435,7 +433,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button id="guidedStart" type="button" class="btn btn-primary"><i class="fas fa-flag-checkered"></i> Start</button>
+                                        <button id="guidedStart" type="button" class="btn btn-primary" onclick="guidedStart()"><i class="fas fa-flag-checkered"></i> Start</button>
                                     </div>
                                 </div>
                             </div>
