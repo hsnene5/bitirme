@@ -194,7 +194,7 @@ function initMaps() {
 var iconBase = 'http://maps.google.com/mapfiles/kml/shapes/';
 var marker;
 var mainMaps;
-var mainHomeMarker;
+var mainHomeMarker = false;
 
 function mainMap() {
 
@@ -218,7 +218,7 @@ function mainMap() {
 
             var user = { lat: position.coords.latitude, lng: position.coords.longitude };
             marker = new google.maps.Marker({ position: user, map: mainMaps, icon: iconBase + 'man.png' });
-            mainHomeMarker = new google.maps.Marker({ position: user, map: mainMaps, icon: iconBase + 'homegardenbusiness.png' });
+            
         }, function () {
             handleLocationError(true, mainMaps.getCenter());
         });
@@ -449,7 +449,13 @@ function simulationStart() {
     var simMarkerLocation = simMarker.getPosition();
     guidedHomeMarker.setPosition(simMarker.getPosition());
     guidedRangeCircle.setCenter(simMarker.getPosition());
-    mainHomeMarker.setPosition(simMarker.getPosition());
+    if (mainHomeMarker === false) {
+        mainHomeMarker = new google.maps.Marker({ position: simMarker.getPosition(), map: mainMaps, icon: iconBase + 'homegardenbusiness.png' });
+    } else {
+        mainHomeMarker.setPosition(simMarker.getPosition());
+    }
+
+    
     var homeLocation = {
         lng: simMarkerLocation.lng(),
         lat: simMarkerLocation.lat(),
