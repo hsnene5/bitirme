@@ -260,31 +260,39 @@ function selectNewLocation() {
 }
 
 function selectNewOptionLand() {
-    if (document.getElementById("secondPoint").style.display == 'none') {
+    if (document.getElementById("secondPoint").style.display == 'none' && document.getElementById("rtlOption1").style.display == 'none') {
+        document.getElementById("landOption1").innerHTML = "Next Step: LAND";
         document.getElementById("landOption1").style.display = 'block';
     }
-    if (document.getElementById("thirdPoint").style.display == 'none' && document.getElementById("secondPoint").style.display != 'none') {
+    if (document.getElementById("thirdPoint").style.display == 'none' && document.getElementById("secondPoint").style.display != 'none' && document.getElementById("rtlOption2").style.display == 'none') {
+        document.getElementById("landOption2").innerHTML = "Next Step: LAND";
         document.getElementById("landOption2").style.display = 'block';
     }
-    if (document.getElementById("fourthPoint").style.display == 'none' && document.getElementById("thirdPoint").style.display != 'none') {
+    if (document.getElementById("fourthPoint").style.display == 'none' && document.getElementById("thirdPoint").style.display != 'none' && document.getElementById("rtlOption3").style.display == 'none') {
+        document.getElementById("landOption3").innerHTML = "Next Step: LAND";
         document.getElementById("landOption3").style.display = 'block';
     }
-    if (document.getElementById("fourthPoint").style.display != 'none') {
+    if (document.getElementById("fourthPoint").style.display != 'none' && document.getElementById("rtlOption4").style.display == 'none') {
+        document.getElementById("landOption4").innerHTML = "Next Step: LAND";
         document.getElementById("landOption4").style.display = 'block';
     }
 }
 
 function selectNewOptionRtl() {
-    if (document.getElementById("secondPoint").style.display == 'none') {
+    if (document.getElementById("secondPoint").style.display == 'none' ) {
+        document.getElementById("rtlOption1").innerHTML = "Next Step: RTL";
         document.getElementById("rtlOption1").style.display = 'block';
     }
     if (document.getElementById("thirdPoint").style.display == 'none' && document.getElementById("secondPoint").style.display != 'none') {
+        document.getElementById("rtlOption2").innerHTML = "Next Step: RTL";
         document.getElementById("rtlOption2").style.display = 'block';
     }
     if (document.getElementById("fourthPoint").style.display == 'none' && document.getElementById("thirdPoint").style.display != 'none') {
+        document.getElementById("rtlOption3").innerHTML = "Next Step: RTL";
         document.getElementById("rtlOption3").style.display = 'block';
     }
     if (document.getElementById("fourthPoint").style.display != 'none') {
+        document.getElementById("rtlOption4").innerHTML = "Next Step: RTL";
         document.getElementById("rtlOption4").style.display = 'block';
     }
 }
@@ -305,6 +313,14 @@ function cancelNewLocation() {
         document.getElementById("exampleModalLongTitle2").style.display = 'none';
         document.getElementById("secondPoint").style.display = 'none';
     });
+}
+
+function cancelLandRtlOption() {
+    document.getElementById("cancelLandOption4").addEventListener("click", function () {
+        document.getElementById("landOption4").style.display = 'none';
+        document.getElementById("landOption4").innerHTML = '';
+    });
+
 }
 
 function enableFlightModes(connectionMode)
@@ -534,7 +550,16 @@ $('#autoStart').on('click', function () {
         point3Lat: document.getElementById('autoPoint3Lat').value,
         point3Lon: document.getElementById('autoPoint3Lon').value,
         point4Lat: document.getElementById('autoPoint4Lat').value,
-        point4Lon: document.getElementById('autoPoint4Lon').value
+        point4Lon: document.getElementById('autoPoint4Lon').value,
+        land1: document.getElementById('landOption1').textContent,
+        land2: document.getElementById('landOption2').textContent,
+        land3: document.getElementById('landOption3').textContent,
+        land4: document.getElementById('landOption4').textContent,
+        rtl1: document.getElementById('rtlOption1').textContent,
+        rtl2: document.getElementById('rtlOption2').textContent,
+        rtl3: document.getElementById('rtlOption3').textContent,
+        rtl4: document.getElementById('rtlOption4').textContent
+
     };
 
     $.ajax({
