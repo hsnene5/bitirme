@@ -292,7 +292,6 @@ def api_land():
 
 @app.route("/api/loiter", methods=['POST', 'PUT'])
 def api_loiter():
-
     pointLoiterAlt = vehicle.location.global_relative_frame.alt
     pointLoiterLon = vehicle.location.global_relative_frame.lon
     pointLoiterLat = vehicle.location.global_relative_frame.lat
