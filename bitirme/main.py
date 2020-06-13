@@ -293,10 +293,21 @@ def api_land():
 @app.route("/api/loiter", methods=['POST', 'PUT'])
 def api_loiter():
 
+    pointLoiterAlt = vehicle.location.global_relative_frame.alt
+    pointLoiterLon = vehicle.location.global_relative_frame.lon
+    pointLoiterLat = vehicle.location.global_relative_frame.lat
+    loiterPoint = LocationGlobalRelative(pointLoiterLat, pointLoiterLon, pointLoiterAlt)
+    vehicle.simple_goto(loiterPoint)
+    time.sleep(1)
     print("Loiter mode is on")
-    vehicle.mode = VehicleMode("STABILIZE")
-    
-    # Close vehicle object before exiting script
+    #vehicle.mode = VehicleMode("STABILIZE")
+    while True:
+        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
+        # Break and return from function just below target altitude.
+        ##if vehicle.mode != VehicleMode("LOITER"):
+          ##  print("Loiter mode is ended")
+            ##break
+        time.sleep(1)
 
     return jsonify(ok=True)
 
