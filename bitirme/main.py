@@ -307,7 +307,7 @@ def api_loiter():
           ##  print("Loiter mode is ended")
             ##break
         time.sleep(1)
-
+    
     return jsonify(ok=True)
 
 @app.route("/api/cancel", methods=['POST', 'PUT'])
