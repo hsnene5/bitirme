@@ -27,8 +27,12 @@ function notify(message) {
 }
 
 
-var map2; //Will contain map object.
-var marker2 = false; ////Has the user plotted their location marker? 
+var guidedMaps; //Will contain map object.
+var guidedMarker = false; ////Has the user plotted their location marker? 
+var guidedUserMarker;
+var guidedDroneMarker = false;
+var guidedHomeMarker;
+var guidedRangeCircle;
 
 var simMap;
 var simMarker = false;
@@ -38,7 +42,7 @@ var simMarker = false;
 function guidedMap() {
 
     //The center location of our map.
-    var centerOfMap = new google.maps.LatLng(52.357971, -6.516758);
+    
 
     //Map options.
     var options = {
@@ -47,27 +51,47 @@ function guidedMap() {
     };
 
     //Create the map object.
-    map2 = new google.maps.Map(document.getElementById('guidedSelectMap'), options);
-    map2.setMapTypeId(google.maps.MapTypeId.HYBRID);
+    guidedMaps = new google.maps.Map(document.getElementById('guidedSelectMap'), options);
+    guidedMaps.setMapTypeId(google.maps.MapTypeId.HYBRID);
     //Listen for any clicks on the map.
-    google.maps.event.addListener(map2, 'click', function (event) {
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            guidedMaps.setCenter(pos);
+
+            var user = { lat: position.coords.latitude, lng: position.coords.longitude };
+            guidedUserMarker = new google.maps.Marker({ position: user, map: guidedMaps, icon: iconBase + 'man.png' });
+            
+        }, function () {
+            handleLocationError(true, guidedMaps.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, guidedMaps.getCenter());
+    }
+    google.maps.event.addListener(guidedMaps, 'click', function (event) {
         //Get the location that the user clicked.
         var clickedLocation = event.latLng;
         //If the marker hasn't been added.
-        if (marker2 === false) {
+        if (guidedMarker === false) {
             //Create the marker.
-            marker2 = new google.maps.Marker({
+            guidedMarker = new google.maps.Marker({
                 position: clickedLocation,
-                map: map2,
+                map: guidedMaps,
                 draggable: true, //make it draggable
             });
             //Listen for drag events!
-            google.maps.event.addListener(marker2, 'dragend', function (event) {
+            google.maps.event.addListener(guidedMarker, 'dragend', function (event) {
                 guidedMarkerLocation();
             });
         } else {
             //Marker has already been added, so just change its location.
-            marker2.setPosition(clickedLocation);
+            guidedMarker.setPosition(clickedLocation);
         }
         //Get the marker's location.
         guidedMarkerLocation();
@@ -78,7 +102,6 @@ function simulationMap() {
 
     //The center location of our map.
     var mapProp = {
-        
         zoom: 14,
     };
 
@@ -97,7 +120,18 @@ function simulationMap() {
 
             var user = { lat: position.coords.latitude, lng: position.coords.longitude };
             marker = new google.maps.Marker({ position: user, map: simMap, icon: iconBase + 'man.png' });
-            simMarker = new google.maps.Marker({ position: user, map: simMap });
+            simMarker = new google.maps.Marker({ position: user, map: simMap});
+            guidedHomeMarker = new google.maps.Marker({ position: user, map: guidedMaps, icon: iconBase + 'homegardenbusiness.png' });
+            guidedRangeCircle = new google.maps.Circle({
+                center: user,
+                strokeColor: '#1ec904',
+                strokeOpacity: 0.8,
+                fill: false,
+                strokeWeight: 2,
+                map: guidedMaps,
+                clickable: false,
+                radius: 1500
+            });
         }, function () {
             handleLocationError(true, simMap.getCenter());
         });
@@ -131,11 +165,11 @@ function simulationMap() {
 
 function guidedMarkerLocation() {
     //Get location.
-    var currentLocation = marker2.getPosition();
-    if (google.maps.geometry.spherical.computeDistanceBetween(currentLocation, rangeCircle.center) > rangeCircle.radius) {
+    var currentLocation = guidedMarker.getPosition();
+    if (google.maps.geometry.spherical.computeDistanceBetween(currentLocation, guidedRangeCircle.center) > guidedRangeCircle.radius) {
         
         notify("Selected location is not in the range.");
-        marker2.setPosition(rangeCircle.center);
+        guidedMarker.setPosition(guidedRangeCircle.center);
         return;
     }
     //Add lat and lng values to a field that we can save.
@@ -146,9 +180,9 @@ function guidedMarkerLocation() {
 
 function simulationMarkerLocation() {
     var currentLocation = simMarker.getPosition();
-
-    document.getElementById('simulationHomeLat').value = currentLocation.lat(); //latitude
-    document.getElementById('simulationHomeLon').value = currentLocation.lng(); //longitude
+    
+    document.getElementById('simulationHomeLat').value = currentLocation.lat().toFixed(6); //latitude
+    document.getElementById('simulationHomeLon').value = currentLocation.lng().toFixed(6); //longitude
 }
 
 function initMaps() {
@@ -159,7 +193,9 @@ function initMaps() {
 
 var iconBase = 'http://maps.google.com/mapfiles/kml/shapes/';
 var marker;
-var map;
+var mainMaps;
+var mainHomeMarker;
+
 function mainMap() {
 
     var mapProp = {
@@ -168,8 +204,8 @@ function mainMap() {
     };
 
     var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-    map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-    map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+    mainMaps = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+    mainMaps.setMapTypeId(google.maps.MapTypeId.HYBRID);
     //infoWindow = new google.maps.InfoWindow;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -178,16 +214,17 @@ function mainMap() {
                 lng: position.coords.longitude
             };
 
-            map.setCenter(pos);
+            mainMaps.setCenter(pos);
 
             var user = { lat: position.coords.latitude, lng: position.coords.longitude };
-            marker = new google.maps.Marker({ position: user, map: map, icon: iconBase + 'man.png' })
+            marker = new google.maps.Marker({ position: user, map: mainMaps, icon: iconBase + 'man.png' });
+            mainHomeMarker = new google.maps.Marker({ position: user, map: mainMaps, icon: iconBase + 'homegardenbusiness.png' });
         }, function () {
-            handleLocationError(true, map.getCenter());
+            handleLocationError(true, mainMaps.getCenter());
         });
     } else {
         // Browser doesn't support Geolocation
-        handleLocationError(false, map.getCenter());
+        handleLocationError(false, mainMaps.getCenter());
     }
 
 }
@@ -394,6 +431,9 @@ function simulationStart() {
     document.getElementById('connect').disabled = true;
     enableFlightModes();
     var simMarkerLocation = simMarker.getPosition();
+    guidedHomeMarker.setPosition(simMarker.getPosition());
+    guidedRangeCircle.setCenter(simMarker.getPosition());
+    mainHomeMarker.setPosition(simMarker.getPosition());
     var homeLocation = {
         lng: simMarkerLocation.lng(),
         lat: simMarkerLocation.lat(),
@@ -470,16 +510,15 @@ function guidedStart() {
 
     enableComponents('guided');
     var uluru = { lat: parseFloat(guidedPointLat), lng: parseFloat(guidedPointLon) };
-    pointMarker = new google.maps.Marker({ position: uluru, map: map });
-
+    pointMarker = new google.maps.Marker({ position: uluru, map: mainMaps });
     $.ajax({
         method: 'PUT',
         url: '/api/guided',
         contentType: 'application/json',
         data: JSON.stringify({ dataY })
     })
-         .done(function (msg) {
-             $('#toast').toast('hide');
+        .done(function (msg) {
+            $('#toast').toast('hide');
          });
 
 }
@@ -572,7 +611,7 @@ function prevFlightsClick() {
                 };
 
                 var uluru = { lat: parseFloat($(this).attr('guidedPointLat')), lng: parseFloat($(this).attr('guidedPointLon')) };
-                pointMarker = new google.maps.Marker({ position: uluru, map: map });
+                pointMarker = new google.maps.Marker({ position: uluru, map: mainMaps });
 
                 $.ajax({
                     method: 'PUT',
@@ -621,7 +660,7 @@ $('#simulationSelectMapButton').on('click', function () {
     }
 })
 
-$('#simulationUserLocation').on('click', function () {
+function simulationUserLocationClick() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
 
@@ -631,13 +670,15 @@ $('#simulationUserLocation').on('click', function () {
             };
 
             simMap.setCenter(pos);
-
-            if (simMarker != null) {
+            if (simMarker === false) {
+                simMarker = new google.maps.Marker({ position: pos, map: simMap });
+            }
+            else {
                 simMarker.setPosition(pos);
             }
-            
-            document.getElementById('simulationHomeLat').value = pos.lat;
-            document.getElementById('simulationHomeLon').value = pos.lng;
+
+            document.getElementById('simulationHomeLat').value = pos.lat.toFixed(6);
+            document.getElementById('simulationHomeLon').value = pos.lng.toFixed(6);
             
         }, function () {
             handleLocationError(true, simMap.getCenter());
@@ -646,7 +687,7 @@ $('#simulationUserLocation').on('click', function () {
         // Browser doesn't support Geolocation
         handleLocationError(false, simMap.getCenter());
     }
-})
+}
 
 
 $('#guidedSelectMapButton').on('click', function () {
@@ -660,19 +701,16 @@ $('#guidedSelectMapButton').on('click', function () {
 })
 
 var globmsg = null;
-var droneMarker = new google.maps.Marker({ map: map, icon: iconBase + 'heliport.png' });
-var rangeCircle = new google.maps.Circle({
-    strokeColor: '#1ec904',
-    strokeOpacity: 0.8,
-    fill: false,
-    strokeWeight: 2,
-    map: map2,
-    clickable: false,
-    radius: 1500
-});
+//var droneMarker = new google.maps.Marker({ map: map, icon: iconBase + 'heliport.png' });
+var droneMarker = false;
+
 
 var source = new EventSource('/api/sse/state');
 source.onmessage = function (event) {
+
+   
+    
+
     var msg = JSON.parse(event.data);
     if (spinner = false) {
 
@@ -691,13 +729,32 @@ source.onmessage = function (event) {
     
     $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState + '<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2));
     var latlng = new google.maps.LatLng(msg.lat, msg.lon);
-    map.setCenter(latlng);
-    map2.setCenter(latlng);
-    
-    //droneMarker;
-    rangeCircle.setCenter(latlng);
-    droneMarker.setPosition(latlng);
-    //var marker2 = new google.maps.Marker({ point1, map: map })
-}
+    mainMaps.setCenter(latlng);
 
-//google.maps.event.addDomListener(window, 'load', mainMap);
+    //Check if the marker is already created
+    if (droneMarker === false) {
+        //Create the marker.
+        droneMarker = new google.maps.Marker({
+            position: latlng,
+            map: mainMaps,
+            icon: iconBase + 'heliport.png'
+        });
+       
+    } else {
+
+        droneMarker.setPosition(latlng);
+    }
+    //Check if the marker is already created
+    if (guidedDroneMarker === false) {
+        //Create the marker.
+        guidedDroneMarker = new google.maps.Marker({
+            position: latlng,
+            map: guidedMaps,
+            icon: iconBase + 'heliport.png'
+        });
+        //Listen for drag events!
+    } else {
+        //Marker has already been added, so just change its location.
+        guidedDroneMarker.setPosition(latlng);
+    }
+}
