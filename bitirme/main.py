@@ -21,6 +21,7 @@ from datetime import datetime
 from array import *
 import dronekit_sitl
 from dronekit_sitl import SITL
+from werkzeug.exceptions import HTTPException
 
 app = Flask(__name__)
 
@@ -501,40 +502,17 @@ def about():
     # show the form, it wasn't submitted
     return render_template('about.html')
 
+   
 @app.route('/401', methods=['GET', 'POST'])
 def error401():
-    if request.method == 'POST':
-        # do stuff when the form is submitted
-
-        # redirect to end the POST handling
-        # the redirect can be to the same route or somewhere else
-        return redirect(url_for('index'))
-
-    # show the form, it wasn't submitted
     return render_template('401.html')
 
 @app.route('/404', methods=['GET', 'POST'])
 def error404():
-    if request.method == 'POST':
-        # do stuff when the form is submitted
-
-        # redirect to end the POST handling
-        # the redirect can be to the same route or somewhere else
-        return redirect(url_for('index'))
-
-    # show the form, it wasn't submitted
     return render_template('404.html')
 
 @app.route('/500', methods=['GET', 'POST'])
 def error500():
-    if request.method == 'POST':
-        # do stuff when the form is submitted
-
-        # redirect to end the POST handling
-        # the redirect can be to the same route or somewhere else
-        return redirect(url_for('index'))
-
-    # show the form, it wasn't submitted
     return render_template('500.html')
 
 def main():
