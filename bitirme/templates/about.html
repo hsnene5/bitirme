@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" href="static/images/favicon.png" type="image/png" />
+    <title>The UACT</title>
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">The UACT</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-helicopter"></i></div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Other Menu</div>
+                        <a class="nav-link" href="{{ url_for('about') }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                            About
+                        </a>
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                            Error Pages
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                    Pages
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="{{ url_for('error401') }}">401 Page</a><a class="nav-link" href="{{ url_for('error404') }}">404 Page</a><a class="nav-link" href="{{ url_for('error500') }}">500 Page</a></nav>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    Dev User
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid">
+                    <h1 class="mt-4">About</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">About</li>
+                    </ol>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <p class="mb-0">The UACT provides a service to users to control their drone in various modes. </p><br />
+                            <p class="mb-0">At Autonomous Cargo Transporter, we believe there is a better way to do transportation. 
+                            Our aim is to find a solution against traffic, environmental pollution, manpower usage and such different problems by designing a drone that can carry autonomous and cargo.
+                             We focus on to control this aircraft also via a web application. This system is a more valuable way where customers are earned rather than bought. Our mission is to help people use and to become widespread this new transportation system. It’s one of the least understood and least transparent aspects of transportation and we see that as an opportunity. We are excited to simplify using a drone for everyone daily routine through our software, education and originality. </pclass="mb-0">
+                        </div>
+                    </div>
+                    <h1 class="mt-4">Team</h1>
+                    <br />
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card">
+                                    <img class="card-img-top" style="height: 40rem;object-fit: cover;" src="static/images/hasanenesdogan.jpg" alt="Card image cap">
+                                    <div class="card-body">
+                                        <p class="card-text">Hasan Enes Doğan</p>
+                                        <p class="card-text">Student at TED University, Computer Engineering</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card">
+                                    <img class="card-img-top" style="height: 40rem;object-fit: cover;" src="static/images/iremsılabatı.jpg" alt="Card image cap">
+                                    <div class="card-body">
+                                        <p class="card-text">İrem Sıla Batı</p>
+                                        <p class="card-text">Student at TED University, Electrical and Electronics Engineering</p>
+                                    </div>
+                                </div>
+                            </div>                        
+                            <div class="w-100"></div>
+                            <div class="col">
+                                <div class="card">
+                                    <img class="card-img-top" style="height: 40rem;object-fit: cover;" src="static/images/kutlughanozkan.jpg" alt="Card image cap">
+                                    <div class="card-body">
+                                        <p class="card-text">Kutluğhan Özkan</p>
+                                        <p class="card-text">Student at TED University, Electrical and Electronics Engineering</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card">
+                                    <img class="card-img-top" style="height: 40rem;object-fit: cover;" src="static/images/cvfotoğraf.jpg" alt="Card image cap">
+                                    <div class="card-body">
+                                        <p class="card-text">Muhammed Haktan Acar </p>
+                                        <p class="card-text">Student at TED University, Electrical and Electronics Engineering</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; The UACT 2020</div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+</body>
+</html>
