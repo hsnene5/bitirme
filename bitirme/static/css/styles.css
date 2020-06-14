@@ -11002,6 +11002,14 @@ ol.carousel-indicators {
     height: 400px;
 }
 
+#autoSelectGoogleMap {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    height: 400px;
+}
+
 #spinner {
     width: 100%;
     height: 100%;

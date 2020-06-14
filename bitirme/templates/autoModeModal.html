@@ -78,27 +78,51 @@
                             Dashboard
                         </a>
                         <div class="sb-sidenav-menu-heading">Other Menu</div>
-                        <a class="nav-link" href="{{ url_for('about') }}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            About
-                        </a>                
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Other One
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="layout-static.html">1</a><a class="nav-link" href="layout-sidenav-light.html">2</a></nav>
+                        </div>
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Error Pages
+                            Other Two
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                    1
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="login.html">Login</a><a class="nav-link" href="register.html">Register</a><a class="nav-link" href="password.html">Forgot Password</a></nav>
+                                </div>
                                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                    Pages
+                                    2
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
                                 <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="{{ url_for('error401') }}">401 Page</a><a class="nav-link" href="{{ url_for('error404') }}">404 Page</a><a class="nav-link" href="{{ url_for('error500') }}">500 Page</a></nav>
+                                    <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="401.html">401 Page</a><a class="nav-link" href="404.html">404 Page</a><a class="nav-link" href="500.html">500 Page</a></nav>
                                 </div>
                             </nav>
                         </div>
+                        <div class="sb-sidenav-menu-heading">Other Three</div>
+                        <a class="nav-link" href="charts.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Other Four
+                        </a>
+                        <a class="nav-link" href="tables.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Other Five
+                        </a>
                     </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    Dev User
                 </div>
             </nav>
         </div>
@@ -118,61 +142,71 @@
 
                     </ol>
                     <p id="header-state"><b>Vehicle:</b> <br><b>Armed:</b> <br><b>Mode:</b> <br><b>Altitude:</b></p>
-
+                    <div class="progress">
+                        <div id="battery" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                    </div>
                     <div class="row">
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
                             <button id="connect" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="connectClick()" data-target="#connectPopup">Connect</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="You can connect your device to The UACT. " title="Connect">
-                                 Details                          </a>
-                        </div>
-                        <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="simulation" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#simulationPopup">Simulation</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="You can enable the simulation mode and simulate your flight." title="Simulation">
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="auto" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoModePopup" disabled>Auto</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="You can create a flight mission in Auto Mode." title="Auto">
+                            <button id="simulation" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#simulationPopup">Simulation</button>
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
+                                Details
+                            </a>
+                        </div>
+                        <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
+                            <button id="auto" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoModePopup">Auto</button>
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
                             <button id="guided" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#guidedModePopup">Guided</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content=" You can choose the destination and set the task to be done after arrival. (RTL, Land or Loiter)" title="Guided">
-                                Details                                                     
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
+                                Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
                             <button id="rtl" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="rtlClick()" data-target="#rtlModePopup">RTL</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="You can send your device back to the departure point with RTL mode." title="RTL">
-                                Details                  
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
+                                Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
                             <button id="loiter" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#stabilizeModePopup">LOITER</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="You can maintain the current location, heading and altitude of your device with Loiter Mode." title="Loiter">
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
                             <button id="land" type="button" class="btn btn-lg btn-primary" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#landModePopup" disabled>Land</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="You can bring the device straight down with Land Mode." title="Land">
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
                             <button id="cancel" type="button" class="btn btn-lg btn-danger" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#cancelFlightPopup" disabled>Cancel</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="You can cancel the flight at any point by choosing Loiter, Land or RTL modes." title="Cancel">
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
                         <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
-                            <button id="prevFlights" type="button" class="btn btn-lg btn-danger" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="prevFlightsClick()" data-target="#prevFlightsPopup">Prev Flights</button>
-                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="You can see your previous flights." title="Connect">
+                            <button id="prevFlights" type="button" class="btn btn-lg btn-warning" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="prevFlightsClick()" data-target="#prevFlightsPopup">Prev Flights</button>
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
                                 Details
                             </a>
                         </div>
+                        <div class="btn-group-vertical col-xl-2 col-md-2" role="group">
+                            <button id="test" type="button" class="btn btn-lg btn-danger" data-backdrop="false" data-keyboard="false" data-toggle="modal" onclick="testClick()">Test</button>
+                            <a tabindex="0" class="btn btn-sm btn-light" role="button" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="Details" title="Connect">
+                                Details
+                            </a>
+                        </div>
+
                         <!-- Modal -->
 
                         <div class="modal fade" id="prevFlightsPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -277,49 +311,55 @@
                                     <div class="modal-body">
                                         <h6 class="modal-title" id="exampleModalLongTitle">Select Point 1</h6>
                                         <div id="firstPoint" class="input-group">
-                                            <input id="autoPoint1Lat" type="number" class="form-control" placeholder="Latitude" required>
-                                            <input id="autoPoint1Lon" type="number" class="form-control" placeholder="Longtitude" required>
+                                            <input id="autoPoint1Lat" type="number" class="form-control" placeholder="Latitude" required disabled>
+                                            <input id="autoPoint1Lon" type="number" class="form-control" placeholder="Longtitude" required disabled>
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
+                                                <button class="btn btn-outline-secondary" role="button" id="autoSelectMap1" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</button>
                                             </div>
                                         </div>
                                         <br />
                                         <h5 style="display:none" id="landOption1"></h5>
+                                        <button style="display:none" id="cancelLandOption1" class="btn btn-outline-danger" onclick="cancelLandOption1()"><i class="fas fa-times"></i></button>
                                         <h5 style="display:none" id="rtlOption1"></h5>
+                                        <button style="display:none" id="cancelRtlOption1" class="btn btn-outline-danger" onclick="cancelRtlOption1()"><i class="fas fa-times"></i></button>
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle2">Point 2</h6>
                                         <div style="display:none" id="secondPoint" class="input-group">
-                                            <input id="autoPoint2Lat" type="number" class="form-control" placeholder="Latitude" required>
-                                            <input id="autoPoint2Lon" type="number" class="form-control" placeholder="Longtitude" required>
+                                            <input id="autoPoint2Lat" type="number" class="form-control" placeholder="Latitude" required disabled>
+                                            <input id="autoPoint2Lon" type="number" class="form-control" placeholder="Longtitude" required disabled>
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
-                                                <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint2"><i class="fas fa-times"></i></button>
+                                                <button class="btn btn-outline-secondary" role="button" id="autoSelectMap2" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</button>
+                                                <button onclick="cancelSecondLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint2"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
                                         <h5 style="display:none" id="landOption2"></h5>
+                                        <button style="display:none" id="cancelLandOption2" class="btn btn-outline-danger" onclick="cancelLandOption2()"><i class="fas fa-times"></i></button>
                                         <h5 style="display:none" id="rtlOption2"></h5>
+                                        <button style="display:none" id="cancelRtlOption2" class="btn btn-outline-danger" onclick="cancelRtlOption2()"><i class="fas fa-times"></i></button>
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle3">Point 3</h6>
                                         <div style="display:none" id="thirdPoint" class="input-group">
-                                            <input id="autoPoint3Lat" type="number" class="form-control" placeholder="Latitude" required>
-                                            <input id="autoPoint3Lon" type="number" class="form-control" placeholder="Longtitude" required>
+                                            <input id="autoPoint3Lat" type="number" class="form-control" placeholder="Latitude" required disabled>
+                                            <input id="autoPoint3Lon" type="number" class="form-control" placeholder="Longtitude" required disabled>
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
-                                                <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint3"><i class="fas fa-times"></i></button>
+                                                <button class="btn btn-outline-secondary" role="button" id="autoSelectMap3" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</button>
+                                                <button onclick="cancelThirdLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint3"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
                                         <h5 style="display:none" id="landOption3"></h5>
+                                        <button style="display:none" id="cancelLandOption3" class="btn btn-outline-danger" onclick="cancelLandOption3()"><i class="fas fa-times"></i></button>
                                         <h5 style="display:none" id="rtlOption3"></h5>
+                                        <button style="display:none" id="cancelRtlOption3" class="btn btn-outline-danger" onclick="cancelRtlOption3()"><i class="fas fa-times"></i></button>
                                         <h6 style="display:none" class="modal-title" id="exampleModalLongTitle4">Point 4</h6>
                                         <div style="display:none" id="fourthPoint" class="input-group">
-                                            <input id="autoPoint4Lat" type="number" class="form-control" placeholder="Latitude" required>
-                                            <input id="autoPoint4Lon" type="number" class="form-control" placeholder="Longtitude" required>
+                                            <input id="autoPoint4Lat" type="number" class="form-control" placeholder="Latitude" required disabled>
+                                            <input id="autoPoint4Lon" type="number" class="form-control" placeholder="Longtitude" required disabled>
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" role="button" id="autoSelectMap" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</span>
-                                                <button onclick="cancelNewLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint4"><i class="fas fa-times"></i></button>
+                                                <button class="btn btn-outline-secondary" role="button" id="autoSelectMap4" data-backdrop="false" data-keyboard="false" data-toggle="modal" data-target="#autoSelectMapPopup"><i class="fas fa-map mr-1"></i>Map</button>
+                                                <button onclick="cancelFourtLocation()" class="btn btn-outline-secondary" role="button" id="cancelPoint4"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
                                         <div class="input-group-prepend">
                                             <h5 style="display:none" id="landOption4"></h5>
-                                            <button onclick="cancelLandRtlOption()" class="btn btn-outline-secondary" role="button" id="cancelLandOption4"><i class="fas fa-times"></i></button>
+                                            <button style="display:none" id="cancelLandOption4" class="btn btn-outline-danger" onclick="cancelLandOption4()"><i class="fas fa-times"></i></button>
                                         </div>
                                         <h5 style="display:none" id="rtlOption4"></h5>
                                         <br />
@@ -334,18 +374,81 @@
                                         </div>
                                         <br />
                                         <br />
-                                        <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
-                                        <div class="input-group">
-                                            <input id="autoVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity" required>
-                                        </div>
-                                        <h6 class="modal-title" id="exampleModalLongTitle">Set Altitude</h6>
-                                        <div class="input-group">
-                                            <input id="autoAlt" type="number" min="2" max="10" class="form-control" placeholder="Altitude" required>
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <h6 class="modal-title" id="exampleModalLongTitle">Set Velocity</h6>
+                                                <div class="input-group">
+                                                    <input id="autoVel" type="number" min="1" max="5" class="form-control" placeholder="Velocity" required>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <h6 class="modal-title" id="exampleModalLongTitle">Set Altitude</h6>
+                                                <div class="input-group">
+                                                    <input id="autoAlt" type="number" min="2" max="10" class="form-control" placeholder="Altitude" required>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button id="autoStart" type="button" class="btn btn-primary">Start</button>
+                                        <button id="autoStart" type="button" class="btn btn-primary" onclick="autoStart()">Start</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="autoSelectMapPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                <div class="modal-content" id="simulationPopupContent">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Select Target Point</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6 class="modal-title" id="firstPointMap">Point 1</h6>
+                                        <div class="input-group">
+                                            <input id="autoPoint1LatMap" type="text" class="form-control" placeholder="Latitude" required disabled>
+                                            <input id="autoPoint1LonMap" type="text" class="form-control" placeholder="Longtitude" required disabled>
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-secondary" role="button" id="autoSelectTargetFromMap" onclick="autoSelectTargetFromMap()"><i class="fas fa-map mr-1"></i>Map</button>
+                                                <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
+                                            </div>
+                                        </div>
+                                        <h6 class="modal-title" id="secondPointMapHeader" style="display:none">Point 2</h6>
+                                        <div class="input-group" id="secondPointMap" style="display:none">
+                                            <input id="autoPoint2LatMap" type="text" class="form-control" placeholder="Latitude" required disabled>
+                                            <input id="autoPoint2LonMap" type="text" class="form-control" placeholder="Longtitude" required disabled>
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-secondary" role="button" id="autoSelectTargetFromMap" onclick="autoSelectTargetFromMap()"><i class="fas fa-map mr-1"></i>Map</button>
+                                                <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
+                                            </div>
+                                        </div>
+                                        <h6 class="modal-title" id="thirdPointMapHeader" style="display:none">Point 3</h6>
+                                        <div class="input-group" id="thirdPointMap" style="display:none">
+                                            <input id="autoPoint3LatMap" type="text" class="form-control" placeholder="Latitude" required disabled>
+                                            <input id="autoPoint3LonMap" type="text" class="form-control" placeholder="Longtitude" required disabled>
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-secondary" role="button" id="autoSelectTargetFromMap" onclick="autoSelectTargetFromMap()"><i class="fas fa-map mr-1"></i>Map</button>
+                                                <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
+                                            </div>
+                                        </div>
+                                        <h6 class="modal-title" id="fourthPointMapHeader" style="display:none">Point 4</h6>
+                                        <div class="input-group" id="fourthPointMap" style="display:none">
+                                            <input id="autoPoint4LatMap" type="text" class="form-control" placeholder="Latitude" required disabled>
+                                            <input id="autoPoint4LonMap" type="text" class="form-control" placeholder="Longtitude" required disabled>
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-secondary" role="button" id="autoSelectTargetFromMap" onclick="autoSelectTargetFromMap()"><i class="fas fa-map mr-1"></i>Map</button>
+                                                <button class="btn btn-outline-secondary" data-toggle="popover" data-placement="bottom" data-content="Maximum travel distance is set to 1.5 kilometers. Green circle shows the range of the drone."><i class="fas fa-question"></i></button>
+                                            </div>
+                                        </div>
+                                        <div id="autoSelectGoogleMap">
+
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
                                     </div>
                                 </div>
                             </div>
@@ -358,18 +461,18 @@
 
                                         <!-- <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" data-animation="true" id="toast" style="position:absolute" >
 
-                        <div class="toast-header">
-                            <i class="fas fa-exclamation-circle">  </i>
-                            <strong class="mr-auto">    Location Error</strong>
+                            <div class="toast-header">
+                                <i class="fas fa-exclamation-circle">  </i>
+                                <strong class="mr-auto">    Location Error</strong>
 
-                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="toast-body">
-                            Selected location is not in the range.<br /> Please select another location.
-                        </div>
-                    </div>-->
+                                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="toast-body">
+                                Selected location is not in the range.<br /> Please select another location.
+                            </div>
+                        </div>-->
 
                                         <h5 class="modal-title" id="exampleModalLongTitle">Guided Mode</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -549,6 +652,10 @@
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; The UACT 2020</div>
+                        <div>
+                            <a href="#">Privacy Policy</a> &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
                     </div>
                 </div>
             </footer>

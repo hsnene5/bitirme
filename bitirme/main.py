@@ -13,7 +13,8 @@ import sys
 import socket
 import glob
 import serial.tools.list_ports
-from threading import Thread
+import threading
+from threading import Thread, Event
 from subprocess import Popen
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -49,6 +50,7 @@ vehicleState = None
 vehicle = None
 point1 = None
 spinner = None
+battery = None
 def sse_encode(obj, id=None):
     return "data: %s\n\n" % json.dumps(obj)
 
@@ -61,17 +63,21 @@ def state_msg():
         "vehicleState": vehicleState,
         "armed": vehicle.armed,
         "alt": vehicle.location.global_relative_frame.alt,
+        "vel": vehicle.airspeed,
         "mode": vehicle.mode.name,
         "heading": vehicle.heading or 0,
         "lat": vehicle.location.global_relative_frame.lat,
         "lon": vehicle.location.global_relative_frame.lon,
-        "spinner" : spinner
+        "spinner" : spinner,
+        "batteryLevel" : vehicle.battery.level,
+        "current" : vehicle.battery.current,
+        "voltage" : vehicle.battery.voltage
+
     }
 
 listeners_location = []
 listeners_location
 
-from threading import Thread
 import time
 def tcount():
     while True:
@@ -82,6 +88,7 @@ def tcount():
                 x.put(msg)
         except Exception as e:
             pass
+
 t = Thread(target=tcount)
 t.daemon = True
 t.start()
@@ -101,13 +108,16 @@ def api_sse_location():
 
     return Response(gen(), mimetype="text/event-stream")
 
+cancelFlight = False
 
 @app.route("/api/guided", methods = ['POST','PUT'])
 def api_guided():
+    
+
     """
     Arms vehicle and fly to aTargetAltitude.
     """
-    parameter = request.json['dataY']
+    parameter = request.json['dataY']        
     targetAltitude = float(parameter["altitude"])
     velocity = float(parameter["velocity"])
     point1Lat = float(parameter["point1Lat"])
@@ -151,9 +161,9 @@ def api_guided():
     print("Going towards first point for 30 seconds ...")
     point1 = LocationGlobalRelative(point1Lat, point1Lon, targetAltitude)
     vehicle.simple_goto(point1)
-    
-    while not targetReached(point1,vehicle.location.global_relative_frame):
-        pass
+    global cancelFlight
+    while targetReached(point1,vehicle.location.global_relative_frame) != True and cancelFlight != True:
+        print 'goiiinnnn'
 
     print 'ARRIVED'
     if afterArrival == "RTL":
@@ -167,6 +177,8 @@ def api_guided():
 
     db.session.add(flight)
     db.session.commit()
+
+            
 
     return jsonify(ok=True)
 
@@ -200,12 +212,12 @@ def api_autoMode():
         if((parameter["point3Lat"]) != ""):
             point3Lat = float(parameter["point3Lat"])
             point3Lon = float(parameter["point3Lon"])
-            points = [[point1Lat, point1Lon], [point2Lat, point2Lon], [point3Lat, poin3Lon]]    
+            points = [[point1Lat, point1Lon], [point2Lat, point2Lon], [point3Lat, point3Lon]]    
             numberOfPoints=3
             if((parameter["point4Lat"]) != ""):
                 point4Lat = float(parameter["point4Lat"])
                 point4Lon = float(parameter["point4Lon"])
-                points = [[point1Lat, point1Lon], [point2Lat, point2Lon], [point3Lat, poin3Lon], [point4Lat, poin4Lon]]
+                points = [[point1Lat, point1Lon], [point2Lat, point2Lon], [point3Lat, point3Lon], [point4Lat, point4Lon]]
                 numberOfPoints=4
 
     print(targetAltitude)
@@ -269,6 +281,7 @@ def api_autoMode():
         point1 = LocationGlobalRelative(points[x][0], points[x][1], targetAltitude)
         vehicle.simple_goto(point1)
         while not targetReached(point1,vehicle.location.global_relative_frame):
+            print 'goind'
             pass
         print 'ARRIVED'
         if(landOptions[count] == 'Next Step: LAND'):
@@ -295,17 +308,37 @@ def api_arm():
 
 @app.route("/api/land", methods=['POST', 'PUT'])
 def api_land():
+    global cancelFlight
+    cancelFlight = True
+   
 
-    print("Now let's land")
-    vehicle.mode = VehicleMode("LAND")
+    return jsonify(ok=True)
 
-    while True:
-        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
-        # Break and return from function just below target altitude.
-        if vehicle.location.global_relative_frame.alt <=  0.5:
-            print("Landed safely")
-            break
-        time.sleep(1)
+@app.route("/api/test", methods=['POST', 'PUT'])
+def api_test():
+    print 'rebooting'
+    global vehicle
+    global guided_on
+    cancelFlight = True
+    vehicle.armed = False
+    reboot_msg = vehicle.message_factory.command_long_encode(
+            0, 0,  # target_system, target_component
+            mavutil.mavlink.MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN,  # command
+            0,  # confirmation
+            1,  # param 1, autopilot (reboot)
+            0,  # param 2, onboard computer (do nothing)
+            0,  # param 3, camera (do nothing)
+            0,  # param 4, mount (do nothing)
+            0, 0, 0)  # param 5 ~ 7 not used
+
+    vehicle.send_mavlink(reboot_msg)
+    vehicle.close()
+    vehicle = None
+    if sitl:
+        sitl.stop()
+    
+    
+    #vehicle = None
 
     return jsonify(ok=True)
 
@@ -389,6 +422,7 @@ def enableSimulation():
     homeLocationLat = float(parameter["lat"])
     homeLocationLng = float(parameter["lng"])
     global vehicle
+    global sitl
     homeArg = '--home='+str(homeLocationLat)+','+str(homeLocationLng)+',0,180'
     sitl = dronekit_sitl.start_default(homeLocationLat,homeLocationLng)
     #sitl.download('copter','3.3', verbose=True)
@@ -428,6 +462,7 @@ def getDB():
 def targetReached(point1, point2):
     if "{:.5f}".format(point1.lat) == "{:.5f}".format(point2.lat):
         if "{:.5f}".format(point1.lon) == "{:.5f}".format(point2.lon):
+            print 'going'
             return True
     else:
         return False

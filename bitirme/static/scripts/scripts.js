@@ -132,6 +132,16 @@ function simulationMap() {
                 clickable: false,
                 radius: 1500
             });
+            autoRangeCircle = new google.maps.Circle({
+                center: user,
+                strokeColor: '#1ec904',
+                strokeOpacity: 0.8,
+                fill: false,
+                strokeWeight: 2,
+                map: autoMaps,
+                clickable: false,
+                radius: 1500
+            });
         }, function () {
             handleLocationError(true, simMap.getCenter());
         });
@@ -189,9 +199,179 @@ function initMaps() {
     mainMap();
     guidedMap();
     simulationMap();
+    autoInitMap();
+}
+
+var autoMaps;
+var autoUserMarker;
+var autoPoint1Marker = false;
+var autoPoint2Marker = false;
+var autoPoint3Marker = false;
+var autoPoint4Marker = false;
+var autoRangeCircle;
+var currentMarker;
+
+function autoInitMap() {
+    //The center location of our map.
+
+
+    //Map options.
+    var options = {
+        //center: centerOfMap, //Set center.
+        zoom: 13 //The zoom value.
+    };
+
+    //Create the map object.
+    autoMaps = new google.maps.Map(document.getElementById('autoSelectGoogleMap'), options);
+    autoMaps.setMapTypeId(google.maps.MapTypeId.HYBRID);
+    //Listen for any clicks on the map.
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            autoMaps.setCenter(pos);
+
+            var user = { lat: position.coords.latitude, lng: position.coords.longitude };
+            autoUserMarker = new google.maps.Marker({ position: user, map: autoMaps, icon: iconBase + 'man.png' });
+
+        }, function () {
+            handleLocationError(true, autoMaps.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, autoMaps.getCenter());
+    }
+
+    google.maps.event.addListener(autoMaps, 'click', function (event) {
+        //Get the location that the user clicked.
+        var clickedLocation = event.latLng;
+        //If the marker hasn't been added.
+        if (autoPoint1Marker === false) {
+            //Create the marker.
+            autoPoint1Marker = new google.maps.Marker({
+                position: clickedLocation,
+                map: autoMaps,
+                draggable: true, //make it draggable
+                icon: iconBaseNumber + '1.png'
+            });
+            google.maps.event.addListener(autoPoint1Marker, 'dragend', function (event) {
+                autoMarkerLocation();
+            });
+        }
+        /*if (autoPoint2Marker === false) {
+            autoPoint2Marker = new google.maps.Marker({
+                position: clickedLocation,
+                //map: autoMaps,
+                draggable: true, //make it draggable
+                icon: iconBaseNumber + '2.png'
+            });
+            google.maps.event.addListener(autoPoint2Marker, 'dragend', function (event) {
+                autoMarkerLocation();
+            });
+        }*/
+
+        /*if (autoPoint3Marker === false) {
+            autoPoint3Marker = new google.maps.Marker({
+                position: clickedLocation,
+                //map: autoMaps,
+                draggable: true, //make it draggable
+                icon: iconBaseNumber + '3.png'
+            });
+            google.maps.event.addListener(autoPoint3Marker, 'dragend', function (event) {
+                autoMarkerLocation();
+            });
+        }
+
+        if (autoPoint4Marker === false) {
+            autoPoint4Marker = new google.maps.Marker({
+                position: clickedLocation,
+                //map: autoMaps,
+                draggable: true, //make it draggable
+                icon: iconBaseNumber + '4.png'
+            });
+            google.maps.event.addListener(autoPoint4Marker, 'dragend', function (event) {
+                autoMarkerLocation();
+            });
+        }*/
+        //Get the marker's location.
+        autoMarkerLocation();
+    });
+}
+
+function autoMarkerLocation() {
+    if (!autoPoint1Marker === false) {
+        var point1Location = autoPoint1Marker.getPosition();
+        if (google.maps.geometry.spherical.computeDistanceBetween(point1Location, autoRangeCircle.center) > autoRangeCircle.radius) {
+
+            notify("Selected location is not in the range.");
+            autoPoint1Marker.setPosition(autoRangeCircle.center);
+            return ;
+        }
+        document.getElementById('autoPoint1Lat').value = point1Location.lat().toFixed(6); //latitude
+        document.getElementById('autoPoint1Lon').value = point1Location.lng().toFixed(6); //latitude
+        document.getElementById('autoPoint1LatMap').value = point1Location.lat().toFixed(6); //latitude
+        document.getElementById('autoPoint1LonMap').value = point1Location.lng().toFixed(6); //longitude
+    }
+    
+
+    if (!autoPoint2Marker === false) {
+        var point2Location = autoPoint2Marker.getPosition();
+        if (google.maps.geometry.spherical.computeDistanceBetween(point2Location, autoRangeCircle.center) > autoRangeCircle.radius) {
+
+            notify("Selected location is not in the range.");
+            autoPoint2Marker.setPosition(autoRangeCircle.center);
+            return ;
+        }
+        document.getElementById('autoPoint2Lat').value = point2Location.lat().toFixed(6); //latitude
+        document.getElementById('autoPoint2Lon').value = point2Location.lng().toFixed(6); //latitude
+        document.getElementById('autoPoint2LatMap').value = point2Location.lat().toFixed(6); //latitude
+        document.getElementById('autoPoint2LonMap').value = point2Location.lng().toFixed(6); //longitude
+    }
+
+    if (!autoPoint3Marker === false) {
+        var point3Location = autoPoint3Marker.getPosition();
+        if (google.maps.geometry.spherical.computeDistanceBetween(point3Location, autoRangeCircle.center) > autoRangeCircle.radius) {
+
+            notify("Selected location is not in the range.");
+            autoPoint3Marker.setPosition(autoRangeCircle.center);
+            return ;
+        }
+        document.getElementById('autoPoint3Lat').value = point3Location.lat().toFixed(6); //latitude
+        document.getElementById('autoPoint3Lon').value = point3Location.lng().toFixed(6); //latitude
+        document.getElementById('autoPoint3LatMap').value = point3Location.lat().toFixed(6); //latitude
+        document.getElementById('autoPoint3LonMap').value = point3Location.lng().toFixed(6); //longitude
+    }
+    
+
+
+    if (!autoPoint4Marker === false) {
+        var point4Location = autoPoint4Marker.getPosition();
+        if (google.maps.geometry.spherical.computeDistanceBetween(point4Location, autoRangeCircle.center) > autoRangeCircle.radius) {
+
+            notify("Selected location is not in the range.");
+            autoPoint4Marker.setPosition(autoRangeCircle.center);
+            return ;
+        }
+        document.getElementById('autoPoint4Lat').value = point4Location.lat().toFixed(6); //latitude
+        document.getElementById('autoPoint4Lon').value = point4Location.lng().toFixed(6); //latitude
+        document.getElementById('autoPoint4LatMap').value = point4Location.lat().toFixed(6); //latitude
+        document.getElementById('autoPoint4LonMap').value = point4Location.lng().toFixed(6); //longitude
+    }
+    
+
+    
+
+    //Add lat and lng values to a field that we can save.
+    $('#toast').toast('hide');
+    
 }
 
 var iconBase = 'http://maps.google.com/mapfiles/kml/shapes/';
+var iconBaseNumber = 'http://maps.google.com/mapfiles/kml/paddle/';
 var marker;
 var mainMaps;
 var mainHomeMarker = false;
@@ -246,16 +426,82 @@ function selectNewStep(){
 
 function selectNewLocation() {
     if (document.getElementById("secondPoint").style.display == 'none') {
-        document.getElementById("exampleModalLongTitle2").style.display = 'block';
-        document.getElementById("secondPoint").style.display = 'flex';
+        if ((document.getElementById("autoPoint1Lat").value == "") || (document.getElementById("autoPoint1Lat").value == "")) {
+            notify("Please Select First Point");
+            $('#firstPoint').css('border', '2px solid red');
+            return false;
+        }
+        else {
+            $('#firstPoint').css('border', 'none');
+            document.getElementById("exampleModalLongTitle2").style.display = 'block';
+            document.getElementById("secondPoint").style.display = 'flex';
+            document.getElementById("secondPointMapHeader").style.display = 'flex';
+            document.getElementById("secondPointMap").style.display = 'flex';
+            //document.getElementById("autoPoint2LonMap").style.display = 'flex';
+            autoPoint2Marker = new google.maps.Marker({
+                position: autoMaps.getCenter(),
+                map: autoMaps,
+                draggable: true, //make it draggable
+                icon: iconBaseNumber + '2.png'
+            });
+            google.maps.event.addListener(autoPoint2Marker, 'dragend', function (event) {
+                autoMarkerLocation();
+            });
+            //autoPoint2Marker.setMap(autoMaps);
+            currentMarker = autoPoint2Marker;
+        }
+        
     }
     else if (document.getElementById("thirdPoint").style.display == 'none') {
-        document.getElementById("exampleModalLongTitle3").style.display = 'block';
-        document.getElementById("thirdPoint").style.display = 'flex';
+        if ((document.getElementById("autoPoint2Lat").value == "") || (document.getElementById("autoPoint2Lat").value == "")) {
+            notify("Please Select Second Point");
+            $('#secondPoint').css('border', '2px solid red');
+            return false;
+        }
+        else {
+            $('#secondPoint').css('border', 'none');
+            document.getElementById("exampleModalLongTitle3").style.display = 'block';
+            document.getElementById("thirdPoint").style.display = 'flex';
+            document.getElementById("thirdPointMapHeader").style.display = 'flex';
+            document.getElementById("thirdPointMap").style.display = 'flex';
+            autoPoint3Marker = new google.maps.Marker({
+                position: autoMaps.getCenter(),
+                map: autoMaps,
+                draggable: true, //make it draggable
+                icon: iconBaseNumber + '3.png'
+            });
+            google.maps.event.addListener(autoPoint3Marker, 'dragend', function (event) {
+                autoMarkerLocation();
+            });
+            //autoPoint3Marker.setMap(autoMaps);
+            currentMarker = autoPoint2Marker;
+        }
     }
     else if (document.getElementById("fourthPoint").style.display == 'none') {
-        document.getElementById("exampleModalLongTitle4").style.display = 'block';
-        document.getElementById("fourthPoint").style.display = 'flex';
+        if ((document.getElementById("autoPoint3Lat").value == "") || (document.getElementById("autoPoint3Lat").value == "")) {
+            notify("Please Select Third Point");
+            $('#thirdPoint').css('border', '2px solid red');
+            return false;
+        }
+        else {
+            $('#thirdPoint').css('border', 'none');
+            document.getElementById("exampleModalLongTitle4").style.display = 'block';
+            document.getElementById("fourthPoint").style.display = 'flex';
+            document.getElementById("fourthPointMapHeader").style.display = 'flex';
+            document.getElementById("fourthPointMap").style.display = 'flex';
+            autoPoint4Marker = new google.maps.Marker({
+                position: autoMaps.getCenter(),
+                map: autoMaps,
+                draggable: true, //make it draggable
+                icon: iconBaseNumber + '4.png'
+            });
+            google.maps.event.addListener(autoPoint4Marker, 'dragend', function (event) {
+                autoMarkerLocation();
+            });
+            //autoPoint4Marker.setMap(autoMaps);
+            currentMarker = autoPoint2Marker;
+        }
+       
     }
 }
 
@@ -263,18 +509,22 @@ function selectNewOptionLand() {
     if (document.getElementById("secondPoint").style.display == 'none' && document.getElementById("rtlOption1").style.display == 'none') {
         document.getElementById("landOption1").innerHTML = "Next Step: LAND";
         document.getElementById("landOption1").style.display = 'block';
+        document.getElementById("cancelLandOption1").style.display = 'block';
     }
     if (document.getElementById("thirdPoint").style.display == 'none' && document.getElementById("secondPoint").style.display != 'none' && document.getElementById("rtlOption2").style.display == 'none') {
         document.getElementById("landOption2").innerHTML = "Next Step: LAND";
         document.getElementById("landOption2").style.display = 'block';
+        document.getElementById("cancelLandOption2").style.display = 'block';
     }
     if (document.getElementById("fourthPoint").style.display == 'none' && document.getElementById("thirdPoint").style.display != 'none' && document.getElementById("rtlOption3").style.display == 'none') {
         document.getElementById("landOption3").innerHTML = "Next Step: LAND";
         document.getElementById("landOption3").style.display = 'block';
+        document.getElementById("cancelLandOption3").style.display = 'block';
     }
     if (document.getElementById("fourthPoint").style.display != 'none' && document.getElementById("rtlOption4").style.display == 'none') {
         document.getElementById("landOption4").innerHTML = "Next Step: LAND";
         document.getElementById("landOption4").style.display = 'block';
+        document.getElementById("cancelLandOption4").style.display = 'block';
     }
 }
 
@@ -282,18 +532,22 @@ function selectNewOptionRtl() {
     if (document.getElementById("secondPoint").style.display == 'none' ) {
         document.getElementById("rtlOption1").innerHTML = "Next Step: RTL";
         document.getElementById("rtlOption1").style.display = 'block';
+        document.getElementById("cancelRtlOption1").style.display = 'block';
     }
     if (document.getElementById("thirdPoint").style.display == 'none' && document.getElementById("secondPoint").style.display != 'none') {
         document.getElementById("rtlOption2").innerHTML = "Next Step: RTL";
         document.getElementById("rtlOption2").style.display = 'block';
+        document.getElementById("cancelRtlOption2").style.display = 'block';
     }
     if (document.getElementById("fourthPoint").style.display == 'none' && document.getElementById("thirdPoint").style.display != 'none') {
         document.getElementById("rtlOption3").innerHTML = "Next Step: RTL";
         document.getElementById("rtlOption3").style.display = 'block';
+        document.getElementById("cancelRtlOption3").style.display = 'block';
     }
     if (document.getElementById("fourthPoint").style.display != 'none') {
         document.getElementById("rtlOption4").innerHTML = "Next Step: RTL";
         document.getElementById("rtlOption4").style.display = 'block';
+        document.getElementById("cancelRtlOption4").style.display = 'block';
     }
 }
 
@@ -302,23 +556,120 @@ function cancelNewLocation() {
     {
         document.getElementById("exampleModalLongTitle4").style.display = 'none';
         document.getElementById("fourthPoint").style.display = 'none';
+        document.getElementById("fourthPointMapHeader").style.display = 'none';
+        document.getElementById("fourthPointMap").style.display = 'none';
+        autoPoint4Marker.setMap(null);
     });
 
     document.getElementById("cancelPoint3").addEventListener("click", function () {
         document.getElementById("exampleModalLongTitle3").style.display = 'none';
         document.getElementById("thirdPoint").style.display = 'none';
+        document.getElementById("thirdPointMapHeader").style.display = 'none';
+        document.getElementById("thirdPointMap").style.display = 'none';
+        autoPoint3Marker.setMap(null);
     });
 
     document.getElementById("cancelPoint2").addEventListener("click", function () {
         document.getElementById("exampleModalLongTitle2").style.display = 'none';
         document.getElementById("secondPoint").style.display = 'none';
+        document.getElementById("secondPointMapHeader").style.display = 'none';
+        document.getElementById("secondPointMap").style.display = 'none';
+        autoPoint2Marker.setMap(null);
     });
+}
+
+function cancelSecondLocation() {
+    document.getElementById("exampleModalLongTitle2").style.display = 'none';
+    document.getElementById("secondPoint").style.display = 'none';
+    document.getElementById("secondPointMapHeader").style.display = 'none';
+    document.getElementById("secondPointMap").style.display = 'none';
+    autoPoint2Marker.setMap(null);
+}
+
+function cancelThirdLocation() {
+    document.getElementById("exampleModalLongTitle3").style.display = 'none';
+    document.getElementById("thirdPoint").style.display = 'none';
+    document.getElementById("thirdPointMapHeader").style.display = 'none';
+    document.getElementById("thirdPointMap").style.display = 'none';
+    autoPoint3Marker.setMap(null);
+}
+
+function cancelFourthLocation() {
+    document.getElementById("exampleModalLongTitle4").style.display = 'none';
+    document.getElementById("fourthPoint").style.display = 'none';
+    document.getElementById("fourthPointMapHeader").style.display = 'none';
+    document.getElementById("fourthPointMap").style.display = 'none';
+    autoPoint4Marker.setMap(null);
+}
+
+function cancelLandOption1() {
+    document.getElementById("landOption1").style.display = 'none';
+    document.getElementById("landOption1").innerHTML = '';
+    document.getElementById("cancelLandOption1").style.display = 'none';
+}
+
+function cancelLandOption2() {
+    document.getElementById("landOption2").style.display = 'none';
+    document.getElementById("landOption2").innerHTML = '';
+    document.getElementById("cancelLandOption2").style.display = 'none';
+}
+
+function cancelLandOption3() {
+    document.getElementById("landOption3").style.display = 'none';
+    document.getElementById("landOption3").innerHTML = '';
+    document.getElementById("cancelLandOption3").style.display = 'none';
+}
+
+function cancelLandOption4() {
+    document.getElementById("landOption4").style.display = 'none';
+    document.getElementById("landOption4").innerHTML = '';
+    document.getElementById("cancelLandOption4").style.display = 'none';
+}
+
+function cancelRtlOption1() {
+    document.getElementById("rtlOption1").style.display = 'none';
+    document.getElementById("rtlOption1").innerHTML = '';
+    document.getElementById("cancelRtlOption1").style.display = 'none';
+}
+
+function cancelRtlOption2() {
+    document.getElementById("rtlOption2").style.display = 'none';
+    document.getElementById("rtlOption2").innerHTML = '';
+    document.getElementById("cancelRtlOption2").style.display = 'none';
+}
+
+function cancelRtlOption3() {
+    document.getElementById("rtlOption3").style.display = 'none';
+    document.getElementById("rtlOption3").innerHTML = '';
+    document.getElementById("cancelRtlOption3").style.display = 'none';
+}
+
+function cancelRtlOption4() {
+    document.getElementById("rtlOption4").style.display = 'none';
+    document.getElementById("rtlOption4").innerHTML = '';
+    document.getElementById("cancelRtlOption4").style.display = 'none';
 }
 
 function cancelLandRtlOption() {
     document.getElementById("cancelLandOption4").addEventListener("click", function () {
         document.getElementById("landOption4").style.display = 'none';
         document.getElementById("landOption4").innerHTML = '';
+    });
+    document.getElementById("cancelLandOption3").addEventListener("click", function () {
+        document.getElementById("landOption3").style.display = 'none';
+        document.getElementById("landOption3").innerHTML = '';
+    });
+    document.getElementById("cancelLandOption3").addEventListener("click", function () {
+        document.getElementById("landOption3").style.display = 'none';
+        document.getElementById("landOption3").innerHTML = '';
+    });
+    document.getElementById("cancelLandOption2").addEventListener("click", function () {
+        document.getElementById("landOption2").style.display = 'none';
+        document.getElementById("landOption2").innerHTML = '';
+    });
+    document.getElementById("cancelLandOption1").addEventListener("click", function () {
+        document.getElementById("landOption1").style.display = 'none';
+        document.getElementById("landOption1").innerHTML = '';
     });
 
 }
@@ -502,25 +853,29 @@ function guidedStart() {
         return false;
     }
 
+    if (guidedVelocity == "") {
+        notify("Velocity parameter cannot be empty!");
+        $('#guidedVel').css('border', '2px solid red');
+        return false;
+    }
+
     if (guidedAltitude == "") {
         notify("Altitude parameter cannot be empty!");
         $('#guidedAlt').css('border', '2px solid red');
         return false;
     }
 
-    if (guidedAltitude > 20) {
-        notify("Altitude cannot be higher than 20!");
+    if (guidedAltitude > 20 || guidedAltitude < 2) {
+        notify("Altitude should be between 2 and 20!");
         $('#guidedAlt').css('border', '2px solid red');
         return false;
     }
 
     if (guidedVelocity > 5) {
-        notify("Velocity cannot be higher than 5!");
+        notify("Velocity should be between 1 and 5!");
         $('#guidedVel').css('border', '2px solid red');
         return false;
     }
-
-    
 
     var dataY = {
         altitude : document.getElementById('guidedAlt').value,
@@ -545,7 +900,83 @@ function guidedStart() {
 
 }
 
-$('#autoStart').on('click', function () {
+function autoStart() {
+
+    var autoAltitude = document.getElementById('autoAlt').value;
+    var autoVelocity = document.getElementById('autoVel').value;
+
+    
+    if ((document.getElementById('autoPoint1Lat').value == "") || (document.getElementById('autoPoint1Lon').value == "")) {
+        notify("Location parameters cannot be empty!");
+        $('#firstPoint').css('border', '2px solid red');
+        return false;
+    }
+
+    if (document.getElementById('secondPoint').style.display == 'flex') {
+        if ((document.getElementById('autoPoint2Lat').value == "") || (document.getElementById('autoPoint2Lon').value == "")) {
+            notify("Location parameters cannot be empty!");
+            $('#secondPoint').css('border', '2px solid red');
+            return false;
+        }
+        
+    }
+
+    if (document.getElementById('thirdPoint').style.display == 'flex') {
+        if ((document.getElementById('autoPoint3Lat').value == "") || (document.getElementById('autoPoint3Lon').value == "")) {
+            notify("Location parameters cannot be empty!");
+            $('#thirdPoint').css('border', '2px solid red');
+            return false;
+        }
+
+    }
+
+    if (document.getElementById('fourthPoint').style.display == 'flex') {
+        if ((document.getElementById('autoPoint4Lat').value == "") || (document.getElementById('autoPoint4Lon').value == "")) {
+            notify("Location parameters cannot be empty!");
+            $('#fourthPoint').css('border', '2px solid red');
+            return false;
+        }
+
+    }
+
+    if (autoAltitude == "" && autoVelocity == "") {
+        notify("Altitude and Velocity parameters cannot be empty!");
+        $('#autoVel').css('border', '2px solid red');
+        $('#autoAlt').css('border', '2px solid red');
+        return false;
+    }
+
+    if (autoAltitude == "") {
+        notify("Altitude parameter cannot be empty!");
+        $('#autoAlt').css('border', '2px solid red');
+        return false;
+    }
+
+    if (autoVelocity == "") {
+        notify("Velocity parameter cannot be empty!");
+        $('#autoVel').css('border', '2px solid red');
+        return false;
+    }
+
+    if ((autoAltitude > 20 || autoAltitude < 2) && (autoVelocity > 5 || autoVelocity < 1)) {
+        notify("Altitude and Velocity params should be in range! Altitude : [2-20] Velocity : [1-5]");
+        $('#autoVel').css('border', '2px solid red');
+        $('#autoAlt').css('border', '2px solid red');
+        return false;
+    }
+
+    if (autoAltitude > 20 || autoAltitude < 2) {
+        notify("Altitude should be between 2 and 20!");
+        $('#autoAlt').css('border', '2px solid red');
+        return false;
+    }
+
+    if (autoVelocity > 5 || autoVelocity < 1) {
+        notify("Velocity should be between 1 and 5!");
+        $('#autoVel').css('border', '2px solid red');
+        return false;
+    }
+
     var dataX = {
         altitude : document.getElementById('autoAlt').value,
         velocity : document.getElementById('autoVel').value,
@@ -565,8 +996,29 @@ $('#autoStart').on('click', function () {
         rtl2: document.getElementById('rtlOption2').textContent,
         rtl3: document.getElementById('rtlOption3').textContent,
         rtl4: document.getElementById('rtlOption4').textContent
-
     };
+
+    var target1Marker = autoPoint1Marker;
+    target1Marker.setOptions({ draggable: false });
+    target1Marker.setMap(mainMaps);
+
+    if (!autoPoint2Marker === false) {
+        var target2Marker = autoPoint2Marker;
+        target2Marker.setOptions({ draggable: false });
+        target2Marker.setMap(mainMaps);
+    }
+
+    if (!autoPoint3Marker === false) {
+        var target3Marker = autoPoint3Marker;
+        target3Marker.setOptions({ draggable: false });
+        target3Marker.setMap(mainMaps);
+    }
+
+    if (!autoPoint4Marker === false) {
+        var target4Marker = autoPoint4Marker;
+        target4Marker.setOptions({ draggable: false });
+        target4Marker.setMap(mainMaps);
+    }
 
     $.ajax({
         method: 'PUT',
@@ -578,7 +1030,7 @@ $('#autoStart').on('click', function () {
             console.log('sent guided mode')
         });
 
-})
+}
 
 $('#land').on('click', function () {
     $.ajax({
@@ -682,7 +1134,6 @@ $('#cancelStart').on('click', function () {
 })
 
 $('#simulationSelectMapButton').on('click', function () {
-    console.log("simul");
     var elem = document.getElementById('simulationSelectMap');
     if (elem.style.display == "block") {
         elem.style.display = "none";
@@ -690,6 +1141,15 @@ $('#simulationSelectMapButton').on('click', function () {
         elem.style.display = "block";
     }
 })
+
+function autoSelectTargetFromMap() {
+    var elem = document.getElementById('autoSelectGoogleMap');
+    if (elem.style.display == "block") {
+        elem.style.display = "none";
+    } else {
+        elem.style.display = "block";
+    }
+}
 
 function simulationUserLocationClick() {
     if (navigator.geolocation) {
@@ -731,6 +1191,18 @@ $('#guidedSelectMapButton').on('click', function () {
     }
 })
 
+function testClick() {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/test',
+        contentType: 'application/json',
+        //data: JSON.stringify({ dataSelected }),
+    })
+        .done(function (msg) {
+            console.log('sent cancel mode')
+        });
+}
+
 var globmsg = null;
 //var droneMarker = new google.maps.Marker({ map: map, icon: iconBase + 'heliport.png' });
 var droneMarker = false;
@@ -757,8 +1229,9 @@ source.onmessage = function (event) {
     if (msg.vehicleState == null) {
         msg.vehicleState = 'Not Available';
     }
-    
-    $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState + '<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2));
+
+    $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState + '<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2) + '<br><b>Heading:</b> ' + msg.heading + '<br><b>Velocity:</b> ' + msg.vel.toFixed(2) + '<br><b>Battery:</b> ' + msg.batteryLevel + '<br><b>Current:</b> ' + msg.current + '<br><b>Voltage:</b> ' + msg.voltage);
+    $('#battery').css('width', msg.batteryLevel + '%').attr('aria-valuenow', msg.batteryLevel);
     var latlng = new google.maps.LatLng(msg.lat, msg.lon);
     mainMaps.setCenter(latlng);
 
