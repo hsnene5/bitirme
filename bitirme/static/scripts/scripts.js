@@ -1,6 +1,5 @@
 (function ($) {
     "use strict";
-   
     // Add active state to sidbar nav links
     var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
     $("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function () {
@@ -8,7 +7,6 @@
             $(this).addClass("active");
         }
     });
-
     // Toggle the side navigation
     $("#sidebarToggle").on("click", function (e) {
         e.preventDefault();
@@ -16,19 +14,19 @@
     });
 })(jQuery);
 
+// Auto Hide Notification
 function notifyAutoHide(message) {
     $('.toast-body').html(message);
     $('#toast2').toast('show');
 }
-
+// Notification
 function notify(message) {
     $('.toast-body').html(message);
     $('#toast').toast('show');
 }
 
-
-var guidedMaps; //Will contain map object.
-var guidedMarker = false; ////Has the user plotted their location marker? 
+var guidedMaps; 
+var guidedMarker = false; 
 var guidedUserMarker;
 var guidedDroneMarker = false;
 var guidedHomeMarker;
@@ -37,31 +35,23 @@ var guidedRangeCircle;
 var simMap;
 var simMarker = false;
 
-//Function called to initialize / create the map.
-//This is called when the page has loaded.
+
 function guidedMap() {
-
-    //The center location of our map.
-    
-
-    //Map options.
     var options = {
-        //center: centerOfMap, //Set center.
         zoom: 13 //The zoom value.
     };
 
     //Create the map object.
     guidedMaps = new google.maps.Map(document.getElementById('guidedSelectMap'), options);
     guidedMaps.setMapTypeId(google.maps.MapTypeId.HYBRID);
-    //Listen for any clicks on the map.
     
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
+            // Users Geolocation
             var pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
-
             guidedMaps.setCenter(pos);
 
             var user = { lat: position.coords.latitude, lng: position.coords.longitude };
@@ -74,6 +64,7 @@ function guidedMap() {
         // Browser doesn't support Geolocation
         handleLocationError(false, guidedMaps.getCenter());
     }
+    //Listen for any clicks on the map.
     google.maps.event.addListener(guidedMaps, 'click', function (event) {
         //Get the location that the user clicked.
         var clickedLocation = event.latLng;
@@ -100,14 +91,12 @@ function guidedMap() {
 
 function simulationMap() {
 
-    //The center location of our map.
     var mapProp = {
         zoom: 14,
     };
 
     simMap = new google.maps.Map(document.getElementById("simulationSelectMap"), mapProp);
     simMap.setMapTypeId(google.maps.MapTypeId.HYBRID);
-    //infoWindow = new google.maps.InfoWindow;
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -119,9 +108,13 @@ function simulationMap() {
             simMap.setCenter(pos);
 
             var user = { lat: position.coords.latitude, lng: position.coords.longitude };
+
             marker = new google.maps.Marker({ position: user, map: simMap, icon: iconBase + 'man.png' });
-            simMarker = new google.maps.Marker({ position: user, map: simMap});
+
+            simMarker = new google.maps.Marker({ position: user, map: simMap, draggable: true });
+
             guidedHomeMarker = new google.maps.Marker({ position: user, map: guidedMaps, icon: iconBase + 'homegardenbusiness.png' });
+
             guidedRangeCircle = new google.maps.Circle({
                 center: user,
                 strokeColor: '#1ec904',
@@ -132,6 +125,7 @@ function simulationMap() {
                 clickable: false,
                 radius: 1500
             });
+
             autoRangeCircle = new google.maps.Circle({
                 center: user,
                 strokeColor: '#1ec904',
@@ -142,6 +136,7 @@ function simulationMap() {
                 clickable: false,
                 radius: 1500
             });
+
         }, function () {
             handleLocationError(true, simMap.getCenter());
         });
@@ -212,12 +207,9 @@ var autoRangeCircle;
 var currentMarker;
 
 function autoInitMap() {
-    //The center location of our map.
-
 
     //Map options.
     var options = {
-        //center: centerOfMap, //Set center.
         zoom: 13 //The zoom value.
     };
 
@@ -262,41 +254,6 @@ function autoInitMap() {
                 autoMarkerLocation();
             });
         }
-        /*if (autoPoint2Marker === false) {
-            autoPoint2Marker = new google.maps.Marker({
-                position: clickedLocation,
-                //map: autoMaps,
-                draggable: true, //make it draggable
-                icon: iconBaseNumber + '2.png'
-            });
-            google.maps.event.addListener(autoPoint2Marker, 'dragend', function (event) {
-                autoMarkerLocation();
-            });
-        }*/
-
-        /*if (autoPoint3Marker === false) {
-            autoPoint3Marker = new google.maps.Marker({
-                position: clickedLocation,
-                //map: autoMaps,
-                draggable: true, //make it draggable
-                icon: iconBaseNumber + '3.png'
-            });
-            google.maps.event.addListener(autoPoint3Marker, 'dragend', function (event) {
-                autoMarkerLocation();
-            });
-        }
-
-        if (autoPoint4Marker === false) {
-            autoPoint4Marker = new google.maps.Marker({
-                position: clickedLocation,
-                //map: autoMaps,
-                draggable: true, //make it draggable
-                icon: iconBaseNumber + '4.png'
-            });
-            google.maps.event.addListener(autoPoint4Marker, 'dragend', function (event) {
-                autoMarkerLocation();
-            });
-        }*/
         //Get the marker's location.
         autoMarkerLocation();
     });
@@ -312,7 +269,7 @@ function autoMarkerLocation() {
             return ;
         }
         document.getElementById('autoPoint1Lat').value = point1Location.lat().toFixed(6); //latitude
-        document.getElementById('autoPoint1Lon').value = point1Location.lng().toFixed(6); //latitude
+        document.getElementById('autoPoint1Lon').value = point1Location.lng().toFixed(6); //longitude
         document.getElementById('autoPoint1LatMap').value = point1Location.lat().toFixed(6); //latitude
         document.getElementById('autoPoint1LonMap').value = point1Location.lng().toFixed(6); //longitude
     }
@@ -327,7 +284,7 @@ function autoMarkerLocation() {
             return ;
         }
         document.getElementById('autoPoint2Lat').value = point2Location.lat().toFixed(6); //latitude
-        document.getElementById('autoPoint2Lon').value = point2Location.lng().toFixed(6); //latitude
+        document.getElementById('autoPoint2Lon').value = point2Location.lng().toFixed(6); //longitude
         document.getElementById('autoPoint2LatMap').value = point2Location.lat().toFixed(6); //latitude
         document.getElementById('autoPoint2LonMap').value = point2Location.lng().toFixed(6); //longitude
     }
@@ -341,7 +298,7 @@ function autoMarkerLocation() {
             return ;
         }
         document.getElementById('autoPoint3Lat').value = point3Location.lat().toFixed(6); //latitude
-        document.getElementById('autoPoint3Lon').value = point3Location.lng().toFixed(6); //latitude
+        document.getElementById('autoPoint3Lon').value = point3Location.lng().toFixed(6); //longitude
         document.getElementById('autoPoint3LatMap').value = point3Location.lat().toFixed(6); //latitude
         document.getElementById('autoPoint3LonMap').value = point3Location.lng().toFixed(6); //longitude
     }
@@ -357,14 +314,10 @@ function autoMarkerLocation() {
             return ;
         }
         document.getElementById('autoPoint4Lat').value = point4Location.lat().toFixed(6); //latitude
-        document.getElementById('autoPoint4Lon').value = point4Location.lng().toFixed(6); //latitude
+        document.getElementById('autoPoint4Lon').value = point4Location.lng().toFixed(6); //longitude
         document.getElementById('autoPoint4LatMap').value = point4Location.lat().toFixed(6); //latitude
         document.getElementById('autoPoint4LonMap').value = point4Location.lng().toFixed(6); //longitude
     }
-    
-
-    
-
     //Add lat and lng values to a field that we can save.
     $('#toast').toast('hide');
     
@@ -437,7 +390,7 @@ function selectNewLocation() {
             document.getElementById("secondPoint").style.display = 'flex';
             document.getElementById("secondPointMapHeader").style.display = 'flex';
             document.getElementById("secondPointMap").style.display = 'flex';
-            //document.getElementById("autoPoint2LonMap").style.display = 'flex';
+
             autoPoint2Marker = new google.maps.Marker({
                 position: autoMaps.getCenter(),
                 map: autoMaps,
@@ -447,10 +400,9 @@ function selectNewLocation() {
             google.maps.event.addListener(autoPoint2Marker, 'dragend', function (event) {
                 autoMarkerLocation();
             });
-            //autoPoint2Marker.setMap(autoMaps);
+
             currentMarker = autoPoint2Marker;
         }
-        
     }
     else if (document.getElementById("thirdPoint").style.display == 'none') {
         if ((document.getElementById("autoPoint2Lat").value == "") || (document.getElementById("autoPoint2Lat").value == "")) {
@@ -464,16 +416,17 @@ function selectNewLocation() {
             document.getElementById("thirdPoint").style.display = 'flex';
             document.getElementById("thirdPointMapHeader").style.display = 'flex';
             document.getElementById("thirdPointMap").style.display = 'flex';
+
             autoPoint3Marker = new google.maps.Marker({
                 position: autoMaps.getCenter(),
                 map: autoMaps,
                 draggable: true, //make it draggable
                 icon: iconBaseNumber + '3.png'
             });
+
             google.maps.event.addListener(autoPoint3Marker, 'dragend', function (event) {
                 autoMarkerLocation();
             });
-            //autoPoint3Marker.setMap(autoMaps);
             currentMarker = autoPoint2Marker;
         }
     }
@@ -489,19 +442,19 @@ function selectNewLocation() {
             document.getElementById("fourthPoint").style.display = 'flex';
             document.getElementById("fourthPointMapHeader").style.display = 'flex';
             document.getElementById("fourthPointMap").style.display = 'flex';
+
             autoPoint4Marker = new google.maps.Marker({
                 position: autoMaps.getCenter(),
                 map: autoMaps,
                 draggable: true, //make it draggable
                 icon: iconBaseNumber + '4.png'
             });
+
             google.maps.event.addListener(autoPoint4Marker, 'dragend', function (event) {
                 autoMarkerLocation();
             });
-            //autoPoint4Marker.setMap(autoMaps);
             currentMarker = autoPoint2Marker;
         }
-       
     }
 }
 
@@ -671,24 +624,6 @@ function cancelLandRtlOption() {
         document.getElementById("landOption1").style.display = 'none';
         document.getElementById("landOption1").innerHTML = '';
     });
-
-}
-
-function enableFlightModes(connectionMode)
-{
-    document.getElementById('auto').disabled = false;
-    document.getElementById('guided').disabled = false;
-}
-
-function enableComponents(flightMode) {
-    if (flightMode == 'guided') {
-        document.getElementById('auto').disabled = true;
-    } else if (flightMode == 'auto') {
-        document.getElementById('guided').disabled = true;
-    }
-    document.getElementById('rtl').disabled = false;
-    document.getElementById('land').disabled = false;
-    document.getElementById('cancel').disabled = false;
 }
 
 $('.popover-dismiss').popover({
@@ -708,22 +643,28 @@ function connectClick() {
         contentType: 'application/json',
         dataType: "json",
         success: function (response) {
-            var data = [{ "telemetryName": response, "connection": "none" }];
-            $('#connectionTable').bootstrapTable({
-                data: data,
-                columns: [{},
-                {
-                    title: 'Connection',
-                    align: 'center',
-                    valign: 'middle',
-                    clickToSelect: false,
-                    formatter: function () {
-                        //return '<input name="elementname"  value="'+value+'"/>';
-                        return '<button type="button" class=\'btn btn-primary \' id="simulationStart" onclick="connectToCom()">Connect</button> ';
+            if (response === null) {
+                notifyAutoHide("No available devices found. Check your telemetry connection!");
+            }
+            else {
+                var data = [{ "telemetryName": response, "connection": "none" }];
+                $('#connectionTable').bootstrapTable({
+                    data: data,
+                    columns: [{},
+                    {
+                        title: 'Connection',
+                        align: 'center',
+                        valign: 'middle',
+                        clickToSelect: false,
+                        formatter: function () {
+                            //return '<input name="elementname"  value="'+value+'"/>';
+                            return '<button type="button" class=\'btn btn-primary \' id="simulationStart" onclick="connectToCom()">Connect</button> ';
+                        }
                     }
-                }
-                ]
-            });
+                    ]
+                });
+            }
+            
         },
         error: function () {
             alert("No available devices found. Check your telemetry connection!")
@@ -732,42 +673,7 @@ function connectClick() {
         .done(function (msg) {
             console.log('sent arming message')
         });
-    //document.getElementById("connect").innerHTML="armed";
 }
-
-/*$('#connect').on('click', function () {
-    $.ajax({
-        method: 'PUT',
-        url: '/api/availableDevices',
-        contentType: 'application/json',
-        dataType: "json",
-        success: function (response) {
-            var data = [{ "telemetryName": response, "connection": "none" }];
-            $('#connectionTable').bootstrapTable({
-                data: data,
-                columns: [{},
-                {
-                    title: 'Connection',
-                    align: 'center',
-                    valign: 'middle',
-                    clickToSelect: false,
-                    formatter: function () {
-                        //return '<input name="elementname"  value="'+value+'"/>';
-                        return '<button type="button" class=\'btn btn-primary \' id="simulationStart" onclick="connectToCom()">Connect</button> ';
-                    }
-                }
-                ]
-            });
-        },
-        error: function () {
-            alert("No available devices found. Check your telemetry connection!")
-        }
-    })
-        .done(function (msg) {
-            console.log('sent arming message')
-        });
-    //document.getElementById("connect").innerHTML="armed";
-})*/
 
 function connectToCom() {
     console.log('conncet');
@@ -793,10 +699,7 @@ function connectToCom() {
         });
 }
 
-
 function simulationStart() {
-    document.getElementById('connect').disabled = true;
-    enableFlightModes();
     var simMarkerLocation = simMarker.getPosition();
     guidedHomeMarker.setPosition(simMarker.getPosition());
     guidedRangeCircle.setCenter(simMarker.getPosition());
@@ -806,7 +709,6 @@ function simulationStart() {
         mainHomeMarker.setPosition(simMarker.getPosition());
     }
 
-    
     var homeLocation = {
         lng: simMarkerLocation.lng(),
         lat: simMarkerLocation.lat(),
@@ -885,7 +787,6 @@ function guidedStart() {
         afterArrival: afterArrival
     };
 
-    enableComponents('guided');
     var uluru = { lat: parseFloat(guidedPointLat), lng: parseFloat(guidedPointLon) };
     pointMarker = new google.maps.Marker({ position: uluru, map: mainMaps });
     $.ajax({
@@ -905,7 +806,6 @@ function autoStart() {
     var autoAltitude = document.getElementById('autoAlt').value;
     var autoVelocity = document.getElementById('autoVel').value;
 
-    
     if ((document.getElementById('autoPoint1Lat').value == "") || (document.getElementById('autoPoint1Lon').value == "")) {
         notify("Location parameters cannot be empty!");
         $('#firstPoint').css('border', '2px solid red');
@@ -918,7 +818,6 @@ function autoStart() {
             $('#secondPoint').css('border', '2px solid red');
             return false;
         }
-        
     }
 
     if (document.getElementById('thirdPoint').style.display == 'flex') {
@@ -927,7 +826,6 @@ function autoStart() {
             $('#thirdPoint').css('border', '2px solid red');
             return false;
         }
-
     }
 
     if (document.getElementById('fourthPoint').style.display == 'flex') {
@@ -936,7 +834,6 @@ function autoStart() {
             $('#fourthPoint').css('border', '2px solid red');
             return false;
         }
-
     }
 
     if (autoAltitude == "" && autoVelocity == "") {
@@ -1029,10 +926,9 @@ function autoStart() {
         .done(function (msg) {
             console.log('sent guided mode')
         });
-
 }
 
-$('#land').on('click', function () {
+function landClick() {
     $.ajax({
         method: 'PUT',
         url: '/api/land',
@@ -1042,10 +938,21 @@ $('#land').on('click', function () {
         .done(function (msg) {
             console.log('sent landing mode')
        });
+}
 
-})
+function armClick() {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/arm',
+        contentType: 'application/json',
+        data: JSON.stringify({ mode: 'LAND' }),
+    })
+        .done(function (msg) {
+            console.log('sent landing mode')
+        });
+}
 
-$('#loiter').on('click', function () {
+function loiterClick() {
     $.ajax({
         method: 'PUT',
         url: '/api/loiter',
@@ -1055,8 +962,7 @@ $('#loiter').on('click', function () {
         .done(function (msg) {
             console.log('sent loiter mode')
         });
-
-})
+}
 
 function prevFlightsClick() {
     $.ajax({
@@ -1080,7 +986,6 @@ function prevFlightsClick() {
                     }
                 }
                 ]  
-                
             });
             $(".prevFlightbtn").click(function () {
                 var alt = $(this).attr('guidedAltitude');
@@ -1130,7 +1035,6 @@ $('#cancelStart').on('click', function () {
          .done(function (msg) {
              console.log('sent cancel mode')
          });
-
 })
 
 $('#simulationSelectMapButton').on('click', function () {
@@ -1162,7 +1066,7 @@ function simulationUserLocationClick() {
 
             simMap.setCenter(pos);
             if (simMarker === false) {
-                simMarker = new google.maps.Marker({ position: pos, map: simMap });
+                simMarker = new google.maps.Marker({ position: pos, map: simMap, draggable: true });
             }
             else {
                 simMarker.setPosition(pos);
@@ -1191,50 +1095,69 @@ $('#guidedSelectMapButton').on('click', function () {
     }
 })
 
-function testClick() {
+function rtlClick() {
     $.ajax({
         method: 'PUT',
-        url: '/api/test',
-        contentType: 'application/json',
-        //data: JSON.stringify({ dataSelected }),
+        url: '/api/rtl',
+        contentType: 'application/json'
     })
         .done(function (msg) {
-            console.log('sent cancel mode')
+            console.log('sent rtl mode')
+        });
+}
+
+function reboottClick() {
+    $.ajax({
+        method: 'PUT',
+        url: '/api/reboot',
+        contentType: 'application/json',
+    })
+        .done(function (msg) {
+            console.log('sent reboot mode')
         });
 }
 
 var globmsg = null;
-//var droneMarker = new google.maps.Marker({ map: map, icon: iconBase + 'heliport.png' });
 var droneMarker = false;
 
 
 var source = new EventSource('/api/sse/state');
 source.onmessage = function (event) {
-
-   
-    
-
     var msg = JSON.parse(event.data);
-    if (spinner = false) {
-
-    }
-
-    if (msg.onFlight == true) {
-        $('#stopSimulationGroup').prop("hidden", true);
-    }
-    if (msg.onFlight == false) {
-        $('#stopSimulationGroup').prop("hidden", false);
-    }
-
-    if (msg.vehicleState == null) {
-        msg.vehicleState = 'Not Available';
-    }
 
     $('#header-state').html('<b>Vehicle:</b> ' + msg.vehicleState + '<br><b>Armed:</b> ' + msg.armed + '<br><b>Mode:</b> ' + msg.mode + '<br><b>Altitude:</b> ' + msg.alt.toFixed(2) + '<br><b>Heading:</b> ' + msg.heading + '<br><b>Velocity:</b> ' + msg.vel.toFixed(2) + '<br><b>Battery:</b> ' + msg.batteryLevel + '<br><b>Current:</b> ' + msg.current + '<br><b>Voltage:</b> ' + msg.voltage);
-    $('#battery').css('width', msg.batteryLevel + '%').attr('aria-valuenow', msg.batteryLevel);
+    if (msg.batteryLevel > 25) {
+        $('#voltageHeader').html(msg.voltage + ' V');
+        $('#currentHeader').html(msg.current + ' A');
+        $('#batteryHeader').html('Battery ' + msg.batteryLevel + ' %');
+        $('#battery').css('width', msg.batteryLevel + '%').attr('aria-valuenow', msg.batteryLevel).html(msg.batteryLevel + '%');
+    }
+    else if (msg.batteryLevel < 25 && msg.batteryLevel > 0) {
+        $('#batteryCard').css('background-color', '#dc3545');
+        $('#voltageHeader').html(msg.voltage + ' V');
+        $('#currentHeader').html(msg.current + ' A');
+        $('#batteryHeader').html('Battery ' + msg.batteryLevel + ' %');
+        $('#battery').css({ 'width': msg.batteryLevel + '%', 'background-color': '#dc3545' }).attr('aria-valuenow', msg.batteryLevel).html(msg.batteryLevel + '%');
+    } else {
+        $('#batteryCard').css('background-color', '#dc3545');
+        $('#batteryHeader').html('Battery ' + 0 + ' %');
+        $('#voltageHeader').html(0 + ' V');
+        $('#currentHeader').html(0 + ' A');
+    }
+    
+    $('#runModeHeader').html(msg.vehicleState);
+    $('#vehicleModeHeader').html(msg.mode);
+    if (msg.armed == true) {
+        $('#armedHeader').html('TRUE');
+    } else {
+        $('#armedHeader').html('FALSE');
+    }
+    
+    $('#altHeader').html(msg.alt.toFixed(2)+' m');
+    $('#velHeader').html(msg.vel.toFixed(2)+' m/s');
+    $('#headingHeader').html(msg.heading +' &#176;');
     var latlng = new google.maps.LatLng(msg.lat, msg.lon);
     mainMaps.setCenter(latlng);
-
     //Check if the marker is already created
     if (droneMarker === false) {
         //Create the marker.
@@ -1245,7 +1168,6 @@ source.onmessage = function (event) {
         });
        
     } else {
-
         droneMarker.setPosition(latlng);
     }
     //Check if the marker is already created

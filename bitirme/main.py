@@ -1,5 +1,10 @@
-
-
+""" The UACT
+    Authors : 
+            Hasan Enes DOĞAN
+            Muhammed Haktan ACAR
+            Kutluğhan Özkan
+    Date    : 18.06.2020
+"""
 from dronekit import connect, VehicleMode, LocationGlobalRelative, LocationGlobal
 from pymavlink import mavutil
 from Queue import Queue
@@ -27,7 +32,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template('autoModeModal.html', branding = False)
+    return render_template('index.html', branding = False)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///theUactDB.db'
 
@@ -43,7 +48,6 @@ class GuidedFlight(db.Model):
     run_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     def as_dict(self):
-        #return '[id:'+ self.id +',targetLat:'+self.targetLat+',targetLon:'+self.targetLon+',run_velocity:'+self.run_velocity+',run_altitude:'+self.run_altitude+',run_date:',self.run_date+']'
         return {c.name: unicode(getattr(self, c.name)) for c in self.__table__.columns}
 
 sitl = None
@@ -52,6 +56,7 @@ vehicle = None
 point1 = None
 spinner = None
 battery = None
+
 def sse_encode(obj, id=None):
     return "data: %s\n\n" % json.dumps(obj)
 
@@ -69,7 +74,6 @@ def state_msg():
         "heading": vehicle.heading or 0,
         "lat": vehicle.location.global_relative_frame.lat,
         "lon": vehicle.location.global_relative_frame.lon,
-        "spinner" : spinner,
         "batteryLevel" : vehicle.battery.level,
         "current" : vehicle.battery.current,
         "voltage" : vehicle.battery.voltage
@@ -111,10 +115,11 @@ def api_sse_location():
 
 cancelFlight = False
 
+"""
+Gets JSON Data and operates a GUIDED Flight
+"""
 @app.route("/api/guided", methods = ['POST','PUT'])
 def api_guided():
-    
-
     """
     Arms vehicle and fly to aTargetAltitude.
     """
@@ -124,14 +129,10 @@ def api_guided():
     point1Lat = float(parameter["point1Lat"])
     point1Lon = float(parameter["point1Lon"])
     afterArrival = parameter["afterArrival"]
-    print velocity
-    print targetAltitude
     
-    print("Basic pre-arm checks")
-    # Don't try to arm until autopilot is ready
+    print 'Basic pre-arm checks'
+    print 'Arming motors'
 
-
-    print("Arming motors")
     # Copter should arm in GUIDED mode
     vehicle.mode = VehicleMode("GUIDED")
     vehicle.armed = True
@@ -140,8 +141,7 @@ def api_guided():
         print(" Waiting for arming...")
         time.sleep(1)
 
-
-    print("Taking off!")
+    print 'Taking off!'
     vehicle.simple_takeoff(targetAltitude)  # Take off to target altitude
 
     # Wait until the vehicle reaches a safe height before processing the goto
@@ -155,7 +155,6 @@ def api_guided():
             break
         time.sleep(1)
 
-
     print("set default/target airspeed to velocity")
     vehicle.airspeed = velocity
 
@@ -164,7 +163,7 @@ def api_guided():
     vehicle.simple_goto(point1)
     global cancelFlight
     while targetReached(point1,vehicle.location.global_relative_frame) != True and cancelFlight != True:
-        print 'goiiinnnn'
+        pass
 
     print 'ARRIVED'
     if afterArrival == "RTL":
@@ -179,10 +178,11 @@ def api_guided():
     db.session.add(flight)
     db.session.commit()
 
-            
-
     return jsonify(ok=True)
 
+"""
+Gets JSON Data and operates a AUTO Flight
+"""
 @app.route("/api/auto", methods = ['POST','PUT'])
 def api_autoMode():
     parameter = request.json['dataX']
@@ -291,10 +291,11 @@ def api_autoMode():
 
         count=count+1
 
-
-
     return jsonify(ok=True)
 
+"""
+Arms Vehicle
+"""
 @app.route("/api/arm", methods=['POST', 'PUT'])
 def api_arm():
     if request.method == 'POST' or request.method == 'PUT':
@@ -306,17 +307,29 @@ def api_arm():
             print(e)
             return jsonify(ok=False)
 
-
+"""
+Lands Vehicle
+"""
 @app.route("/api/land", methods=['POST', 'PUT'])
 def api_land():
-    global cancelFlight
-    cancelFlight = True
-   
+    print("Now let's land")
+    vehicle.mode = VehicleMode("LAND")
+
+    while True:
+        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
+        # Break and return from function just below target altitude.
+        if vehicle.location.global_relative_frame.alt <=  0.5:
+            print("Landed safely")
+            break
+        time.sleep(1)
 
     return jsonify(ok=True)
 
-@app.route("/api/test", methods=['POST', 'PUT'])
-def api_test():
+"""
+Reboots Vehicle
+"""
+@app.route("/api/reboot", methods=['POST', 'PUT'])
+def api_reboot():
     print 'rebooting'
     global vehicle
     global guided_on
@@ -337,30 +350,15 @@ def api_test():
     vehicle = None
     if sitl:
         sitl.stop()
-    
-    
-    #vehicle = None
 
     return jsonify(ok=True)
 
+"""
+Stops Vehicle
+"""
 @app.route("/api/loiter", methods=['POST', 'PUT'])
 def api_loiter():
-    pointLoiterAlt = vehicle.location.global_relative_frame.alt
-    pointLoiterLon = vehicle.location.global_relative_frame.lon
-    pointLoiterLat = vehicle.location.global_relative_frame.lat
-    loiterPoint = LocationGlobalRelative(pointLoiterLat, pointLoiterLon, pointLoiterAlt)
-    vehicle.simple_goto(loiterPoint)
-    time.sleep(1)
-    print("Loiter mode is on")
-    #vehicle.mode = VehicleMode("STABILIZE")
-    while True:
-        print(" Altitude: ", vehicle.location.global_relative_frame.alt)
-        # Break and return from function just below target altitude.
-        ##if vehicle.mode != VehicleMode("LOITER"):
-          ##  print("Loiter mode is ended")
-            ##break
-        time.sleep(1)
-    
+    vehicle.mode = VehicleMode('BRAKE')
     return jsonify(ok=True)
 
 @app.route("/api/cancel", methods=['POST', 'PUT'])
@@ -377,6 +375,9 @@ def api_cancel():
         api_rtl();
     return jsonify(ok=True)
 
+"""
+Vehicle Returns to Launch
+"""
 @app.route("/api/rtl", methods=['POST', 'PUT'])
 def api_rtl():
     vehicle.parameters['RTL_ALT'] = 0
@@ -385,6 +386,9 @@ def api_rtl():
 
     return jsonify(ok=True)
 
+"""
+Finds Available Devices
+"""
 @app.route("/api/availableDevices", methods=['POST','PUT'])
 def availableDevices():
 
@@ -394,8 +398,11 @@ def availableDevices():
     descriptions = []
     for port in ports:
         return jsonify(port.description)
-    return jsonify(ok=False)
+    return jsonify(None)
 
+"""
+Connects to the Available Vehicle
+"""
 @app.route("/api/connect", methods=['POST','PUT'])
 def connect_to_drone():
     if request.method == 'POST' or request.method == 'PUT':
@@ -410,13 +417,13 @@ def connect_to_drone():
                 print 'waiting for connection... (%s)' % str(e)
                 time.sleep(2)
 
-    # if --sim is enabled...
-    #api_arm()
     vehicleState = 'Connected'
     print 'connected!'
     return jsonify(ok=True)
 
-
+"""
+Starts Simulation
+"""
 @app.route("/api/simulation", methods=['POST','PUT'])
 def enableSimulation():
     parameter = request.json['homeLocation']
@@ -426,10 +433,6 @@ def enableSimulation():
     global sitl
     homeArg = '--home='+str(homeLocationLat)+','+str(homeLocationLng)+',0,180'
     sitl = dronekit_sitl.start_default(homeLocationLat,homeLocationLng)
-    #sitl.download('copter','3.3', verbose=True)
-    #sitl_args = ['-I0', '--model', 'quad', homeArg]
-    #sitl.launch(sitl_args,await_ready=True, restart = True)
-    #connection_string = 'tcp:127.0.0.1:5760'
     connection_string = sitl.connection_string()
 
     while not vehicle:
@@ -441,25 +444,23 @@ def enableSimulation():
 
     global vehicleState
     vehicleState = 'Simulation'
-    spinner = False
     print 'simulation mode enabled'
-    
-    
+
     return jsonify(ok=True)
 
+"""
+Gets Previous Flights from Database
+"""
 @app.route("/api/getDB", methods=['POST','PUT'])
 def getDB():
     users = GuidedFlight.query.all()
     for user in users:
         return jsonify([u.as_dict() for u in GuidedFlight.query.all()])
 
-#t2 = Thread(target=connect_to_drone)
-#t2.daemon = True
-#t2.start()
 
-###################################
-## TARGET POINT REACHED FUNCTION ##
-###################################
+"""
+Checks If the Vehicle Reached Target
+"""
 def targetReached(point1, point2):
     if "{:.5f}".format(point1.lat) == "{:.5f}".format(point2.lat):
         if "{:.5f}".format(point1.lon) == "{:.5f}".format(point2.lon):
@@ -468,52 +469,39 @@ def targetReached(point1, point2):
     else:
         return False
 
+"""
+Handles 404 Error
+"""
 @app.errorhandler(404)
 def page_not_found(e):
-    # note that we set the 404 status explicitly
     return render_template('404.html'), 404
 
+"""
+Handles 401 Error
+"""
 @app.errorhandler(401)
 def page_not_found(e):
-    # note that we set the 404 status explicitly
     return render_template('401.html'), 401
 
+"""
+Handles 500 Error
+"""
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if request.method == 'POST':
-        # do stuff when the form is submitted
-
-        # redirect to end the POST handling
-        # the redirect can be to the same route or somewhere else
         return redirect(url_for('index'))
+    return render_template('index.html')
 
-    # show the form, it wasn't submitted
-    return render_template('autoModeModal.html')
-
+"""
+About Page
+"""
 @app.route('/about', methods=['GET', 'POST'])
 def about():
     if request.method == 'POST':
-        # do stuff when the form is submitted
-
-        # redirect to end the POST handling
-        # the redirect can be to the same route or somewhere else
         return redirect(url_for('index'))
 
     # show the form, it wasn't submitted
     return render_template('about.html')
-
-   
-@app.route('/401', methods=['GET', 'POST'])
-def error401():
-    return render_template('401.html')
-
-@app.route('/404', methods=['GET', 'POST'])
-def error404():
-    return render_template('404.html')
-
-@app.route('/500', methods=['GET', 'POST'])
-def error500():
-    return render_template('500.html')
 
 def main():
     app.config['TEMPLATE_AUTO_RELOAD'] = True

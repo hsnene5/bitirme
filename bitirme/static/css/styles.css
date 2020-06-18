@@ -4695,6 +4695,7 @@ input[type=button].btn-block {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    height: 200px;
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
@@ -11032,4 +11033,8 @@ ol.carousel-indicators {
     position: relative;
     top: 20%;
     z-index: 100;
+}
+
+#mainMapCard {
+    height:unset;
 }
