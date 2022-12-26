@@ -5,6 +5,6 @@ pyserial
 flask
 jinja2
 requests==2.5.1
-wheel==0.24.0
+wheel==0.38.1
 dronekit_sitl
 flask-bootstrap
